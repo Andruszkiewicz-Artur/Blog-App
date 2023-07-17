@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.blogapp.core.navigation.RootNavHost
 import com.example.blogapp.ui.theme.BlogAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +20,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             BlogAppTheme {
-
+                RootNavHost()
             }
         }
     }
