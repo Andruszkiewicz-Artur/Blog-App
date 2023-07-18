@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.blogapp.core.navigation.Graph
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
+import com.example.blogapp.feature_profile.presentation.profile_presentation.comp.ProfilePresentation
 
 fun NavGraphBuilder.profileNavGraph(
     navHostController: NavHostController
@@ -18,7 +19,9 @@ fun NavGraphBuilder.profileNavGraph(
         composable(
             route = ProfileScreen.Profile.route
         ) {
-
+            ProfilePresentation(
+                navHostController = navHostController
+            )
         }
     }
 

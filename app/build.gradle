@@ -66,7 +66,9 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
-
+    
+    //Material Icons
+    implementation "androidx.compose.material:material-icons-extended:1.6.0-alpha01"
 
     // Dagger - Hilt
     implementation "com.google.dagger:hilt-android:$dagger_hilt_version"
