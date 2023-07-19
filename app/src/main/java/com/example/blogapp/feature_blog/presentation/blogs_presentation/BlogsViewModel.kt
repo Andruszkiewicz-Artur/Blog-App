@@ -29,8 +29,6 @@ class BlogsViewModel @Inject constructor(
                     limit = _state.value.limitPosts
                 )
             ) }
-
-            Log.d("Check posts", "${_state.value.posts}")
         }
     }
 
