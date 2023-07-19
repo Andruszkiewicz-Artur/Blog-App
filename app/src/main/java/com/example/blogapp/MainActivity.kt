@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.blogapp.core.Static
 import com.example.blogapp.core.comp.bottom_bar.BottomBar
 import com.example.blogapp.core.navigation.RootNavHost
 import com.example.blogapp.ui.theme.BlogAppTheme
@@ -27,8 +28,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
 
+
+        setContent {
             val navHostController = rememberNavController()
 
             val navBackStackEntry by navHostController.currentBackStackEntryAsState()
