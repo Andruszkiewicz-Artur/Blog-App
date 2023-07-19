@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.feature_blog.data.dto.PostPreviewDto
 import com.example.blogapp.feature_blog.domain.model.PostPreviewModel
 import java.text.SimpleDateFormat
@@ -95,6 +96,15 @@ fun BlogsItem(
                 text = post.text,
                 maxLines = 5,
             )
+            
+            Row(
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 8.dp)
+            ) {
+                post.tags.forEach { 
+                    TagPresentation(value = it)
+                }
+            }
 
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
