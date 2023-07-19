@@ -14,6 +14,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ThumbUp
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,76 +50,82 @@ fun BlogsItem(
         }
     }
 
-    Column(
-        verticalArrangement = Arrangement.Top,
+    Card(
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        ),
         modifier = Modifier
             .clickable {
                 onClick(post.id)
             }
-            .background(
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(10.dp)
-            )
-            .padding(8.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
             modifier = Modifier
-                .padding(bottom = 8.dp)
-        ) {
-            AsyncImage(
-                model = post.owner.picture,
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(end = 16.dp)
-                    .size(50.dp)
-                    .clip(CircleShape)
-            )
-
-            Text(
-                text = "${post.owner.title}.",
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                text = " ${post.owner.firstName} ${post.owner.lastName}"
-            )
-        }
-
-        Text(
-            text = post.text,
-            maxLines = 5,
-        )
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom,
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth()
+                .padding(8.dp)
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.ThumbUp,
+                AsyncImage(
+                    model = post.owner.picture,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier
-                        .padding(end = 8.dp)
-                        .size(20.dp)
+                        .padding(end = 16.dp)
+                        .size(50.dp)
+                        .clip(CircleShape)
                 )
 
                 Text(
-                    text = "${post.likes}"
+                    text = "${post.owner.title}.",
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = " ${post.owner.firstName} ${post.owner.lastName}"
                 )
             }
-            
+
             Text(
-                text = formattedTime,
-                fontWeight = FontWeight.Light
+                text = post.text,
+                maxLines = 5,
             )
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom,
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.ThumbUp,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(20.dp)
+                    )
+
+                    Text(
+                        text = "${post.likes}"
+                    )
+                }
+
+                Text(
+                    text = formattedTime,
+                    fontWeight = FontWeight.Light
+                )
+            }
         }
     }
 }

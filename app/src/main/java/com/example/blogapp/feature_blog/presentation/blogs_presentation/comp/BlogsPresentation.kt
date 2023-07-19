@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsEvent
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsViewModel
 
 @Composable
@@ -28,14 +29,28 @@ fun BlogsPresentation(
             .padding(horizontal = 16.dp)
     ){
         items(state.value.posts) {
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             BlogsItem(
                 post = it,
                 onClick = {
 
                 }
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+        
+        item {
+            if (state.value.maxPages != null) {
+                BlogsPageChanger(
+                    pageLimit = state.value.maxPages ?: 0,
+                    currentPage = state.value.page,
+                    onClick = {
+                        viewModel.onEvent(BlogsEvent.ChangePage(it))
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(100.dp))
+            }
         }
     }
 

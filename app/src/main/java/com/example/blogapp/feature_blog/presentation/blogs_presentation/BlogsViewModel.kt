@@ -22,14 +22,29 @@ class BlogsViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            _state.update { it.copy(
-                posts = postsUseCase.invoke(
-                    page = _state.value.page - 1,
-                    limit = _state.value.limitPosts
-                )
-            ) }
+        setUpPosts(_state.value.page)
+    }
+
+    fun onEvent(event: BlogsEvent) {
+        when (event) {
+            is BlogsEvent.ChangePage -> {
+                setUpPosts(event.page)
+            }
         }
     }
 
+    private fun setUpPosts(page: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val data = postsUseCase.invoke(
+                page = page - 1,
+                limit = _state.value.limitPosts
+            )
+
+            _state.update { it.copy(
+                posts = data.second,
+                maxPages = data.first + 1,
+                page = page
+            ) }
+        }
+    }
 }

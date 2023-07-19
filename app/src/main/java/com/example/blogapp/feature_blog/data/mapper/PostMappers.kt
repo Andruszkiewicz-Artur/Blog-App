@@ -12,7 +12,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-fun ListDto<PostPreviewDto>.toPostPreviewModel(): List<PostPreviewModel> {
+fun ListDto<PostPreviewDto>.toPostPreviewModel(): Pair<Int, List<PostPreviewModel>> {
     val list: MutableList<PostPreviewModel> = mutableListOf()
 
     data.forEach {
@@ -45,5 +45,5 @@ fun ListDto<PostPreviewDto>.toPostPreviewModel(): List<PostPreviewModel> {
         )
     }
 
-    return list
+    return Pair(total/limit, list)
 }

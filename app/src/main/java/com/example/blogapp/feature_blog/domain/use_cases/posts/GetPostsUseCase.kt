@@ -10,7 +10,7 @@ class GetPostsUseCase @Inject constructor(
     private val repository: BlogRepository
 ) {
 
-    suspend fun invoke(page: Int, limit: Int): List<PostPreviewModel> {
+    suspend fun invoke(page: Int, limit: Int): Pair<Int, List<PostPreviewModel>> {
         return repository.getPosts(page, limit).toPostPreviewModel()
     }
 
