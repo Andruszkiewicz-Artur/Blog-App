@@ -1,6 +1,7 @@
 package com.example.blogapp.feature_blog.data.repository
 
 import com.example.blogapp.feature_blog.data.dto.ListDto
+import com.example.blogapp.feature_blog.data.dto.PostDto
 import com.example.blogapp.feature_blog.data.dto.PostPreviewDto
 import com.example.blogapp.feature_blog.data.remote.BlogsApi
 import com.example.blogapp.feature_blog.domain.repository.BlogRepository
@@ -14,6 +15,12 @@ class BlogRepositoryImpl @Inject constructor(
         return api.getPostsData(
             page = page,
             limit = limit
+        )
+    }
+
+    override suspend fun getPostById(postId: String): PostDto {
+        return api.getPostById(
+            postId = postId
         )
     }
 

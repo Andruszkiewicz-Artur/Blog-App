@@ -5,6 +5,7 @@ import com.example.blogapp.core.Static
 import com.example.blogapp.feature_blog.data.remote.BlogsApi
 import com.example.blogapp.feature_blog.data.repository.BlogRepositoryImpl
 import com.example.blogapp.feature_blog.domain.repository.BlogRepository
+import com.example.blogapp.feature_blog.domain.use_cases.posts.GetPostByIdUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.posts.GetPostsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.posts.PostUseCases
 import dagger.Module
@@ -40,7 +41,8 @@ object AppModule {
     @Singleton
     fun providePostsUseCases(repository: BlogRepository): PostUseCases {
         return PostUseCases(
-            getPostsUseCase = GetPostsUseCase(repository)
+            getPostsUseCase = GetPostsUseCase(repository),
+            getPostByIdUseCase = GetPostByIdUseCase(repository)
         )
     }
 }
