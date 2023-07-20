@@ -1,5 +1,6 @@
 package com.example.blogapp.feature_blog.data.repository
 
+import com.example.blogapp.feature_blog.data.dto.CommentDto
 import com.example.blogapp.feature_blog.data.dto.ListDto
 import com.example.blogapp.feature_blog.data.dto.PostDto
 import com.example.blogapp.feature_blog.data.dto.PostPreviewDto
@@ -20,6 +21,12 @@ class BlogRepositoryImpl @Inject constructor(
 
     override suspend fun getPostById(postId: String): PostDto {
         return api.getPostById(
+            postId = postId
+        )
+    }
+
+    override suspend fun getCommentsByPost(postId: String): ListDto<CommentDto> {
+        return api.getCommentsByPost(
             postId = postId
         )
     }

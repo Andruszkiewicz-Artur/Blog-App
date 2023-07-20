@@ -1,6 +1,7 @@
 package com.example.blogapp.feature_blog.data.remote
 
 import com.example.blogapp.core.Static
+import com.example.blogapp.feature_blog.data.dto.CommentDto
 import com.example.blogapp.feature_blog.data.dto.ListDto
 import com.example.blogapp.feature_blog.data.dto.PostDto
 import com.example.blogapp.feature_blog.data.dto.PostPreviewDto
@@ -24,4 +25,10 @@ interface BlogsApi {
         @Header("app-id") apiKey: String = Static.API_KEY,
         @Path("id") postId: String
     ): PostDto
+
+    @GET("post/{id}/comment")
+    suspend fun getCommentsByPost(
+        @Header("app-id") apiKey: String = Static.API_KEY,
+        @Path("id") postId: String
+    ): ListDto<CommentDto>
 }

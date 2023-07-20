@@ -5,8 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.feature_blog.domain.use_cases.posts.PostUseCases
-import com.example.blogapp.feature_blog.presentation.blog_presentation.comp.BlogState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,19 +26,16 @@ class BlogViewModel @Inject constructor(
     init {
         savedStateHandle.get<String>("postId")?.let { postId ->
             if (postId != "") {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     _state.update { it.copy(
                         isLoading = true
                     ) }
 
-                    delay(500)
-
                     _state.update { it.copy(
+                        comments = postUseCases.getCommentByPostsUseCase.invoke(postId),
                         post = postUseCases.getPostByIdUseCase.invoke(postId),
                         isLoading = false
                     ) }
-
-                    Log.d("check post data", "${_state.value.post}")
                 }
             }
         }

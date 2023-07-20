@@ -7,7 +7,7 @@ data class PostModel(
     val text: String,
     val image: String,
     val likes: Int,
-    val link: String,
+    val link: String?,
     val tags: List<String>,
     val publishDate: LocalDateTime,
     val owner: UserPreviewModel
