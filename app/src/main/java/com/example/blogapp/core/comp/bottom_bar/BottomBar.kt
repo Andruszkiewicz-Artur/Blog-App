@@ -31,15 +31,19 @@ fun BottomBar(
         )
     )
 
-    BottomAppBar(
-        contentColor = MaterialTheme.colorScheme.secondaryContainer,
-    ) {
-        screens.forEach { screen ->
-            AddItem(
-                screen = screen,
-                currentDestination = currentDestination,
-                navHostController = navHostController
-            )
+    val isBottomBar = screens.any { it.route == currentDestination?.route }
+
+    if (isBottomBar) {
+        BottomAppBar(
+            contentColor = MaterialTheme.colorScheme.secondaryContainer,
+        ) {
+            screens.forEach { screen ->
+                AddItem(
+                    screen = screen,
+                    currentDestination = currentDestination,
+                    navHostController = navHostController
+                )
+            }
         }
     }
 }
