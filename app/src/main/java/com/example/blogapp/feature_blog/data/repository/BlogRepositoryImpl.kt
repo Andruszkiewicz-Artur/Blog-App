@@ -19,6 +19,18 @@ class BlogRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun getPostsByTag(
+        tag: String,
+        page: Int,
+        limit: Int
+    ): ListDto<PostPreviewDto> {
+        return api.getPostsByTag(
+            tag = tag,
+            page = page,
+            limit = limit
+        )
+    }
+
     override suspend fun getPostById(postId: String): PostDto {
         return api.getPostById(
             postId = postId
@@ -29,6 +41,10 @@ class BlogRepositoryImpl @Inject constructor(
         return api.getCommentsByPost(
             postId = postId
         )
+    }
+
+    override suspend fun getTags(): ListDto<String> {
+        return api.getTags()
     }
 
 }

@@ -20,6 +20,14 @@ interface BlogsApi {
         @Query("limit") limit: Int
     ): ListDto<PostPreviewDto>
 
+    @GET("tag/{tag}/post")
+    suspend fun getPostsByTag(
+        @Header("app-id") apiKey: String = Static.API_KEY,
+        @Path("tag") tag: String,
+        @Query("page") page: Int,
+        @Query("limit") limit: Int
+    ): ListDto<PostPreviewDto>
+
     @GET("post/{id}")
     suspend fun getPostById(
         @Header("app-id") apiKey: String = Static.API_KEY,
@@ -31,4 +39,10 @@ interface BlogsApi {
         @Header("app-id") apiKey: String = Static.API_KEY,
         @Path("id") postId: String
     ): ListDto<CommentDto>
+
+    @GET("tag")
+    suspend fun getTags(
+        @Header("app-id") apiKey: String = Static.API_KEY
+    ): ListDto<String>
+
 }

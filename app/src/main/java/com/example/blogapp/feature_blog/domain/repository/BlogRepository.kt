@@ -9,8 +9,12 @@ interface BlogRepository {
 
     suspend fun getPosts(page: Int, limit: Int): ListDto<PostPreviewDto>
 
+    suspend fun getPostsByTag(tag: String, page: Int, limit: Int): ListDto<PostPreviewDto>
+
     suspend fun getPostById(postId: String): PostDto
 
     suspend fun getCommentsByPost(postId: String): ListDto<CommentDto>
+
+    suspend fun getTags(): ListDto<String>
 
 }

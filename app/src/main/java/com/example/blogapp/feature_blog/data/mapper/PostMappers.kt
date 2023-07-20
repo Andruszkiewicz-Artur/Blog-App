@@ -40,3 +40,9 @@ fun PostDto.toPostModel(): PostModel {
         )
     )
 }
+
+fun ListDto<String>.toListStrings(): List<String> {
+    return this.data
+        .filter { it != null }
+        .filter { it.isNotBlank() }
+}

@@ -9,5 +9,7 @@ data class BlogsState(
     val limitPosts: Int = 20,
     val maxPages: Int? = null,
     val isPresentedSorting: Boolean = false,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val tags: List<String> = emptyList(),
+    val currentTag: String? = null
 )

@@ -1,5 +1,6 @@
 package com.example.blogapp.feature_blog.presentation.blogs_presentation.comp
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsEvent
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsViewModel
@@ -47,6 +50,34 @@ fun BlogsPresentation(
                     viewModel.onEvent(BlogsEvent.ClickShowingSorting)
                 }
             )
+
+            if (state.value.tags.isNotEmpty()) {
+                LazyRow(
+
+                ) {
+                    item {
+                        TagPresentation(
+                            value = "All",
+                            color = if(state.value.currentTag == null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier
+                                .clickable {
+                                    viewModel.onEvent(BlogsEvent.ChooseTag(null))
+                                }
+                        )
+                    }
+
+                    items(state.value.tags) {
+                        TagPresentation(
+                            value = it,
+                            color = if(state.value.currentTag == it) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier
+                                .clickable {
+                                    viewModel.onEvent(BlogsEvent.ChooseTag(it))
+                                }
+                        )
+                    }
+                }
+            }
         }
 
         if (!state.value.isLoading) {
@@ -59,9 +90,11 @@ fun BlogsPresentation(
                             .fillMaxSize()
                     ) {
                         Text(
-                            text = "Can`t read data from database.",
+                            text = if(state.value.currentTag == null) "Can`t read data database." else "Non posts with this tag!",
                             style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f),
+                            modifier = Modifier
+                                .padding(top = 32.dp)
                         )
                     }
                 }
@@ -79,7 +112,7 @@ fun BlogsPresentation(
             }
 
             item {
-                if (state.value.maxPages != null) {
+                if (state.value.maxPages != null && state.value.posts.isNotEmpty()) {
                     BlogsPageChanger(
                         pageLimit = state.value.maxPages ?: 0,
                         currentPage = state.value.page,

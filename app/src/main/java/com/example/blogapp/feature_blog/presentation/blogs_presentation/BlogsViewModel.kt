@@ -16,14 +16,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BlogsViewModel @Inject constructor(
-    private val postsUseCase: GetPostsUseCase
+    private val postsUseCase: PostUseCases
 ): ViewModel() {
 
     private val _state = MutableStateFlow(BlogsState())
     val state = _state.asStateFlow()
 
     init {
-        setUpPosts(_state.value.page)
+        setUpPosts()
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update {  it.copy(
+                tags = postsUseCase.getTagsUseCase()
+            ) }
+
+            Log.d("check tags", "${_state.value.tags}")
+        }
     }
 
     fun onEvent(event: BlogsEvent) {
@@ -38,22 +45,38 @@ class BlogsViewModel @Inject constructor(
             }
             is BlogsEvent.ClickSorting -> {
                 if (_state.value.limitPosts != event.newLimit) {
-                    setUpPosts(_state.value.page, event.newLimit)
+                    setUpPosts(event.newLimit)
+                }
+            }
+            is BlogsEvent.ChooseTag -> {
+                if (_state.value.currentTag != event.tag) {
+                    _state.update { it.copy(
+                        currentTag = event.tag
+                    ) }
+                    setUpPosts()
                 }
             }
         }
     }
 
-    private fun setUpPosts(page: Int, limit: Int = _state.value.limitPosts) {
+    private fun setUpPosts(page: Int = _state.value.page, limit: Int = _state.value.limitPosts) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(
                 isLoading = true
             ) }
 
-            val data = postsUseCase.invoke(
-                page = page - 1,
-                limit = limit
-            )
+            val data = if (_state.value.currentTag == null) {
+                postsUseCase.getPostsUseCase.invoke(
+                    page = page - 1,
+                    limit = limit
+                )
+            } else {
+                postsUseCase.getPostsByTagUseCase.invoke(
+                    tag = _state.value.currentTag ?: "",
+                    page = page - 1,
+                    limit = limit
+                )
+            }
 
             delay(500)
 
