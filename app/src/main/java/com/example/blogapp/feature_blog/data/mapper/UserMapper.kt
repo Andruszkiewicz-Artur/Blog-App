@@ -6,7 +6,7 @@ import com.example.blogapp.feature_blog.domain.model.UserModel
 
 fun UserDto.toUserModel(): UserModel {
     return UserModel(
-        id, title, firstName, lastName, gender, email, dateOfBirth, registerDate, phone, picture,
+        id, title, firstName, lastName, gender, email, dateOfBirth.toLocalDataTime(), registerDate, phone, picture,
         LocationModel(
             location.street, location.city, location.state, location.country, location.timezone
         )
