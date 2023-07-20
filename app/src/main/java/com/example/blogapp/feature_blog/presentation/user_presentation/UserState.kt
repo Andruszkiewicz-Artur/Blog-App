@@ -9,5 +9,5 @@ data class UserState(
     val posts: List<PostPreviewModel> = emptyList(),
     val page: Int = 1,
     val countPages: Int = 1,
-    val limit: Int = 20
+    val limit: Int = 5
 )

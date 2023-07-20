@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
+import com.example.blogapp.feature_blog.presentation.blogs_presentation.comp.BlogsPageChanger
+import com.example.blogapp.feature_blog.presentation.user_presentation.UserEvent
 import com.example.blogapp.feature_blog.presentation.user_presentation.UserViewModel
 
 @Composable
@@ -65,6 +67,18 @@ fun UserPresentation(
                             navHostController.navigate(BlogScreen.Blog.sendPostId(it))
                         }
                     )
+                }
+
+                item {
+                    if(state.value.countPages > 1) {
+                        BlogsPageChanger(
+                            pageLimit = state.value.countPages,
+                            currentPage = state.value.page,
+                            onClick = {
+                                viewModel.onEvent(UserEvent.ChangePage(it))
+                            }
+                        )
+                    }
                 }
             }
         }

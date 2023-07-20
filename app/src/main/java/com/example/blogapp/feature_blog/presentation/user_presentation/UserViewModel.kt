@@ -33,17 +33,42 @@ class UserViewModel @Inject constructor(
 
                     delay(500)
 
-                    val posts = postsUseCases.getPostsByUserId.invoke(userId, _state.value.page, _state.value.limit)
-
                     _state.update { it.copy(
                         user = postsUseCases.getUserByIdUseCase.invoke(userId),
-                        posts = posts.second,
-                        countPages = posts.first,
                         isLoading = false
                     ) }
+
+                    loadPosts()
                 }
             }
         }
     }
 
+    fun onEvent(event: UserEvent) {
+        when (event) {
+            is UserEvent.ChangePage -> {
+                loadPosts(
+                    page = event.newPage
+                )
+            }
+        }
+    }
+
+    private fun loadPosts(page: Int = _state.value.page, limit: Int = _state.value.limit) {
+        if (_state.value.user != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                _state.update { it.copy(
+                    posts = emptyList()
+                ) }
+
+                val posts = postsUseCases.getPostsByUserId.invoke(_state.value.user!!.id, page - 1, limit)
+
+                _state.update { it.copy(
+                    posts = posts.second,
+                    countPages = posts.first + 1,
+                    page = page
+                ) }
+            }
+        }
+    }
 }
