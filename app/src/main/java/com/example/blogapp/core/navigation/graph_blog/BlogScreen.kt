@@ -10,6 +10,12 @@ sealed class BlogScreen(
 
     object Blog: BlogScreen(
         route = "blog_screen"
-    )
+    ) {
+        fun sendPostId(
+            id: String
+        ): String {
+            return "$route?postId=$id"
+        }
+    }
 
 }

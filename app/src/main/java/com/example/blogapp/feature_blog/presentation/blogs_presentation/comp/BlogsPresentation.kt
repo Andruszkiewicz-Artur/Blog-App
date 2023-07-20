@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsEvent
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsViewModel
 
@@ -70,8 +71,8 @@ fun BlogsPresentation(
                 Spacer(modifier = Modifier.height(12.dp))
                 BlogsItem(
                     post = it,
-                    onClick = {
-
+                    onClick = { idPost ->
+                        navHostController.navigate(BlogScreen.Blog.sendPostId(idPost))
                     }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
