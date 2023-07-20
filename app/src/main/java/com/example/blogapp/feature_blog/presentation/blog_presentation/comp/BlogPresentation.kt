@@ -50,7 +50,10 @@ fun BlogPresentation(
         ) {
             if (state.post != null) {
                 item {
-                    BlogPostPresentation(postModel = state.post)
+                    BlogPostPresentation(
+                        postModel = state.post,
+                        navHostController = navHostController
+                    )
                 }
 
                 item {
@@ -79,7 +82,10 @@ fun BlogPresentation(
                 }
                 
                 items(state.comments) { comment ->
-                    BlogCommentPresentation(commentModel = comment)
+                    BlogCommentPresentation(
+                        commentModel = comment,
+                        navHostController = navHostController
+                    )
                 }
             }
         }

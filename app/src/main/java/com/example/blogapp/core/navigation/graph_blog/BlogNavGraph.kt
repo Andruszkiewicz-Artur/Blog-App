@@ -10,6 +10,7 @@ import androidx.navigation.navigation
 import com.example.blogapp.core.navigation.Graph
 import com.example.blogapp.feature_blog.presentation.blog_presentation.comp.BlogPresentation
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.comp.BlogsPresentation
+import com.example.blogapp.feature_blog.presentation.user_presentation.comp.UserPresentation
 
 fun NavGraphBuilder.blogNavGraph(
     navHostController: NavHostController
@@ -37,6 +38,20 @@ fun NavGraphBuilder.blogNavGraph(
             )
         ) {
             BlogPresentation(
+                navHostController = navHostController
+            )
+        }
+
+        composable(
+            route = BlogScreen.User.route + "?userId={userId}",
+            arguments = listOf(
+                navArgument("userId") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )
+        ) {
+            UserPresentation(
                 navHostController = navHostController
             )
         }

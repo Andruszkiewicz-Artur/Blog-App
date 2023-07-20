@@ -5,5 +5,7 @@ data class PostUseCases(
     val getPostByIdUseCase: GetPostByIdUseCase,
     val getCommentByPostsUseCase: GetCommentByPostsUseCase,
     val getTagsUseCase: GetTagsUseCase,
-    val getPostsByTagUseCase: GetPostsByTagUseCase
+    val getPostsByTagUseCase: GetPostsByTagUseCase,
+    val getUserByIdUseCase: GetUserByIdUseCase,
+    val getPostsByUserId: GetPostsByUserId
 )

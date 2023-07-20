@@ -8,8 +8,10 @@ import com.example.blogapp.feature_blog.domain.repository.BlogRepository
 import com.example.blogapp.feature_blog.domain.use_cases.posts.GetCommentByPostsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.posts.GetPostByIdUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.posts.GetPostsByTagUseCase
+import com.example.blogapp.feature_blog.domain.use_cases.posts.GetPostsByUserId
 import com.example.blogapp.feature_blog.domain.use_cases.posts.GetPostsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.posts.GetTagsUseCase
+import com.example.blogapp.feature_blog.domain.use_cases.posts.GetUserByIdUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.posts.PostUseCases
 import dagger.Module
 import dagger.Provides
@@ -48,7 +50,9 @@ object AppModule {
             getPostByIdUseCase = GetPostByIdUseCase(repository),
             getCommentByPostsUseCase = GetCommentByPostsUseCase(repository),
             getTagsUseCase = GetTagsUseCase(repository),
-            getPostsByTagUseCase = GetPostsByTagUseCase(repository)
+            getPostsByTagUseCase = GetPostsByTagUseCase(repository),
+            getUserByIdUseCase = GetUserByIdUseCase(repository),
+            getPostsByUserId = GetPostsByUserId(repository)
         )
     }
 }

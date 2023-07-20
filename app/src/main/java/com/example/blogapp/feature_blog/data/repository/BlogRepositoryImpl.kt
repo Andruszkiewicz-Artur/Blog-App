@@ -4,6 +4,7 @@ import com.example.blogapp.feature_blog.data.dto.CommentDto
 import com.example.blogapp.feature_blog.data.dto.ListDto
 import com.example.blogapp.feature_blog.data.dto.PostDto
 import com.example.blogapp.feature_blog.data.dto.PostPreviewDto
+import com.example.blogapp.feature_blog.data.dto.UserDto
 import com.example.blogapp.feature_blog.data.remote.BlogsApi
 import com.example.blogapp.feature_blog.domain.repository.BlogRepository
 import javax.inject.Inject
@@ -47,4 +48,17 @@ class BlogRepositoryImpl @Inject constructor(
         return api.getTags()
     }
 
+    override suspend fun getUserById(userId: String): UserDto {
+        return api.getUserById(
+            userId = userId
+        )
+    }
+
+    override suspend fun getPostsByUserId(userId: String, page: Int, limit: Int): ListDto<PostPreviewDto> {
+        return api.getPostByUserId(
+            userId = userId,
+            page = page,
+            limit = limit
+        )
+    }
 }

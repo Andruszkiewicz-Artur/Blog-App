@@ -1,6 +1,7 @@
 package com.example.blogapp.feature_blog.presentation.blog_presentation.comp
 
 import android.os.Build
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.domain.model.CommentModel
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
@@ -28,7 +31,8 @@ import java.util.Locale
 
 @Composable
 fun BlogCommentPresentation(
-    commentModel: CommentModel
+    commentModel: CommentModel,
+    navHostController: NavHostController
 ) {
     val formattedTime = remember(commentModel.publishDate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -60,6 +64,9 @@ fun BlogCommentPresentation(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .padding(bottom = 8.dp)
+                    .clickable {
+                        navHostController.navigate(BlogScreen.User.sendUserId(commentModel.owner.id))
+                    }
             ) {
                 AsyncImage(
                     model = commentModel.owner.picture,

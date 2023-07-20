@@ -1,6 +1,7 @@
 package com.example.blogapp.feature_blog.presentation.blog_presentation.comp
 
 import android.os.Build
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,8 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.blogapp.core.comp.text.TagPresentation
+import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.domain.model.PostModel
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
@@ -31,7 +34,8 @@ import java.util.Locale
 
 @Composable
 fun BlogPostPresentation(
-    postModel: PostModel
+    postModel: PostModel,
+    navHostController: NavHostController
 ) {
     val formattedTime = remember(postModel.publishDate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -52,6 +56,9 @@ fun BlogPostPresentation(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(vertical = 16.dp)
+                .clickable {
+                    navHostController.navigate(BlogScreen.User.sendUserId(postModel.owner.id))
+                }
         ) {
             AsyncImage(
                 model = postModel.owner.picture,

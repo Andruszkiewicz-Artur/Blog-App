@@ -18,4 +18,14 @@ sealed class BlogScreen(
         }
     }
 
+    object User: BlogScreen(
+        route = "user_screen"
+    ) {
+        fun sendUserId(
+            id: String
+        ): String {
+            return "$route?userId=$id"
+        }
+    }
+
 }

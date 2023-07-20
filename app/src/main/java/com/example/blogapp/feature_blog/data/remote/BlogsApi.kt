@@ -5,6 +5,8 @@ import com.example.blogapp.feature_blog.data.dto.CommentDto
 import com.example.blogapp.feature_blog.data.dto.ListDto
 import com.example.blogapp.feature_blog.data.dto.PostDto
 import com.example.blogapp.feature_blog.data.dto.PostPreviewDto
+import com.example.blogapp.feature_blog.data.dto.UserDto
+import com.example.blogapp.feature_blog.data.dto.UserPreviewDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -45,4 +47,17 @@ interface BlogsApi {
         @Header("app-id") apiKey: String = Static.API_KEY
     ): ListDto<String>
 
+    @GET("user/{id}")
+    suspend fun getUserById(
+        @Header("app-id") apiKey: String = Static.API_KEY,
+        @Path("id") userId: String
+    ): UserDto
+
+    @GET("user/{id}/post")
+    suspend fun getPostByUserId(
+        @Header("app-id") apiKey: String = Static.API_KEY,
+        @Path("id") userId: String,
+        @Query("page") page: Int,
+        @Query("limit") limit: Int
+    ): ListDto<PostPreviewDto>
 }

@@ -28,8 +28,6 @@ class BlogsViewModel @Inject constructor(
             _state.update {  it.copy(
                 tags = postsUseCase.getTagsUseCase()
             ) }
-
-            Log.d("check tags", "${_state.value.tags}")
         }
     }
 
