@@ -13,6 +13,13 @@ import com.example.blogapp.feature_blog.domain.use_cases.posts.GetPostsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.posts.GetTagsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.posts.GetUserByIdUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.posts.PostUseCases
+import com.example.blogapp.feature_login_register.domain.use_cases.validation.ValidateData
+import com.example.blogapp.feature_login_register.domain.use_cases.validation.ValidatePhoneNumber
+import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateEmail
+import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidatePassword
+import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateRePassword
+import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateTerms
+import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,6 +60,19 @@ object AppModule {
             getPostsByTagUseCase = GetPostsByTagUseCase(repository),
             getUserByIdUseCase = GetUserByIdUseCase(repository),
             getPostsByUserId = GetPostsByUserId(repository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateUseCases(): ValidateUseCases {
+        return ValidateUseCases(
+            validateEmail = ValidateEmail(),
+            validatePassword = ValidatePassword(),
+            validateRePassword = ValidateRePassword(),
+            validateTerms = ValidateTerms(),
+            validateData = ValidateData(),
+            validatePhoneNumber = ValidatePhoneNumber()
         )
     }
 }
