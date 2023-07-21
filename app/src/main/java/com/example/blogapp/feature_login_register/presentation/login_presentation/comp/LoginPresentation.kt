@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.core.Global
 import com.example.blogapp.core.comp.button.ButtonStandard
 import com.example.blogapp.core.navigation.screen_login_register.LoginRegisterScreen
 import com.example.blogapp.feature_login_register.presentation.login_presentation.LoginEvent
@@ -50,6 +52,10 @@ fun LoginPresentation(
         onDispose {
             keyboardController?.hide()
         }
+    }
+
+    LaunchedEffect(key1 = true) {
+        if (Global.user != null) navHostController.popBackStack()
     }
 
     LazyColumn(
@@ -101,7 +107,6 @@ fun LoginPresentation(
                 imeAction = ImeAction.Done,
                 onClickDone = {
                     keyboardController?.hide()
-                    viewModel.onEvent(LoginEvent.ClickLogIn)
                 },
                 isPassword = true,
                 isPresentPassword = state.presentPassword,

@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.blogapp.core.navigation.Graph
 import com.example.blogapp.core.navigation.graph_profile.ProfileScreen
+import com.example.blogapp.feature_login_register.presentation.forget_password_presentation.comp.ForgetPasswordPresentation
 import com.example.blogapp.feature_login_register.presentation.login_presentation.comp.LoginPresentation
 import com.example.blogapp.feature_login_register.presentation.register_presentation.comp.RegistrationPresentation
 
@@ -34,7 +35,9 @@ fun NavGraphBuilder.loginRegisterNavGraph(
         composable(
             route = LoginRegisterScreen.ForgetPassword.route
         ) {
-
+            ForgetPasswordPresentation(
+                navHostController = navHostController
+            )
         }
     }
 
