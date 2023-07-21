@@ -1,4 +1,4 @@
-package com.example.blogapp.feature_blog.presentation.blogs_presentation.comp
+package com.example.blogapp.feature_blog.presentation.unit.comp
 
 import android.graphics.Paint.Align
 import androidx.compose.foundation.clickable

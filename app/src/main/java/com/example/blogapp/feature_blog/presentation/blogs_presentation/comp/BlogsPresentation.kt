@@ -25,6 +25,7 @@ import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsEvent
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsViewModel
+import com.example.blogapp.feature_blog.presentation.unit.comp.BlogsPageChanger
 
 @Composable
 fun BlogsPresentation(

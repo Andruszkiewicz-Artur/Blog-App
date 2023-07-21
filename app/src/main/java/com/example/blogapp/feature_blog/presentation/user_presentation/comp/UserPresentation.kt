@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
-import com.example.blogapp.feature_blog.presentation.blogs_presentation.comp.BlogsPageChanger
+import com.example.blogapp.feature_blog.presentation.unit.comp.BlogsPageChanger
 import com.example.blogapp.feature_blog.presentation.user_presentation.UserEvent
 import com.example.blogapp.feature_blog.presentation.user_presentation.UserViewModel
 
