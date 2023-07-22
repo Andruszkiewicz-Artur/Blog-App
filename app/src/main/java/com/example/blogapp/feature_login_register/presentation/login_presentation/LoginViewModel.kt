@@ -1,6 +1,7 @@
 package com.example.blogapp.feature_login_register.presentation.login_presentation
 
 import androidx.lifecycle.ViewModel
+import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -9,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-
+    private val validateUseCases: ValidateUseCases
 ): ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -33,7 +34,9 @@ class LoginViewModel @Inject constructor(
                 ) }
             }
             LoginEvent.ClickLogIn -> {
+                if (isNoneErrors()) {
 
+                }
             }
             LoginEvent.ChangeVisibilityPassword -> {
                 _state.update {  it.copy(
@@ -43,4 +46,22 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    private fun isNoneErrors(): Boolean {
+        val email = validateUseCases.validateEmail.execute(_state.value.email)
+        val password = validateUseCases.validatePassword.execute(_state.value.password)
+
+        val hasError = listOf(
+            email,
+            password
+        ).any { !it.successful }
+
+        if (hasError) {
+            _state.update { it.copy(
+                emailErrorMessage = email.errorMessage,
+                passwordErrorMessage = password.errorMessage
+            ) }
+        }
+
+        return !hasError
+    }
 }

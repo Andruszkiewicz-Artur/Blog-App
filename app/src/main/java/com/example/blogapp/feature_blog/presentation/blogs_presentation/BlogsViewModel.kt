@@ -1,10 +1,8 @@
 package com.example.blogapp.feature_blog.presentation.blogs_presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.blogapp.feature_blog.domain.use_cases.posts.GetPostsUseCase
-import com.example.blogapp.feature_blog.domain.use_cases.posts.PostUseCases
+import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

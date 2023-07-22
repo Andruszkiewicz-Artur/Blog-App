@@ -4,9 +4,11 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,6 +22,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -49,72 +52,78 @@ fun TextFieldLoginRegister(
     onClickNext: () -> Unit = {  },
     modifier: Modifier = Modifier
 ) {
-    TextField(
-        value = value,
-        onValueChange = {
-            onValueChange(it)
-        },
-        label = {
-            Text(text = label)
-        },
-        keyboardOptions = KeyboardOptions.Default.copy(
-            capitalization = KeyboardCapitalization.None,
-            autoCorrect = false,
-            keyboardType = keyboardType,
-            imeAction = imeAction
-        ),
-        keyboardActions = KeyboardActions(
-            onNext = {
-                onClickNext()
-            },
-            onDone = {
-                onClickDone()
-            }
-        ),
-        singleLine = true,
-        shape = CircleShape,
-        isError = errorMessage != null,
-        trailingIcon = {
-            if (isPassword) {
-                AnimatedContent(targetState = isPresentPassword) {
-                    if (it) {
-                        Icon(
-                            imageVector = Icons.Outlined.Visibility,
-                            contentDescription = null,
-                            modifier = Modifier.clickable {
-                                clickVisibilityPassword()
-                            }
-                        )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Outlined.VisibilityOff,
-                            contentDescription = null,
-                            modifier = Modifier.clickable {
-                                clickVisibilityPassword()
-                            }
-                        )
-                    }
-                }
-            }
-        },
-        visualTransformation = if (!isPresentPassword) PasswordVisualTransformation() else  VisualTransformation.None,
-        colors = TextFieldDefaults.textFieldColors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
-        ),
+    Column(
         modifier = modifier
             .fillMaxWidth(0.9f)
-    )
-
-    Spacer(modifier = Modifier.height(4.dp))
-
-    AnimatedVisibility(visible = errorMessage != null) {
-        Text(
-            text = errorMessage.toString(),
-            color = Color.Red,
-            fontWeight = FontWeight.Light
+    ) {
+        TextField(
+            value = value,
+            onValueChange = {
+                onValueChange(it)
+            },
+            label = {
+                Text(text = label)
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                capitalization = KeyboardCapitalization.None,
+                autoCorrect = false,
+                keyboardType = keyboardType,
+                imeAction = imeAction
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    onClickNext()
+                },
+                onDone = {
+                    onClickDone()
+                }
+            ),
+            singleLine = true,
+            shape = CircleShape,
+            trailingIcon = {
+                if (isPassword) {
+                    AnimatedContent(targetState = isPresentPassword) {
+                        if (it) {
+                            Icon(
+                                imageVector = Icons.Outlined.Visibility,
+                                contentDescription = null,
+                                modifier = Modifier.clickable {
+                                    clickVisibilityPassword()
+                                }
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Outlined.VisibilityOff,
+                                contentDescription = null,
+                                modifier = Modifier.clickable {
+                                    clickVisibilityPassword()
+                                }
+                            )
+                        }
+                    }
+                }
+            },
+            visualTransformation = if (!isPresentPassword) PasswordVisualTransformation() else  VisualTransformation.None,
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
         )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        AnimatedVisibility(visible = errorMessage != null) {
+            Text(
+                text = errorMessage.toString(),
+                color = Color.Red,
+                fontWeight = FontWeight.Light,
+                modifier = Modifier
+                    .padding(start = 8.dp)
+            )
+        }
     }
 
     Spacer(modifier = Modifier.height(8.dp))

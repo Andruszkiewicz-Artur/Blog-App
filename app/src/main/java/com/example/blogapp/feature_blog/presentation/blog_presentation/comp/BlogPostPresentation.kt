@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,7 +26,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
-import com.example.blogapp.feature_blog.domain.model.PostModel
+import com.example.blogapp.feature_blog.domain.model.dummy_api.PostModel
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.Locale

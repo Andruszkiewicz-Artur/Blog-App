@@ -1,11 +1,11 @@
 package com.example.blogapp.feature_blog.data.mapper
 
-import com.example.blogapp.feature_blog.data.dto.ListDto
-import com.example.blogapp.feature_blog.data.dto.PostDto
-import com.example.blogapp.feature_blog.data.dto.PostPreviewDto
-import com.example.blogapp.feature_blog.domain.model.PostModel
-import com.example.blogapp.feature_blog.domain.model.PostPreviewModel
-import com.example.blogapp.feature_blog.domain.model.UserPreviewModel
+import com.example.blogapp.core.data.dto.ListDto
+import com.example.blogapp.core.data.dto.PostDto
+import com.example.blogapp.core.data.dto.PostPreviewDto
+import com.example.blogapp.feature_blog.domain.model.dummy_api.PostModel
+import com.example.blogapp.feature_blog.domain.model.dummy_api.PostPreviewModel
+import com.example.blogapp.feature_blog.domain.model.dummy_api.UserPreviewModel
 
 fun ListDto<PostPreviewDto>.toPostPreviewModel(): Pair<Int, List<PostPreviewModel>> {
     val list: MutableList<PostPreviewModel> = mutableListOf()

@@ -56,7 +56,7 @@ fun RegistrationPresentation(
         }
     }
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = Global.user) {
         if (Global.user != null) navHostController.popBackStack()
     }
 
@@ -181,11 +181,12 @@ fun RegistrationPresentation(
                         viewModel.onEvent(RegistrationEvent.ClickRules)
                     },
                     value = "I now Terms of Service and Privacy Policy this app!",
+                    errorMessage = state.rulesErrorMessage
                 )
             }
 
 
-            Spacer(modifier = Modifier.width(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             ButtonStandard(
                 value = "Sign Up",

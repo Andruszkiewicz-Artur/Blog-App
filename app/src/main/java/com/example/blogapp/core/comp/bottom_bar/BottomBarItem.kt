@@ -12,7 +12,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.example.blogapp.core.domain.model.BottomBarScreenModel
+import com.example.blogapp.feature_blog.domain.model.BottomBarScreenModel
 
 @Composable
 fun RowScope.AddItem(

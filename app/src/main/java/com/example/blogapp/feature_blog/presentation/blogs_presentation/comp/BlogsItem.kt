@@ -1,8 +1,6 @@
 package com.example.blogapp.feature_blog.presentation.blogs_presentation.comp
 
 import android.os.Build
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,8 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.blogapp.core.comp.text.TagPresentation
-import com.example.blogapp.feature_blog.data.dto.PostPreviewDto
-import com.example.blogapp.feature_blog.domain.model.PostPreviewModel
+import com.example.blogapp.feature_blog.domain.model.dummy_api.PostPreviewModel
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.Locale

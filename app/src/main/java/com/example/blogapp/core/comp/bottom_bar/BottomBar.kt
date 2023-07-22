@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
-import com.example.blogapp.core.domain.model.BottomBarScreenModel
+import com.example.blogapp.feature_blog.domain.model.BottomBarScreenModel
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.core.navigation.graph_profile.ProfileScreen
 
