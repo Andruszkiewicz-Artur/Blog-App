@@ -1,5 +1,6 @@
 package com.example.blogapp.core.data.repository
 
+import android.util.Log
 import com.example.blogapp.core.data.dto.CommentDto
 import com.example.blogapp.core.data.dto.ListDto
 import com.example.blogapp.core.data.dto.PostDto
@@ -63,10 +64,27 @@ class BlogRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun createUser(userDto: UserBodyDto): UserDto {
-        return api.createUser(
-            user = userDto
-        )
+    override suspend fun createUser(userDto: UserDto): UserDto {
+        return try {
+            api.createUser(
+                user = userDto
+            )
+        } catch (e: Exception) {
+            Log.d("check catch api", "${e.printStackTrace()}")
+            UserDto(
+                id = null,
+                title = null,
+                firstName = null,
+                lastName = null,
+                gender = null,
+                email = null,
+                dateOfBirth = null,
+                registerDate = null,
+                phone = null,
+                picture = null,
+                location = null
+            )
+        }
     }
 
     override suspend fun getUser(userId: String): UserDto {
@@ -79,5 +97,9 @@ class BlogRepositoryImpl @Inject constructor(
         return api.deleteUser(
             userId = userId
         )
+    }
+
+    override suspend fun getAllUsers(): ListDto<UserDto> {
+        return api.getAllUsers()
     }
 }

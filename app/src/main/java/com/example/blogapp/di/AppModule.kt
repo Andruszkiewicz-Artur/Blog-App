@@ -1,5 +1,7 @@
 package com.example.blogapp.di
 
+import android.app.Application
+import android.content.Context
 import com.example.blogapp.core.Static
 import com.example.blogapp.core.data.remote.DummyApi
 import com.example.blogapp.core.data.repository.BlogRepositoryImpl
@@ -17,6 +19,7 @@ import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
 import com.example.blogapp.core.domain.use_cases.validation.ValidateData
 import com.example.blogapp.core.domain.use_cases.validation.ValidatePhoneNumber
 import com.example.blogapp.feature_login_register.domain.use_case.CreateUserUseCase
+import com.example.blogapp.feature_login_register.domain.use_case.GetAllUsersUseCase
 import com.example.blogapp.feature_login_register.domain.use_case.GetUserById
 import com.example.blogapp.feature_login_register.domain.use_case.UserUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateEmail
@@ -32,6 +35,7 @@ import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -96,7 +100,8 @@ object AppModule {
     fun provideUserUseCases(blogRepository: BlogRepository, firebaseRepository: FirebaseRepository): UserUseCases {
         return UserUseCases(
             createUserUseCase = CreateUserUseCase(blogRepository, firebaseRepository),
-            getUserById = GetUserById(blogRepository)
+            getUserById = GetUserById(blogRepository),
+            getAllUsersUseCase = GetAllUsersUseCase(blogRepository)
         )
     }
 }

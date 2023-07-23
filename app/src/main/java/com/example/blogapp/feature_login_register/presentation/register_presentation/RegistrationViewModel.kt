@@ -1,6 +1,7 @@
 package com.example.blogapp.feature_login_register.presentation.register_presentation
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
@@ -12,7 +13,10 @@ import com.example.notes.feature_profile.domain.use_case.validationUseCases.Vali
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,28 +26,40 @@ import javax.inject.Inject
 class RegistrationViewModel @Inject constructor(
     private val validateUseCases: ValidateUseCases,
     private val userUseCases: UserUseCases,
-    private val context: Application
+    private val application: Application,
 ): ViewModel() {
 
     private val _state = MutableStateFlow(RegistrationState())
     val state = _state.asStateFlow()
 
+    private val _eventFlow = MutableSharedFlow<RegistrationUiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
     fun onEvent(event: RegistrationEvent) {
         when (event) {
             RegistrationEvent.ClickRegistration -> {
                 if (isNoneErrors()) {
-//                    viewModelScope.launch(Dispatchers.IO) {
-//                        if (!userUseCases.createUserUseCase.invoke(
-//                                UserBodyModel(
-//                                    _state.value.firstName,
-//                                    _state.value.lastName,
-//                                    _state.value.email
-//                                ),
-//                                _state.value.password
-//                        )) {
-//                            Toast.makeText(context, "Problem with creating your account", Toast.LENGTH_LONG).show()
-//                        }
-//                    }
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val users = userUseCases.getAllUsersUseCase.invoke()
+
+                        users.forEach {
+                            Log.d(
+                                "user",
+                                "${it.id}\n${if(it.email.isBlank()) "none email" else it.email}"
+                            )
+                        }
+
+                        if (!userUseCases.createUserUseCase.invoke(
+                                UserBodyModel(
+                                    _state.value.firstName,
+                                    _state.value.lastName,
+                                    _state.value.email
+                                ),
+                                _state.value.password
+                        )) {
+                            _eventFlow.emit(RegistrationUiEvent.showToast("Problem with creating your account"))
+                        }
+                    }
                 }
             }
             RegistrationEvent.ClickRules -> {

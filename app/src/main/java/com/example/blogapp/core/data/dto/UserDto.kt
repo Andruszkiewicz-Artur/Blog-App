@@ -8,13 +8,13 @@ data class UserDto(
     @field:Json(name = "title")
     val title: String?,
     @field:Json(name = "firstName")
-    val firstName: String,
+    val firstName: String?,
     @field:Json(name = "lastName")
-    val lastName: String,
+    val lastName: String?,
     @field:Json(name = "gender")
     val gender: String?,
     @field:Json(name = "email")
-    val email: String,
+    val email: String?,
     @field:Json(name = "dateOfBirth")
     val dateOfBirth: String?,
     @field:Json(name = "registerDate")

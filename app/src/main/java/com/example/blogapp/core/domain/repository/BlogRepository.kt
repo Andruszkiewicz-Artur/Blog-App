@@ -23,9 +23,11 @@ interface BlogRepository {
 
     suspend fun getPostsByUserId(userId: String, page: Int, limit: Int): ListDto<PostPreviewDto>
 
-    suspend fun createUser(userDto: UserBodyDto): UserDto
+    suspend fun createUser(userDto: UserDto): UserDto
 
     suspend fun getUser(userId: String): UserDto
 
     suspend fun deleteUser(userId: String): String
+
+    suspend fun getAllUsers(): ListDto<UserDto>
 }

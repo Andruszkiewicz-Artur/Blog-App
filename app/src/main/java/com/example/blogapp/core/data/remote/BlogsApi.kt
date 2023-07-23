@@ -68,7 +68,7 @@ interface DummyApi {
     @POST("user/create")
     suspend fun createUser(
         @Header("app-id") apiKey: String = Static.API_KEY,
-        @Body user: UserBodyDto
+        @Body user: UserDto
     ): UserDto
 
     @DELETE("user/{id}")
@@ -76,4 +76,10 @@ interface DummyApi {
         @Header("app-id") apiKey: String = Static.API_KEY,
         @Body userId: String
     ): String
+
+    @GET("user")
+    suspend fun getAllUsers(
+        @Header("app-id") apiKey: String = Static.API_KEY,
+        @Query("limit") limit: Int = 50
+    ): ListDto<UserDto>
 }
