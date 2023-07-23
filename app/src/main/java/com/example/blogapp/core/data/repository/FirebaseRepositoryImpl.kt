@@ -29,4 +29,8 @@ class FirebaseRepositoryImpl: FirebaseRepository {
         return false
     }
 
+    override suspend fun forgetPassword(email: String): Boolean {
+        return Firebase.auth.sendPasswordResetEmail(email).isSuccessful
+    }
+
 }
