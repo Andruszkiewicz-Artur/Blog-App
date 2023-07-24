@@ -2,6 +2,7 @@ package com.example.blogapp.feature_profile.presentation.profile_presentation.co
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -14,10 +15,13 @@ fun ProfilePresentation(
 ) {
     val state = viewModel.state.collectAsState().value
 
+    LaunchedEffect(key1 = true) {
+        viewModel.updateState()
+    }
+
     if(state.user == null) {
         ProfileSignInPresentation(
             navHostController = navHostController
         )
     }
-
 }

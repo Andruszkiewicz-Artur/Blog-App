@@ -4,5 +4,6 @@ data class UserUseCases(
     val createUserUseCase: CreateUserUseCase,
     val getUserById: GetUserById,
     val getAllUsersUseCase: GetAllUsersUseCase,
-    val forgetPasswordUseCase: ForgetPasswordUseCase
+    val forgetPasswordUseCase: ForgetPasswordUseCase,
+    val logInUseCase: LogInUseCase
 )

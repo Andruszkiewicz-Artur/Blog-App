@@ -1,5 +1,6 @@
 package com.example.blogapp.feature_login_register.presentation.login_presentation.comp
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -34,9 +36,11 @@ import com.example.blogapp.core.Global
 import com.example.blogapp.core.comp.button.ButtonStandard
 import com.example.blogapp.core.navigation.screen_login_register.LoginRegisterScreen
 import com.example.blogapp.feature_login_register.presentation.login_presentation.LoginEvent
+import com.example.blogapp.feature_login_register.presentation.login_presentation.LoginUiEvent
 import com.example.blogapp.feature_login_register.presentation.login_presentation.LoginViewModel
 import com.example.blogapp.feature_login_register.presentation.unit.comp.CheckBoxLoginRegister
 import com.example.blogapp.feature_login_register.presentation.unit.comp.TextFieldLoginRegister
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -47,6 +51,7 @@ fun LoginPresentation(
     val state = viewModel.state.collectAsState().value
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
 
     DisposableEffect(Unit) {
         onDispose {
@@ -56,6 +61,17 @@ fun LoginPresentation(
 
     LaunchedEffect(key1 = true) {
         if (Global.user != null) navHostController.popBackStack()
+
+        viewModel.sharedFlow.collectLatest { event ->
+            when (event) {
+                LoginUiEvent.LogIn -> {
+                    navHostController.popBackStack()
+                }
+                is LoginUiEvent.Toast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     LazyColumn(

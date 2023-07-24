@@ -22,6 +22,7 @@ import com.example.blogapp.feature_login_register.domain.use_case.CreateUserUseC
 import com.example.blogapp.feature_login_register.domain.use_case.ForgetPasswordUseCase
 import com.example.blogapp.feature_login_register.domain.use_case.GetAllUsersUseCase
 import com.example.blogapp.feature_login_register.domain.use_case.GetUserById
+import com.example.blogapp.feature_login_register.domain.use_case.LogInUseCase
 import com.example.blogapp.feature_login_register.domain.use_case.UserUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateEmail
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidatePassword
@@ -103,7 +104,8 @@ object AppModule {
             createUserUseCase = CreateUserUseCase(blogRepository, firebaseRepository),
             getUserById = GetUserById(blogRepository),
             getAllUsersUseCase = GetAllUsersUseCase(blogRepository),
-            forgetPasswordUseCase = ForgetPasswordUseCase(firebaseRepository)
+            forgetPasswordUseCase = ForgetPasswordUseCase(firebaseRepository),
+            logInUseCase = LogInUseCase(blogRepository, firebaseRepository)
         )
     }
 }

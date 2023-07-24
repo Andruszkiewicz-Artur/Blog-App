@@ -33,4 +33,26 @@ class FirebaseRepositoryImpl: FirebaseRepository {
         return Firebase.auth.sendPasswordResetEmail(email).isSuccessful
     }
 
+    override suspend fun logInUser(email: String, password: String): String? {
+        try {
+            val userId = Firebase.auth.signInWithEmailAndPassword(email, password).await().user?.uid ?: ""
+
+            Log.d("Check userId", "${userId.isNotBlank()}")
+
+            if (userId.isNotBlank()) {
+                val blogUserId = Firebase.database.reference.child(userId).child("userId").get().await().value as String
+                Log.d("Check blog userId", blogUserId)
+                return blogUserId
+            }
+            return null
+        } catch (e: Exception) {
+            Log.d("Check error forgetPasswordUseCase", "${e.message}")
+            return null
+        }
+    }
+
+    override suspend fun singOut() {
+        Firebase.auth.signOut()
+    }
+
 }

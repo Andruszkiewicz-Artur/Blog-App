@@ -17,6 +17,10 @@ class ProfileViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
+        updateState()
+    }
+
+    fun updateState() {
         _state.update {
             it.copy(user = Global.user)
         }
