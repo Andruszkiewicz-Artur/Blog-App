@@ -15,4 +15,8 @@ interface FirebaseRepository {
     suspend fun getUserId(userId: String): String?
 
     suspend fun putImageToStorage(uri: Uri): String?
+
+    suspend fun takeAllLikedPosts(): List<String>
+
+    suspend fun updateLikeList(likeList: List<String>): List<String>?
 }

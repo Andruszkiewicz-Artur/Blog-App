@@ -1,5 +1,6 @@
 package com.example.blogapp.feature_blog.presentation.blog_presentation
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,13 +34,40 @@ class BlogViewModel @Inject constructor(
                     _state.update { it.copy(
                         comments = postUseCases.getCommentByPostsUseCase.invoke(postId),
                         post = postUseCases.getPostByIdUseCase.invoke(postId),
-                        isLoading = false
+                        isLoading = false,
+                        isLiked = Global.likedPosts.contains(postId)
                     ) }
 
                     if (Global.user != null) {
                         _state.update {  it.copy(
-                            isUserBlog = (_state.value.post?.owner?.id ?: "") == (Global.user?.id
-                                ?: "1")
+                            isUserBlog = (_state.value.post?.owner?.id ?: "") == (Global.user?.id ?: "1")
+                        ) }
+                    }
+                }
+            }
+        }
+    }
+
+    fun onEvent(event: BlogEvent) {
+        when (event) {
+            BlogEvent.ClickLike -> {
+                val postId = _state.value.post?.id
+                if(postId != null) {
+                    val list = Global.likedPosts.toMutableList()
+
+                    if(_state.value.isLiked) {
+                        list.remove(postId)
+                    } else {
+                        list.add(postId)
+                    }
+
+                    viewModelScope.launch {
+                        val newList = postUseCases.updateLikePostUseCase.invoke(list)
+                        if(newList != null) {
+                            Global.likedPosts = newList.distinct()
+                        }
+                        _state.update { it.copy(
+                            isLiked = _state.value.isLiked.not()
                         ) }
                     }
                 }

@@ -22,8 +22,10 @@ import com.example.blogapp.core.domain.use_cases.validation.ValidateLink
 import com.example.blogapp.core.domain.use_cases.validation.ValidatePhoneNumber
 import com.example.blogapp.core.domain.use_cases.validation.ValidationPicture
 import com.example.blogapp.feature_blog.domain.use_cases.CreatePostUseCase
+import com.example.blogapp.feature_blog.domain.use_cases.GetLikedPosts
 import com.example.blogapp.feature_blog.domain.use_cases.GetUserFromFirebaseUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.PutImageToStorage
+import com.example.blogapp.feature_blog.domain.use_cases.UpdateLikePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.UpdatePostUseCase
 import com.example.blogapp.feature_login_register.domain.use_case.CreateUserUseCase
 import com.example.blogapp.feature_login_register.domain.use_case.ForgetPasswordUseCase
@@ -93,7 +95,9 @@ object AppModule {
             getUserFromFirebaseUseCase = GetUserFromFirebaseUseCase(repository, firebaseRepository),
             putImageToStorage = PutImageToStorage(firebaseRepository),
             updatePostUseCase = UpdatePostUseCase(repository),
-            createPostUseCase = CreatePostUseCase(repository)
+            createPostUseCase = CreatePostUseCase(repository),
+            getLikedPosts = GetLikedPosts(firebaseRepository),
+            updateLikePostUseCase = UpdateLikePostUseCase(firebaseRepository)
         )
     }
 

@@ -1,17 +1,22 @@
 package com.example.blogapp.feature_blog.presentation.blog_presentation.comp
 
 import android.os.Build
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Icon
@@ -26,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.blogapp.core.Global
 import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.domain.model.dummy_api.PostModel
@@ -37,7 +43,10 @@ import java.util.Locale
 @Composable
 fun BlogPostPresentation(
     postModel: PostModel,
-    navHostController: NavHostController
+    isUserBlog: Boolean,
+    navHostController: NavHostController,
+    isLiked: Boolean,
+    onClickLike: () -> Unit
 ) {
     val formattedTime = remember(postModel.publishDate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -58,12 +67,12 @@ fun BlogPostPresentation(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
+                .padding(vertical = 16.dp)
                 .fillMaxWidth()
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(vertical = 16.dp)
                     .clickable {
                         navHostController.navigate(BlogScreen.User.sendUserId(postModel.owner.id))
                     }
@@ -92,15 +101,23 @@ fun BlogPostPresentation(
                 }
             }
 
-            Icon(
-                imageVector = Icons.Outlined.Edit,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable {
-                        navHostController.navigate(BlogScreen.PostCreateEdit.sendPostId(postModel.id ?: ""))
-                    }
-            )
+            Spacer(modifier = Modifier.width(16.dp))
+
+            AnimatedVisibility(visible = isUserBlog) {
+                Icon(
+                    imageVector = Icons.Outlined.Edit,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clickable {
+                            navHostController.navigate(
+                                BlogScreen.PostCreateEdit.sendPostId(
+                                    postModel.id ?: ""
+                                )
+                            )
+                        }
+                )
+            }
         }
 
         AsyncImage(
@@ -156,13 +173,31 @@ fun BlogPostPresentation(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.ThumbUp,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .size(50.dp)
-                )
+                AnimatedContent(targetState = isLiked) { isLiked ->
+                    if (isLiked) {
+                        Icon(
+                            imageVector = Icons.Filled.ThumbUp,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clickable {
+                                    onClickLike()
+                                }
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Outlined.ThumbUp,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clickable {
+                                    onClickLike()
+                                }
+                        )
+                    }
+                }
                 Text(
                     text = " ${postModel.likes}",
                     style = MaterialTheme.typography.titleLarge,

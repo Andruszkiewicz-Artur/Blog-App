@@ -7,5 +7,6 @@ data class BlogState(
     val post: PostModel? = null,
     val comments: List<CommentModel> = emptyList(),
     val isLoading: Boolean = false,
-    val isUserBlog: Boolean = false
+    val isUserBlog: Boolean = false,
+    val isLiked: Boolean = false
 )

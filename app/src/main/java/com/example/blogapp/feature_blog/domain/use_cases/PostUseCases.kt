@@ -11,5 +11,7 @@ data class PostUseCases(
     val getUserFromFirebaseUseCase: GetUserFromFirebaseUseCase,
     val putImageToStorage: PutImageToStorage,
     val updatePostUseCase: UpdatePostUseCase,
-    val createPostUseCase: CreatePostUseCase
+    val createPostUseCase: CreatePostUseCase,
+    val getLikedPosts: GetLikedPosts,
+    val updateLikePostUseCase: UpdateLikePostUseCase
 )

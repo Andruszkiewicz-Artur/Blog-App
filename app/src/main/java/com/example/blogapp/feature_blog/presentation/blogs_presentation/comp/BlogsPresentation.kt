@@ -107,7 +107,8 @@ fun BlogsPresentation(
                     post = it,
                     onClick = { idPost ->
                         navHostController.navigate(BlogScreen.Blog.sendPostId(idPost))
-                    }
+                    },
+                    isLikedPost = state.value.likedPosts.contains(it.id)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }

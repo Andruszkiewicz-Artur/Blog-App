@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.blogapp.core.domain.repository.FirebaseRepository
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -68,6 +69,34 @@ class FirebaseRepositoryImpl: FirebaseRepository {
         riversRef.putFile(uri).await()
 
         return riversRef.downloadUrl.await().path
+    }
+
+    override suspend fun takeAllLikedPosts(): List<String> {
+        val userid = Firebase.auth.currentUser?.uid
+
+        if (userid != null) {
+            try {
+                val dataSnapshot = Firebase.database.reference.child(userid).child("likes").get().await()
+                val likesList = dataSnapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
+                return likesList ?: emptyList()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return emptyList()
+            }
+        }
+
+        return emptyList()
+    }
+
+    override suspend fun updateLikeList(likeList: List<String>): List<String>? {
+        val userid = Firebase.auth.currentUser?.uid
+
+        if (userid != null) {
+            Firebase.database.reference.child(userid).child("likes").setValue(likeList).await()
+            return likeList
+        }
+
+        return null
     }
 
 }

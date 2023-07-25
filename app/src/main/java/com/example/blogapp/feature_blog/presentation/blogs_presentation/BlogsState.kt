@@ -10,5 +10,6 @@ data class BlogsState(
     val isPresentedSorting: Boolean = false,
     val isLoading: Boolean = false,
     val tags: List<String> = emptyList(),
-    val currentTag: String? = null
+    val currentTag: String? = null,
+    val likedPosts: List<String> = emptyList()
 )

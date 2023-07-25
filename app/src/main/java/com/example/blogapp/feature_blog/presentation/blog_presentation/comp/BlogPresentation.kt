@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogEvent
 import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogViewModel
 
 @Composable
@@ -52,7 +53,12 @@ fun BlogPresentation(
                 item {
                     BlogPostPresentation(
                         postModel = state.post,
-                        navHostController = navHostController
+                        navHostController = navHostController,
+                        isUserBlog = state.isUserBlog,
+                        isLiked = state.isLiked,
+                        onClickLike = {
+                            viewModel.onEvent(BlogEvent.ClickLike)
+                        }
                     )
                 }
 

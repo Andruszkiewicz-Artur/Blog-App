@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -34,6 +35,7 @@ import java.util.Locale
 @Composable
 fun BlogsItem(
     post: PostPreviewModel,
+    isLikedPost: Boolean,
     onClick: (String) -> Unit
 ) {
     val formattedTime = remember(post.publishDate) {
@@ -116,9 +118,9 @@ fun BlogsItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.ThumbUp,
+                        imageVector = if(isLikedPost) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onBackground,
+                        tint = if(isLikedPost) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
                             .padding(end = 8.dp)
                             .size(20.dp)

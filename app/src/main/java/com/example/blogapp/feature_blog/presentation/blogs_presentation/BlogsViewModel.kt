@@ -36,6 +36,10 @@ class BlogsViewModel @Inject constructor(
             val currentUser = Firebase.auth.currentUser
             if (currentUser != null) {
                 Global.user = postsUseCase.getUserFromFirebaseUseCase.invoke(currentUser.uid)
+                Global.likedPosts = postsUseCase.getLikedPosts()
+                _state.update {  it.copy(
+                    likedPosts = Global.likedPosts
+                ) }
             }
         }
     }
