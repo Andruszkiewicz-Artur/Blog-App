@@ -3,6 +3,7 @@ package com.example.blogapp.feature_blog.presentation.blog_presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blogapp.core.Global
 import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +35,13 @@ class BlogViewModel @Inject constructor(
                         post = postUseCases.getPostByIdUseCase.invoke(postId),
                         isLoading = false
                     ) }
+
+                    if (Global.user != null) {
+                        _state.update {  it.copy(
+                            isUserBlog = (_state.value.post?.owner?.id ?: "") == (Global.user?.id
+                                ?: "1")
+                        ) }
+                    }
                 }
             }
         }

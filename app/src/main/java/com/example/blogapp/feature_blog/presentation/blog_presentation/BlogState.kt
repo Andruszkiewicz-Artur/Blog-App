@@ -6,5 +6,6 @@ import com.example.blogapp.feature_blog.domain.model.dummy_api.PostModel
 data class BlogState(
     val post: PostModel? = null,
     val comments: List<CommentModel> = emptyList(),
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val isUserBlog: Boolean = false
 )

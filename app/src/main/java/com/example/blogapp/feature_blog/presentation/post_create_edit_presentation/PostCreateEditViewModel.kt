@@ -39,8 +39,11 @@ class PostCreateEditViewModel @Inject constructor(
         savedStateHandle.get<String>("postId").let { postId ->
             if(!postId.isNullOrEmpty()) {
                 viewModelScope.launch {
+                    val post = blogUseCases.getPostByIdUseCase.invoke(postId)
                     _state.update {  it.copy(
-                        post = blogUseCases.getPostByIdUseCase.invoke(postId)
+                        post = post,
+                        chosenTags = post.tags,
+                        isCreating = false
                     ) }
                 }
             } else if(Global.user != null) {
@@ -70,8 +73,11 @@ class PostCreateEditViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            val tags = blogUseCases.getTagsUseCase.invoke().toMutableList().filter { it.length < 20 }
+            val max = if (tags.size > 100) 100 else tags.size
+            val min = 0
             _state.update {  it.copy(
-                tags = blogUseCases.getTagsUseCase.invoke().toMutableList().filter { it.length < 20 }
+                tags = tags.subList(min, max)
             ) }
         }
     }
@@ -87,29 +93,18 @@ class PostCreateEditViewModel @Inject constructor(
             }
             PostCreateEditEvent.Save -> {
                 if (isNoneErrors()) {
-                    if(_state.value.post?.id != null) {
-                        if(_state.value.image != null) {
-                            viewModelScope.launch {
-                                val path = blogUseCases.putImageToStorage.invoke(_state.value.image!!)
-                                if (path == null) {
-                                    _sharedFlow.emit(PostCreateEditUiEvent.Toast("Problem with database"))
-                                } else {
-                                    _state.update { it.copy(
-                                        post = _state.value.post!!.copy(
-                                            image = path
-                                        )
-                                    ) }
-                                }
+                    viewModelScope.launch {
+                        if(_state.value.post?.id != null) {
+                            if(_state.value.image != null) {
+                                uploadPhoto()
+                            }
+                            blogUseCases.updatePostUseCase.invoke(_state.value.post!!)
+                        } else {
+                            if (uploadPhoto()) {
+                                blogUseCases.createPostUseCase.invoke(_state.value.post!!)
                             }
                         }
-                        viewModelScope.launch {
-                            blogUseCases.updatePostUseCase.invoke(_state.value.post!!)
-                        }
-                    } else {
 
-                    }
-
-                    viewModelScope.launch {
                         _sharedFlow.emit(PostCreateEditUiEvent.Finish)
                     }
                 }
@@ -140,7 +135,10 @@ class PostCreateEditViewModel @Inject constructor(
                 }
 
                 _state.update { it.copy(
-                        chosenTags = newList.toList()
+                        chosenTags = newList.toList(),
+                        post = _state.value.post?.copy(
+                            tags = newList
+                        )
                     )
                 }
             }
@@ -159,10 +157,10 @@ class PostCreateEditViewModel @Inject constructor(
 
     private fun isNoneErrors(): Boolean {
         val content = validateUseCases.validateContent.execute(_state.value.post?.image ?: "")
-        val link = if(_state.value.post?.link != null) validateUseCases.validateLink.execute(_state.value.post?.link ?: "") else ValidationResult(true)
+        val link = validateUseCases.validateLink.execute(_state.value.post?.link ?: "")
         val picture = validateUseCases.validatePicture.execute(_state.value.image, _state.value.post?.link)
 
-        val hasError = listOf(
+        var hasError = listOf(
             content,
             link,
             picture
@@ -178,6 +176,29 @@ class PostCreateEditViewModel @Inject constructor(
             ) }
         }
 
+        if(_state.value.post == null) {
+            hasError = true
+            viewModelScope.launch {
+                _sharedFlow.emit(PostCreateEditUiEvent.Toast("Problem with set up data"))
+            }
+        }
+
         return !hasError
+    }
+
+    private suspend fun uploadPhoto(): Boolean {
+        val path = blogUseCases.putImageToStorage.invoke(_state.value.image!!)
+        if (path == null) {
+            _sharedFlow.emit(PostCreateEditUiEvent.Toast("Problem with database"))
+            return false
+        } else {
+            _state.update { it.copy(
+                post = _state.value.post!!.copy(
+                    image = path
+                )
+            ) }
+        }
+
+        return true
     }
 }

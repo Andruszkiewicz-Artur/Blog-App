@@ -70,7 +70,7 @@ fun BlogsPresentation(
                     items(state.value.tags) {
                         TagPresentation(
                             value = it,
-                            isChosen = state.value.currentTag == null,
+                            isChosen = state.value.currentTag == it,
                             modifier = Modifier
                                 .clickable {
                                     viewModel.onEvent(BlogsEvent.ChooseTag(it))

@@ -90,4 +90,10 @@ interface DummyApi {
         @Body postDto: PostDto,
         @Path("idPost") idPost: String
     ): PostDto
+
+    @POST("post/create")
+    suspend fun createPost(
+        @Header("app-id") apiKey: String = Static.API_KEY,
+        @Body user: UserDto
+    ): UserDto
 }

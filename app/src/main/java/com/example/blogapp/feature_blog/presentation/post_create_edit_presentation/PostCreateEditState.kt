@@ -11,5 +11,6 @@ data class PostCreateEditState(
     val isImagePicker: Boolean = false,
     val pictureErrorMessage: String? = null,
     val contentErrorMessage: String? = null,
-    val linkErrorMessage: String? = null
+    val linkErrorMessage: String? = null,
+    val isCreating: Boolean = true
 )

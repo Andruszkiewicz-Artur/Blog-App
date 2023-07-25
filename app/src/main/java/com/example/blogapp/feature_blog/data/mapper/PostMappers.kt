@@ -54,7 +54,7 @@ fun PostModel.toPostDto(): PostDto {
         text = text,
         image = image,
         likes = likes,
-        link = link,
+        link = link ?: "123123",
         tags = tags,
         publishDate = null,
         owner = UserPreviewDto(

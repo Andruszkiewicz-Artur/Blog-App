@@ -21,6 +21,7 @@ import com.example.blogapp.core.domain.use_cases.validation.ValidateData
 import com.example.blogapp.core.domain.use_cases.validation.ValidateLink
 import com.example.blogapp.core.domain.use_cases.validation.ValidatePhoneNumber
 import com.example.blogapp.core.domain.use_cases.validation.ValidationPicture
+import com.example.blogapp.feature_blog.domain.use_cases.CreatePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.GetUserFromFirebaseUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.PutImageToStorage
 import com.example.blogapp.feature_blog.domain.use_cases.UpdatePostUseCase
@@ -91,7 +92,8 @@ object AppModule {
             getPostsByUserId = GetPostsByUserId(repository),
             getUserFromFirebaseUseCase = GetUserFromFirebaseUseCase(repository, firebaseRepository),
             putImageToStorage = PutImageToStorage(firebaseRepository),
-            updatePostUseCase = UpdatePostUseCase(repository)
+            updatePostUseCase = UpdatePostUseCase(repository),
+            createPostUseCase = CreatePostUseCase(repository)
         )
     }
 

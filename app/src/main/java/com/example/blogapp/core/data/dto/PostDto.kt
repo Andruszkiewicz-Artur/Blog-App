@@ -12,7 +12,7 @@ data class PostDto(
     @field:Json(name = "likes")
     val likes: Int,
     @field:Json(name = "link")
-    val link: String?,
+    val link: String,
     @field:Json(name = "tags")
     val tags: List<String>,
     @field:Json(name = "publishDate")
