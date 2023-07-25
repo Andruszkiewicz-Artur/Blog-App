@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.blogapp.core.comp.button.ButtonStandard
+import com.example.blogapp.core.comp.textfield.TextFieldStandard
 import com.example.blogapp.feature_login_register.presentation.forget_password_presentation.ForgetPasswordEvent
 import com.example.blogapp.feature_login_register.presentation.forget_password_presentation.ForgetPasswordViewModel
-import com.example.blogapp.feature_login_register.presentation.unit.comp.TextFieldLoginRegister
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -60,7 +60,7 @@ fun ForgetPasswordPresentation(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            TextFieldLoginRegister(
+            TextFieldStandard(
                 label = "Email",
                 value = state.email,
                 onValueChange = {

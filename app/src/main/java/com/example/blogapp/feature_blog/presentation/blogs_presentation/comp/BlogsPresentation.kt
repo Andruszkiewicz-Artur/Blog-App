@@ -59,7 +59,7 @@ fun BlogsPresentation(
                     item {
                         TagPresentation(
                             value = "All",
-                            color = if(state.value.currentTag == null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                            isChosen = state.value.currentTag == null,
                             modifier = Modifier
                                 .clickable {
                                     viewModel.onEvent(BlogsEvent.ChooseTag(null))
@@ -70,7 +70,7 @@ fun BlogsPresentation(
                     items(state.value.tags) {
                         TagPresentation(
                             value = it,
-                            color = if(state.value.currentTag == it) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                            isChosen = state.value.currentTag == null,
                             modifier = Modifier
                                 .clickable {
                                     viewModel.onEvent(BlogsEvent.ChooseTag(it))

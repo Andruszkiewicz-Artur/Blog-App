@@ -8,4 +8,12 @@ sealed class ProfileScreen(
         route = "profile_screen"
     )
 
+    object ChangeData: ProfileScreen(
+        route = "change_data_screen"
+    )
+
+    object ChangePassword: ProfileScreen(
+        route = "change_password"
+    )
+
 }

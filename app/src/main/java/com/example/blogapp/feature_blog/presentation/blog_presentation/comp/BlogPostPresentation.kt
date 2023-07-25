@@ -28,6 +28,7 @@ import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.domain.model.dummy_api.PostModel
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -38,7 +39,8 @@ fun BlogPostPresentation(
 ) {
     val formattedTime = remember(postModel.publishDate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            postModel.publishDate.format(
+            val date = postModel.publishDate ?: LocalDateTime.now()
+            date.format(
                 DateTimeFormatter.ofPattern("u LLLL d HH:mm")
             )
         } else {

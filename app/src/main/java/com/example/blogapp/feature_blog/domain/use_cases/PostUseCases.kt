@@ -7,5 +7,8 @@ data class PostUseCases(
     val getTagsUseCase: GetTagsUseCase,
     val getPostsByTagUseCase: GetPostsByTagUseCase,
     val getUserByIdUseCase: GetUserByIdUseCase,
-    val getPostsByUserId: GetPostsByUserId
+    val getPostsByUserId: GetPostsByUserId,
+    val getUserFromFirebaseUseCase: GetUserFromFirebaseUseCase,
+    val putImageToStorage: PutImageToStorage,
+    val updatePostUseCase: UpdatePostUseCase
 )

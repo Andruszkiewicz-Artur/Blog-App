@@ -1,8 +1,13 @@
 package com.example.blogapp.feature_blog.presentation.blogs_presentation
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blogapp.core.Global
+import com.example.blogapp.feature_blog.data.mapper.toUserModel
 import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -10,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,6 +32,11 @@ class BlogsViewModel @Inject constructor(
             _state.update {  it.copy(
                 tags = postsUseCase.getTagsUseCase()
             ) }
+
+            val currentUser = Firebase.auth.currentUser
+            if (currentUser != null) {
+                Global.user = postsUseCase.getUserFromFirebaseUseCase.invoke(currentUser.uid)
+            }
         }
     }
 

@@ -28,4 +28,14 @@ sealed class BlogScreen(
         }
     }
 
+    object PostCreateEdit: BlogScreen(
+        route = "post_create_edit_screen"
+    ) {
+        fun sendPostId(
+            id: String
+        ): String {
+            return "$route?postId=$id"
+        }
+    }
+
 }

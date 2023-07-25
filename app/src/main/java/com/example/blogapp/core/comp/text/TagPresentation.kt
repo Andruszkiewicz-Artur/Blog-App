@@ -16,14 +16,14 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TagPresentation(
     value: String,
-    color: Color = MaterialTheme.colorScheme.onBackground,
+    isChosen: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
             .padding(end = 8.dp)
             .border(
-                color = color,
+                color = if (isChosen) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
                 width = 2.dp,
                 shape = CircleShape
             )
@@ -31,7 +31,7 @@ fun TagPresentation(
         Text(
             text = value,
             fontWeight = FontWeight.SemiBold,
-            color = color,
+            color = if (isChosen) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
             modifier = Modifier
                 .padding(
                     horizontal = 16.dp,

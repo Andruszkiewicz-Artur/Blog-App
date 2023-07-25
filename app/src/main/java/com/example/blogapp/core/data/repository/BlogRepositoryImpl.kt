@@ -102,4 +102,11 @@ class BlogRepositoryImpl @Inject constructor(
     override suspend fun getAllUsers(): ListDto<UserDto> {
         return api.getAllUsers()
     }
+
+    override suspend fun updatePost(postDto: PostDto, idPost: String): PostDto {
+        return api.updatePost(
+            postDto = postDto,
+            idPost = idPost
+        )
+    }
 }

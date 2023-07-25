@@ -48,7 +48,7 @@ class LoginViewModel @Inject constructor(
             LoginEvent.ClickLogIn -> {
                 if (isNoneErrors()) {
                     viewModelScope.launch {
-                        Global.user = userUseCases.logInUseCase.invoke(_state.value.email, _state.value.password)
+                        Global.user = userUseCases.logInUseCase.invoke(_state.value.email, _state.value.password, _state.value.loginPermanently)
                         if (Global.user != null) {
                             _sharedFlow.emit(LoginUiEvent.LogIn)
                         } else {

@@ -8,6 +8,7 @@ import com.example.blogapp.core.data.repository.BlogRepositoryImpl
 import com.example.blogapp.core.data.repository.FirebaseRepositoryImpl
 import com.example.blogapp.core.domain.repository.BlogRepository
 import com.example.blogapp.core.domain.repository.FirebaseRepository
+import com.example.blogapp.core.domain.use_cases.validation.ValidateContent
 import com.example.blogapp.feature_blog.domain.use_cases.GetCommentByPostsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.GetPostByIdUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.GetPostsByTagUseCase
@@ -17,13 +18,20 @@ import com.example.blogapp.feature_blog.domain.use_cases.GetTagsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.GetUserByIdUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
 import com.example.blogapp.core.domain.use_cases.validation.ValidateData
+import com.example.blogapp.core.domain.use_cases.validation.ValidateLink
 import com.example.blogapp.core.domain.use_cases.validation.ValidatePhoneNumber
+import com.example.blogapp.core.domain.use_cases.validation.ValidationPicture
+import com.example.blogapp.feature_blog.domain.use_cases.GetUserFromFirebaseUseCase
+import com.example.blogapp.feature_blog.domain.use_cases.PutImageToStorage
+import com.example.blogapp.feature_blog.domain.use_cases.UpdatePostUseCase
 import com.example.blogapp.feature_login_register.domain.use_case.CreateUserUseCase
 import com.example.blogapp.feature_login_register.domain.use_case.ForgetPasswordUseCase
 import com.example.blogapp.feature_login_register.domain.use_case.GetAllUsersUseCase
 import com.example.blogapp.feature_login_register.domain.use_case.GetUserById
 import com.example.blogapp.feature_login_register.domain.use_case.LogInUseCase
 import com.example.blogapp.feature_login_register.domain.use_case.UserUseCases
+import com.example.blogapp.feature_profile.domain.use_cases.LogOutUseCase
+import com.example.blogapp.feature_profile.domain.use_cases.ProfileUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateEmail
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidatePassword
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateRePassword
@@ -72,7 +80,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePostsUseCases(repository: BlogRepository): PostUseCases {
+    fun providePostsUseCases(repository: BlogRepository, firebaseRepository: FirebaseRepository): PostUseCases {
         return PostUseCases(
             getPostsUseCase = GetPostsUseCase(repository),
             getPostByIdUseCase = GetPostByIdUseCase(repository),
@@ -80,7 +88,10 @@ object AppModule {
             getTagsUseCase = GetTagsUseCase(repository),
             getPostsByTagUseCase = GetPostsByTagUseCase(repository),
             getUserByIdUseCase = GetUserByIdUseCase(repository),
-            getPostsByUserId = GetPostsByUserId(repository)
+            getPostsByUserId = GetPostsByUserId(repository),
+            getUserFromFirebaseUseCase = GetUserFromFirebaseUseCase(repository, firebaseRepository),
+            putImageToStorage = PutImageToStorage(firebaseRepository),
+            updatePostUseCase = UpdatePostUseCase(repository)
         )
     }
 
@@ -93,7 +104,10 @@ object AppModule {
             validateRePassword = ValidateRePassword(),
             validateTerms = ValidateTerms(),
             validateData = ValidateData(),
-            validatePhoneNumber = ValidatePhoneNumber()
+            validatePhoneNumber = ValidatePhoneNumber(),
+            validateContent = ValidateContent(),
+            validateLink = ValidateLink(),
+            validatePicture = ValidationPicture()
         )
     }
 
@@ -106,6 +120,14 @@ object AppModule {
             getAllUsersUseCase = GetAllUsersUseCase(blogRepository),
             forgetPasswordUseCase = ForgetPasswordUseCase(firebaseRepository),
             logInUseCase = LogInUseCase(blogRepository, firebaseRepository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfileUseCases(blogRepository: BlogRepository, firebaseRepository: FirebaseRepository): ProfileUseCases {
+        return ProfileUseCases(
+            logOutUseCase = LogOutUseCase(firebaseRepository)
         )
     }
 }

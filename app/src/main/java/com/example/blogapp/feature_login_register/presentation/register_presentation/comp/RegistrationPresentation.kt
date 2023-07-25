@@ -34,13 +34,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.comp.button.ButtonStandard
+import com.example.blogapp.core.comp.textfield.TextFieldStandard
 import com.example.blogapp.core.navigation.screen_login_register.LoginRegisterScreen
 import com.example.blogapp.feature_login_register.presentation.login_presentation.LoginEvent
 import com.example.blogapp.feature_login_register.presentation.register_presentation.RegistrationEvent
 import com.example.blogapp.feature_login_register.presentation.register_presentation.RegistrationUiEvent
 import com.example.blogapp.feature_login_register.presentation.register_presentation.RegistrationViewModel
 import com.example.blogapp.feature_login_register.presentation.unit.comp.CheckBoxLoginRegister
-import com.example.blogapp.feature_login_register.presentation.unit.comp.TextFieldLoginRegister
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -99,7 +99,7 @@ fun RegistrationPresentation(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            TextFieldLoginRegister(
+            TextFieldStandard(
                 label = "First name",
                 value = state.firstName,
                 onValueChange = {
@@ -114,7 +114,7 @@ fun RegistrationPresentation(
                     .focusRequester(focusRequester)
             )
 
-            TextFieldLoginRegister(
+            TextFieldStandard(
                 label = "Last name",
                 value = state.lastName,
                 onValueChange = {
@@ -129,7 +129,7 @@ fun RegistrationPresentation(
                     .focusRequester(focusRequester)
             )
 
-            TextFieldLoginRegister(
+            TextFieldStandard(
                 label = "Email",
                 value = state.email,
                 onValueChange = {
@@ -144,7 +144,7 @@ fun RegistrationPresentation(
                     .focusRequester(focusRequester)
             )
 
-            TextFieldLoginRegister(
+            TextFieldStandard(
                 label = "Password",
                 value = state.password,
                 onValueChange = {
@@ -164,7 +164,7 @@ fun RegistrationPresentation(
                     .focusRequester(focusRequester)
             )
 
-            TextFieldLoginRegister(
+            TextFieldStandard(
                 label = "Re-Password",
                 value = state.rePassword,
                 onValueChange = {

@@ -3,6 +3,7 @@ package com.example.blogapp.feature_blog.data.mapper
 import com.example.blogapp.core.data.dto.ListDto
 import com.example.blogapp.core.data.dto.PostDto
 import com.example.blogapp.core.data.dto.PostPreviewDto
+import com.example.blogapp.core.data.dto.UserPreviewDto
 import com.example.blogapp.feature_blog.domain.model.dummy_api.PostModel
 import com.example.blogapp.feature_blog.domain.model.dummy_api.PostPreviewModel
 import com.example.blogapp.feature_blog.domain.model.dummy_api.UserPreviewModel
@@ -35,7 +36,7 @@ fun ListDto<PostPreviewDto>.toPostPreviewModel(): Pair<Int, List<PostPreviewMode
 
 fun PostDto.toPostModel(): PostModel {
     return PostModel(
-        id, text, image, likes, link, tags, publishDate.toLocalDataTime(), UserPreviewModel(
+        id, text, image, likes, link, tags, publishDate?.toLocalDataTime(), UserPreviewModel(
             owner.id, owner.title, owner.firstName, owner.lastName, owner.picture
         )
     )
@@ -45,4 +46,23 @@ fun ListDto<String>.toListStrings(): List<String> {
     return this.data
         .filter { it != null }
         .filter { it.isNotBlank() }
+}
+
+fun PostModel.toPostDto(): PostDto {
+    return PostDto(
+        id = id,
+        text = text,
+        image = image,
+        likes = likes,
+        link = link,
+        tags = tags,
+        publishDate = null,
+        owner = UserPreviewDto(
+            id = owner.id,
+            title = owner.title,
+            firstName = owner.firstName,
+            lastName = owner.lastName,
+            picture = owner.picture
+        )
+    )
 }

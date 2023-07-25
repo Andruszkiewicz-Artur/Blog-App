@@ -30,4 +30,6 @@ interface BlogRepository {
     suspend fun deleteUser(userId: String): String
 
     suspend fun getAllUsers(): ListDto<UserDto>
+
+    suspend fun updatePost(postDto: PostDto, idPost: String): PostDto
 }

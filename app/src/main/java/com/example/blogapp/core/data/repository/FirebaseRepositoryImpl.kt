@@ -1,11 +1,14 @@
 package com.example.blogapp.core.data.repository
 
+import android.net.Uri
 import android.util.Log
 import com.example.blogapp.core.domain.repository.FirebaseRepository
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
+import java.io.File
 
 class FirebaseRepositoryImpl: FirebaseRepository {
 
@@ -53,6 +56,18 @@ class FirebaseRepositoryImpl: FirebaseRepository {
 
     override suspend fun singOut() {
         Firebase.auth.signOut()
+    }
+
+    override suspend fun getUserId(userId: String): String? {
+        return Firebase.database.reference.child(userId).child("userId").get().await().value as? String
+    }
+
+    override suspend fun putImageToStorage(uri: Uri): String? {
+        val riversRef = Firebase.storage.reference.child("images/${uri.lastPathSegment}")
+
+        riversRef.putFile(uri).await()
+
+        return riversRef.downloadUrl.await().path
     }
 
 }
