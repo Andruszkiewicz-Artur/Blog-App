@@ -15,7 +15,9 @@ import com.example.blogapp.feature_blog.presentation.post_create_edit_presentati
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -31,6 +33,9 @@ class BlogViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(BlogState())
     val state = _state.asStateFlow()
+
+    private val _sharedFlow = MutableSharedFlow<BlogUiEvent>()
+    val sharedFlow = _sharedFlow.asSharedFlow()
 
     init {
         savedStateHandle.get<String>("postId")?.let { postId ->
@@ -122,6 +127,18 @@ class BlogViewModel @Inject constructor(
                 _state.update {  it.copy(
                     comment = event.value
                 ) }
+            }
+            BlogEvent.DeletePost -> {
+                if(_state.value.post?.id != null) {
+                    viewModelScope.launch {
+                        val result = postUseCases.deletePostUseCase.invoke(_state.value.post!!.id!!)
+
+                        if (result != null) {
+                            postUseCases.deletePostUseCase.invoke(_state.value.post!!.id!!)
+                            _sharedFlow.emit(BlogUiEvent.DeletePost)
+                        }
+                    }
+                }
             }
         }
     }

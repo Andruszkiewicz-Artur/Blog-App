@@ -1,5 +1,6 @@
 package com.example.blogapp.feature_blog.presentation.blog_presentation.comp
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -23,23 +24,38 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogEvent
+import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogUiEvent
 import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun BlogPresentation(
     navHostController: NavHostController,
     viewModel: BlogViewModel = hiltViewModel()
 ) {
-
     val state = viewModel.state.collectAsState().value
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.sharedFlow.collectLatest {  event ->
+            when (event) {
+                BlogUiEvent.DeletePost -> {
+                    navHostController.popBackStack()
+                    Toast.makeText(context, "Delete post", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
 
     if (state.isLoading) {
         Column(
@@ -67,6 +83,9 @@ fun BlogPresentation(
                         isLiked = state.isLiked,
                         onClickLike = {
                             viewModel.onEvent(BlogEvent.ClickLike)
+                        },
+                        onClickDelete = {
+                            viewModel.onEvent(BlogEvent.DeletePost)
                         }
                     )
                 }

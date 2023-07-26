@@ -102,4 +102,10 @@ interface DummyApi {
         @Header("app-id") apiKey: String = Static.API_KEY,
         @Body commentDto: CommentDto
     ): CommentDto
+
+    @DELETE("post/{idPost}")
+    suspend fun deletePost(
+        @Header("app-id") apiKey: String = Static.API_KEY,
+        @Path("idPost") idPost: String
+    ): String
 }

@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Icon
@@ -46,7 +47,8 @@ fun BlogPostPresentation(
     isUserBlog: Boolean,
     navHostController: NavHostController,
     isLiked: Boolean,
-    onClickLike: () -> Unit
+    onClickLike: () -> Unit,
+    onClickDelete: () -> Unit
 ) {
     val formattedTime = remember(postModel.publishDate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -104,19 +106,33 @@ fun BlogPostPresentation(
             Spacer(modifier = Modifier.width(16.dp))
 
             AnimatedVisibility(visible = isUserBlog) {
-                Icon(
-                    imageVector = Icons.Outlined.Edit,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clickable {
-                            navHostController.navigate(
-                                BlogScreen.PostCreateEdit.sendPostId(
-                                    postModel.id ?: ""
+                Row {
+                    Icon(
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clickable {
+                                navHostController.navigate(
+                                    BlogScreen.PostCreateEdit.sendPostId(
+                                        postModel.id ?: ""
+                                    )
                                 )
-                            )
-                        }
-                )
+                            }
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clickable {
+                                onClickDelete()
+                            }
+                    )
+                }
             }
         }
 

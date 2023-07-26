@@ -119,16 +119,27 @@ class BlogRepositoryImpl @Inject constructor(
         )
     }
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun createComment(commentDto: CommentDto): CommentDto? {
         return try {
             api.createComment(
                 commentDto = commentDto
             )
-        } catch (e: HttpException) {
+        } catch (e: Exception) {
             Log.e("API Error", "${e.message}")
             null
-        } catch (e: Exception) {
+        }
+    }
+
+    override suspend fun deletePost(idPost: String): String? {
+        return try {
+            val result = api.deletePost(
+                idPost = idPost
+            )
+
+            Log.d("Check result delating", "${result}")
+
+            result
+        }catch (e: Exception) {
             Log.e("API Error", "${e.message}")
             null
         }

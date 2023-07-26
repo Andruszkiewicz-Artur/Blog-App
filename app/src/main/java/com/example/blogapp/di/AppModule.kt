@@ -23,6 +23,7 @@ import com.example.blogapp.core.domain.use_cases.validation.ValidatePhoneNumber
 import com.example.blogapp.core.domain.use_cases.validation.ValidationPicture
 import com.example.blogapp.feature_blog.domain.use_cases.CreateCommentUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.CreatePostUseCase
+import com.example.blogapp.feature_blog.domain.use_cases.DeletePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.GetLikedPosts
 import com.example.blogapp.feature_blog.domain.use_cases.GetUserFromFirebaseUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.PutImageToStorage
@@ -99,7 +100,8 @@ object AppModule {
             createPostUseCase = CreatePostUseCase(repository),
             getLikedPosts = GetLikedPosts(firebaseRepository),
             updateLikePostUseCase = UpdateLikePostUseCase(firebaseRepository),
-            createCommentUseCase = CreateCommentUseCase(repository)
+            createCommentUseCase = CreateCommentUseCase(repository),
+            deletePostUseCase = DeletePostUseCase(repository)
         )
     }
 

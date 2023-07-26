@@ -36,4 +36,6 @@ interface BlogRepository {
     suspend fun createPost(postDto: PostDto): PostDto
 
     suspend fun createComment(commentDto: CommentDto): CommentDto?
+
+    suspend fun deletePost(idPost: String): String?
 }
