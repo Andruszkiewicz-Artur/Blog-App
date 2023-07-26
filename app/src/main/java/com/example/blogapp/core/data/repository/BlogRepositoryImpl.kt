@@ -1,6 +1,9 @@
 package com.example.blogapp.core.data.repository
 
+import android.net.http.HttpException
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresExtension
 import com.example.blogapp.core.data.dto.CommentDto
 import com.example.blogapp.core.data.dto.ListDto
 import com.example.blogapp.core.data.dto.PostDto
@@ -111,6 +114,23 @@ class BlogRepositoryImpl @Inject constructor(
     }
 
     override suspend fun createPost(postDto: PostDto): PostDto {
-        TODO("Not yet implemented")
+        return  api.createPost(
+            postDto = postDto
+        )
+    }
+
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+    override suspend fun createComment(commentDto: CommentDto): CommentDto? {
+        return try {
+            api.createComment(
+                commentDto = commentDto
+            )
+        } catch (e: HttpException) {
+            Log.e("API Error", "${e.message}")
+            null
+        } catch (e: Exception) {
+            Log.e("API Error", "${e.message}")
+            null
+        }
     }
 }

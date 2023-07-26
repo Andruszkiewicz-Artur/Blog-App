@@ -8,7 +8,7 @@ class ValidateContent {
         if(content.isBlank()) {
             return ValidationResult(
                 successful = false,
-                errorMessage = "Content can`t be empty"
+                errorMessage = "Text field can`t be empty"
             )
         }
 

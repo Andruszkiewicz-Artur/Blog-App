@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 
 data class CommentDto (
     @field:Json(name = "id")
-    val id: String,
+    val id: String?,
     @field:Json(name = "message")
     val message: String,
     @field:Json(name = "owner")
@@ -12,5 +12,5 @@ data class CommentDto (
     @field:Json(name = "post")
     val post: String,
     @field:Json(name = "publishDate")
-    val publishDate: String
+    val publishDate: String?
 )

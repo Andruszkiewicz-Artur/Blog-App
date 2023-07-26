@@ -94,6 +94,12 @@ interface DummyApi {
     @POST("post/create")
     suspend fun createPost(
         @Header("app-id") apiKey: String = Static.API_KEY,
-        @Body user: UserDto
-    ): UserDto
+        @Body postDto: PostDto
+    ): PostDto
+
+    @POST("comment/create")
+    suspend fun createComment(
+        @Header("app-id") apiKey: String = Static.API_KEY,
+        @Body commentDto: CommentDto
+    ): CommentDto
 }

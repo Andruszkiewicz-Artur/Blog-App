@@ -37,9 +37,7 @@ class BlogsViewModel @Inject constructor(
             if (currentUser != null) {
                 Global.user = postsUseCase.getUserFromFirebaseUseCase.invoke(currentUser.uid)
                 Global.likedPosts = postsUseCase.getLikedPosts()
-                _state.update {  it.copy(
-                    likedPosts = Global.likedPosts
-                ) }
+                updateLikesPost()
             }
         }
     }
@@ -99,5 +97,11 @@ class BlogsViewModel @Inject constructor(
                 isLoading = false
             ) }
         }
+    }
+
+    fun updateLikesPost() {
+        _state.update {  it.copy(
+            likedPosts = Global.likedPosts
+        ) }
     }
 }

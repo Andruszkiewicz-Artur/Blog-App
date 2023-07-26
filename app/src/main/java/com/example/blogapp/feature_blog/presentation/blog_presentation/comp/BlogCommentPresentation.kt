@@ -36,7 +36,7 @@ fun BlogCommentPresentation(
 ) {
     val formattedTime = remember(commentModel.publishDate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            commentModel.publishDate.format(
+            commentModel.publishDate!!.format(
                 DateTimeFormatter.ofPattern("u LLLL d HH:mm")
             )
         } else {

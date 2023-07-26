@@ -21,6 +21,7 @@ import com.example.blogapp.core.domain.use_cases.validation.ValidateData
 import com.example.blogapp.core.domain.use_cases.validation.ValidateLink
 import com.example.blogapp.core.domain.use_cases.validation.ValidatePhoneNumber
 import com.example.blogapp.core.domain.use_cases.validation.ValidationPicture
+import com.example.blogapp.feature_blog.domain.use_cases.CreateCommentUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.CreatePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.GetLikedPosts
 import com.example.blogapp.feature_blog.domain.use_cases.GetUserFromFirebaseUseCase
@@ -97,7 +98,8 @@ object AppModule {
             updatePostUseCase = UpdatePostUseCase(repository),
             createPostUseCase = CreatePostUseCase(repository),
             getLikedPosts = GetLikedPosts(firebaseRepository),
-            updateLikePostUseCase = UpdateLikePostUseCase(firebaseRepository)
+            updateLikePostUseCase = UpdateLikePostUseCase(firebaseRepository),
+            createCommentUseCase = CreateCommentUseCase(repository)
         )
     }
 

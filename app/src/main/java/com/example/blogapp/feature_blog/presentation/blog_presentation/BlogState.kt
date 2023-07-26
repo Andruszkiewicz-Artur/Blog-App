@@ -8,5 +8,8 @@ data class BlogState(
     val comments: List<CommentModel> = emptyList(),
     val isLoading: Boolean = false,
     val isUserBlog: Boolean = false,
-    val isLiked: Boolean = false
+    val isLiked: Boolean = false,
+    val isCommentAddPresented: Boolean = false,
+    val comment: String = "",
+    val commentMessageError: String? = null
 )
