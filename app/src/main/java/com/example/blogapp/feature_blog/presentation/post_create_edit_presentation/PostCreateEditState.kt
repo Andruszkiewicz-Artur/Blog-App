@@ -1,7 +1,7 @@
 package com.example.blogapp.feature_blog.presentation.post_create_edit_presentation
 
 import android.net.Uri
-import com.example.blogapp.feature_blog.domain.model.dummy_api.PostModel
+import com.example.blogapp.feature_blog.domain.model.PostModel
 
 data class PostCreateEditState(
     val post: PostModel? = null,

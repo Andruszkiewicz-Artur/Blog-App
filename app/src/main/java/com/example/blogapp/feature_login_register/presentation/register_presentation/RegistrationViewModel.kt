@@ -1,32 +1,18 @@
 package com.example.blogapp.feature_login_register.presentation.register_presentation
 
-import android.app.Application
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.blogapp.core.Global
-import com.example.blogapp.feature_login_register.domain.model.UserBodyModel
-import com.example.blogapp.feature_login_register.domain.use_case.UserUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
     private val validateUseCases: ValidateUseCases,
-    private val userUseCases: UserUseCases,
-    private val application: Application,
 ): ViewModel() {
 
     private val _state = MutableStateFlow(RegistrationState())
@@ -39,27 +25,7 @@ class RegistrationViewModel @Inject constructor(
         when (event) {
             RegistrationEvent.ClickRegistration -> {
                 if (isNoneErrors()) {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val users = userUseCases.getAllUsersUseCase.invoke()
 
-                        users.forEach {
-                            Log.d(
-                                "user",
-                                "${it.id}\n${if(it.email.isBlank()) "none email" else it.email}"
-                            )
-                        }
-
-                        if (!userUseCases.createUserUseCase.invoke(
-                                UserBodyModel(
-                                    _state.value.firstName,
-                                    _state.value.lastName,
-                                    _state.value.email
-                                ),
-                                _state.value.password
-                        )) {
-                            _eventFlow.emit(RegistrationUiEvent.showToast("Problem with creating your account"))
-                        }
-                    }
                 }
             }
             RegistrationEvent.ClickRules -> {

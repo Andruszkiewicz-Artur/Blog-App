@@ -2,8 +2,8 @@ package com.example.blogapp.feature_blog.data.mapper
 
 import com.example.blogapp.core.data.dto.CommentDto
 import com.example.blogapp.core.data.dto.ListDto
-import com.example.blogapp.feature_blog.domain.model.dummy_api.CommentModel
-import com.example.blogapp.feature_blog.domain.model.dummy_api.UserPreviewModel
+import com.example.blogapp.feature_blog.domain.model.CommentModel
+import com.example.blogapp.feature_blog.domain.model.UserPreviewModel
 import java.time.LocalDateTime
 
 fun ListDto<CommentDto>.toListOfCommentModel(): List<CommentModel> {

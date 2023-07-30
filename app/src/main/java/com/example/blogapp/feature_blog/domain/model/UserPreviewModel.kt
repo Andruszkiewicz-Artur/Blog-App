@@ -1,4 +1,4 @@
-package com.example.blogapp.feature_blog.domain.model.dummy_api
+package com.example.blogapp.feature_blog.domain.model
 
 data class UserPreviewModel(
     val id: String,

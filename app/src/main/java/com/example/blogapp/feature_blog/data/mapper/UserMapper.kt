@@ -2,9 +2,9 @@ package com.example.blogapp.feature_blog.data.mapper
 
 import com.example.blogapp.core.data.dto.UserDto
 import com.example.blogapp.core.data.dto.UserPreviewDto
-import com.example.blogapp.feature_blog.domain.model.dummy_api.LocationModel
+import com.example.blogapp.core.domain.model.LocationModel
 import com.example.blogapp.core.domain.model.UserModel
-import com.example.blogapp.feature_blog.domain.model.dummy_api.UserPreviewModel
+import com.example.blogapp.feature_blog.domain.model.UserPreviewModel
 import java.time.LocalDateTime
 
 fun UserDto.toUserModel(): UserModel {

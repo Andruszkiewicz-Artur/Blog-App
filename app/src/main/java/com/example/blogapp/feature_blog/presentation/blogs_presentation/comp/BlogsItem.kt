@@ -27,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.blogapp.core.comp.text.TagPresentation
-import com.example.blogapp.feature_blog.domain.model.dummy_api.PostPreviewModel
+import com.example.blogapp.feature_blog.domain.model.PostPreviewModel
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.Locale

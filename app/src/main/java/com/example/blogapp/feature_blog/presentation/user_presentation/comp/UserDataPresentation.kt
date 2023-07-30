@@ -28,7 +28,7 @@ fun UserDataPresentation(
 ) {
     val formattedTime = remember(userModel.dateOfBirth) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            userModel.dateOfBirth.format(
+            userModel.dateOfBirth?.format(
                 DateTimeFormatter.ofPattern("u LLLL d")
             )
         } else {
@@ -66,17 +66,17 @@ fun UserDataPresentation(
 
         UserRowInfo(infoValue = "First name", value = userModel.firstName)
         UserRowInfo(infoValue = "Last name", value = userModel.lastName)
-        UserRowInfo(infoValue = "Gender", value = userModel.gender)
-        UserRowInfo(infoValue = "Birthday", value = formattedTime)
+        UserRowInfo(infoValue = "Gender", value = userModel.gender ?: "none information")
+        UserRowInfo(infoValue = "Birthday", value = formattedTime ?: "none information")
         UserRowInfo(infoValue = "Email", value = userModel.email)
-        UserRowInfo(infoValue = "Phone number", value = userModel.phone)
+        UserRowInfo(infoValue = "Phone number", value = userModel.phone ?: "none information")
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        UserRowInfo(infoValue = "Country", value = userModel.location.country)
-        UserRowInfo(infoValue = "State", value = userModel.location.state)
-        UserRowInfo(infoValue = "City", value = userModel.location.city)
-        UserRowInfo(infoValue = "Street", value = userModel.location.street)
+        UserRowInfo(infoValue = "Country", value = userModel.location.country ?: "none information")
+        UserRowInfo(infoValue = "State", value = userModel.location.state ?: "none information")
+        UserRowInfo(infoValue = "City", value = userModel.location.city ?: "none information")
+        UserRowInfo(infoValue = "Street", value = userModel.location.street ?: "none information")
     }
 
 }

@@ -1,8 +1,6 @@
-package com.example.blogapp.core.data.dto
+package com.example.blogapp.core.domain.model
 
-import com.squareup.moshi.Json
-
-data class LocationDto(
+data class LocationModel (
     val street: String?,
     val city: String?,
     val state: String?,

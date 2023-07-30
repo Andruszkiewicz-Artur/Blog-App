@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
-import com.example.blogapp.feature_blog.domain.model.dummy_api.CommentModel
+import com.example.blogapp.feature_blog.domain.model.CommentModel
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.Locale
