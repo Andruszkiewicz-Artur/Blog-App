@@ -1,31 +1,30 @@
 package com.example.blogapp.core.domain.use_cases.validation
 
-import android.util.Patterns
-import com.example.blogapp.core.domain.unit.ValidationResult
+import com.example.blogapp.core.domain.unit.Result
 
 class ValidateData {
 
-    fun execute(data: String, min: Int, max: Int): ValidationResult {
+    fun execute(data: String, min: Int, max: Int): Result {
         if (data.isBlank()) {
-            return ValidationResult(
+            return Result(
                 successful = false,
                 errorMessage = "Field is empty"
             )
         }
         if(data.length < min) {
-            return ValidationResult(
+            return Result(
                 successful = false,
                 errorMessage = "Is to short"
             )
         }
         if(data.length > max) {
-            return ValidationResult(
+            return Result(
                 successful = false,
                 errorMessage = "Is to Long"
             )
         }
 
-        return ValidationResult(
+        return Result(
             successful = true
         )
     }

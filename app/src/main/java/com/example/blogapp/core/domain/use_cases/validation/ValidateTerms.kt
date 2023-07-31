@@ -1,18 +1,18 @@
 package com.example.notes.feature_profile.domain.use_case.validationUseCases
 
-import com.example.blogapp.core.domain.unit.ValidationResult
+import com.example.blogapp.core.domain.unit.Result
 
 class ValidateTerms {
 
-    fun execute(isAccepted: Boolean): ValidationResult {
+    fun execute(isAccepted: Boolean): Result {
         if(!isAccepted) {
-            return ValidationResult(
+            return Result(
                 successful = false,
                 errorMessage = "Terms not accepted"
             )
         }
 
-        return ValidationResult(
+        return Result(
             successful = true
         )
     }

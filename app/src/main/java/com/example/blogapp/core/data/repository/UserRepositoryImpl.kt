@@ -1,18 +1,19 @@
 package com.example.blogapp.core.data.repository
 
 import android.util.Log
+import com.example.blogapp.core.Global
 import com.example.blogapp.core.data.dto.UserDto
-import com.example.blogapp.core.data.mappers.toUserDto
 import com.example.blogapp.core.domain.repository.UserRepository
 import com.example.blogapp.core.domain.unit.Resource
+import com.example.blogapp.core.domain.unit.Result
 import com.google.firebase.FirebaseException
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 
 class UserRepositoryImpl: UserRepository {
@@ -91,6 +92,63 @@ class UserRepositoryImpl: UserRepository {
         } catch (e: Exception) {
             return Resource.Error(message = "${e.message}")
         }
+    }
+
+    override suspend fun setUpNewPassword(oldPassword: String, newPassword: String): Result {
+        try {
+            if(Global.user != null && Global.user?.id != null) {
+                var canChangePassword = false
+                var user = Firebase.auth.currentUser
+                var logOutUserAfterAll = false
+
+                if(user != null) {
+                    val credential = EmailAuthProvider
+                        .getCredential(Global.user!!.email, oldPassword)
+
+                    user.reauthenticate(credential)
+                        .addOnCompleteListener {
+                            canChangePassword = true
+                        }.await()
+                } else {
+                    Firebase.auth.signInWithEmailAndPassword(Global.user!!.email, oldPassword)
+                        .addOnSuccessListener {
+                            canChangePassword = true
+                            logOutUserAfterAll = true
+                        }.await()
+
+                    user = Firebase.auth.currentUser!!
+                }
+
+                delay(200)
+                if(canChangePassword) {
+                    var successfulChangePassword = false
+
+                    user.updatePassword(newPassword)
+                        .addOnSuccessListener {
+                            successfulChangePassword = true
+                        }
+                        .await()
+
+                    if (logOutUserAfterAll) signOut()
+                    if (successfulChangePassword) return Result(true)
+                }
+
+                return Result(
+                    successful = false,
+                    errorMessage = "Problem with changing password"
+                )
+            }
+        } catch (e: Exception) {
+            return Result(
+                successful = false,
+                errorMessage = "${e.message}"
+            )
+        }
+
+        return Result(
+            successful = false,
+            errorMessage = "General problem with global user"
+        )
     }
 
 

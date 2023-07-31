@@ -73,7 +73,7 @@ fun ProfilePresentation(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "${state.user.title ?: ""}. ${state.user.firstName} ${state.user.lastName}",
+                    text = "${if(state.user.title != null) state.user.title + ". " else ""} ${state.user.firstName} ${state.user.lastName}",
                     style = MaterialTheme.typography.titleLarge
                 )
 

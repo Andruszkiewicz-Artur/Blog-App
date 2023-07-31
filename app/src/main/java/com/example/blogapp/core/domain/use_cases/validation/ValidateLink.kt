@@ -1,32 +1,32 @@
 package com.example.blogapp.core.domain.use_cases.validation
 
 import android.util.Patterns
-import com.example.blogapp.core.domain.unit.ValidationResult
+import com.example.blogapp.core.domain.unit.Result
 
 class ValidateLink {
 
-    fun execute(link: String): ValidationResult {
+    fun execute(link: String): Result {
 
         if(link.isBlank()) {
-            return ValidationResult(
+            return Result(
                 false,
                 "You need add link"
             )
         }
         if(link.length in 6..300) {
-            return ValidationResult(
+            return Result(
                 false,
                 "Link can have from 6 to 300 chars"
             )
         }
         if(!Patterns.WEB_URL.matcher(link).matches()) {
-            return ValidationResult(
+            return Result(
                 false,
                 "Link is incorrect."
             )
         }
 
-        return ValidationResult(true)
+        return Result(true)
     }
 
 }
