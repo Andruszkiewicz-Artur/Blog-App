@@ -7,8 +7,13 @@ import com.example.blogapp.core.domain.use_cases.validation.ValidateData
 import com.example.blogapp.core.domain.use_cases.validation.ValidateLink
 import com.example.blogapp.core.domain.use_cases.validation.ValidatePhoneNumber
 import com.example.blogapp.core.domain.use_cases.validation.ValidationPicture
+import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
+import com.example.blogapp.feature_blog.domain.use_cases.TakeUserDataUseCase
 import com.example.blogapp.feature_login_register.domain.use_cases.CreateUserUseCase
+import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCase
 import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCases
+import com.example.blogapp.feature_profile.domain.use_cases.ProfileUseCases
+import com.example.blogapp.feature_profile.domain.use_cases.SignOutUseCase
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateEmail
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidatePassword
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateRePassword
@@ -49,7 +54,24 @@ object AppModule {
     @Singleton
     fun provideSignInUseCases(repository: UserRepository): SignInUseCases {
         return SignInUseCases(
-            createUserUseCase = CreateUserUseCase(repository)
+            createUserUseCase = CreateUserUseCase(repository),
+            signInUseCase = SignInUseCase(repository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfileUseCases(repository: UserRepository): ProfileUseCases {
+        return ProfileUseCases(
+            signOutUseCase = SignOutUseCase(repository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providePostUseCases(repository: UserRepository): PostUseCases {
+        return PostUseCases(
+            takeUserDataUseCase = TakeUserDataUseCase(repository)
         )
     }
 }

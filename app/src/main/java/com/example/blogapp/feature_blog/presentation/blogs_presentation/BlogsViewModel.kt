@@ -3,6 +3,9 @@ package com.example.blogapp.feature_blog.presentation.blogs_presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.core.Global
+import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BlogsViewModel @Inject constructor(
+    private val postUseCases: PostUseCases
 ): ViewModel() {
 
     private val _state = MutableStateFlow(BlogsState())
@@ -21,6 +25,13 @@ class BlogsViewModel @Inject constructor(
     init {
         setUpPosts()
         viewModelScope.launch(Dispatchers.IO) {
+            if(Global.user == null) {
+                val userId = Firebase.auth.currentUser?.uid
+                if(userId != null) {
+                    val user = postUseCases.takeUserDataUseCase.invoke(userId)
+                    Global.user = user
+                }
+            }
         }
     }
 

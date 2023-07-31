@@ -7,20 +7,20 @@ import com.example.blogapp.feature_login_register.domain.model.UserRegistrationM
 fun UserRegistrationModel.toUserDto(): UserDto {
     return UserDto(
         id = "",
-        title = "",
+        title = null,
         firstName = firstName,
         lastName = lastName,
-        gender = "",
+        gender = null,
         email = email,
-        dateOfBirth = "",
-        registerDate = "",
-        phone = "",
-        picture = "",
+        dateOfBirth = null,
+        registerDate = null,
+        phone = null,
+        picture = null,
         location = LocationDto(
-            street = "",
-            city = "",
-            state = "",
-            country = ""
+            street = null,
+            city = null,
+            state = null,
+            country = null
         )
     )
 }

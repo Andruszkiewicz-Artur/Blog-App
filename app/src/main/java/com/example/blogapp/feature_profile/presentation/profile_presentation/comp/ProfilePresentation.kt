@@ -9,6 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.PersonPinCircle
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,16 +55,25 @@ fun ProfilePresentation(
             verticalArrangement = Arrangement.Center
         ) {
             item {
-                AsyncImage(
-                    model = state.user.picture,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(200.dp)
-                )
+                if (state.user.picture != null) {
+                    AsyncImage(
+                        model = state.user.picture,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(200.dp)
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Outlined.AccountCircle,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(200.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "${state.user.title}. ${state.user.firstName} ${state.user.lastName}",
+                    text = "${state.user.title ?: ""}. ${state.user.firstName} ${state.user.lastName}",
                     style = MaterialTheme.typography.titleLarge
                 )
 

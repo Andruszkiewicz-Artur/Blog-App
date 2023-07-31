@@ -1,10 +1,11 @@
 package com.example.blogapp.core.data.dto
 
+import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.Json
 
 data class LocationDto(
-    val street: String,
-    val city: String,
-    val state: String,
-    val country: String
+    val country: String?,
+    val city: String?,
+    val street: String?,
+    val state: String?
 )
