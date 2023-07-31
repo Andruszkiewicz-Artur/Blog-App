@@ -10,6 +10,7 @@ import com.example.blogapp.core.domain.use_cases.validation.ValidationPicture
 import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
 import com.example.blogapp.feature_blog.domain.use_cases.TakeUserDataUseCase
 import com.example.blogapp.feature_login_register.domain.use_cases.CreateUserUseCase
+import com.example.blogapp.feature_login_register.domain.use_cases.ResetPasswordUseCase
 import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCase
 import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCases
 import com.example.blogapp.feature_profile.domain.use_cases.ProfileUseCases
@@ -56,7 +57,8 @@ object AppModule {
     fun provideSignInUseCases(repository: UserRepository): SignInUseCases {
         return SignInUseCases(
             createUserUseCase = CreateUserUseCase(repository),
-            signInUseCase = SignInUseCase(repository)
+            signInUseCase = SignInUseCase(repository),
+            resetPasswordUseCase = ResetPasswordUseCase(repository)
         )
     }
 

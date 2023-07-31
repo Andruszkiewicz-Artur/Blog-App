@@ -16,4 +16,6 @@ interface UserRepository {
 
     suspend fun setUpNewPassword(oldPassword: String, newPassword: String): Result
 
+    suspend fun resetPassword(email: String): Result
+
 }

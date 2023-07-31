@@ -151,5 +151,20 @@ class UserRepositoryImpl: UserRepository {
         )
     }
 
+    override suspend fun resetPassword(email: String): Result {
+        return try {
+            Firebase.auth.sendPasswordResetEmail(email).await()
+
+            Result(
+                successful = true
+            )
+        } catch (e: Exception) {
+            Result(
+                successful = false,
+                errorMessage = "${e.message}"
+            )
+        }
+    }
+
 
 }
