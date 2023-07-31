@@ -1,10 +1,14 @@
 package com.example.blogapp.di
 
+import com.example.blogapp.core.data.repository.UserRepositoryImpl
+import com.example.blogapp.core.domain.repository.UserRepository
 import com.example.blogapp.core.domain.use_cases.validation.ValidateContent
 import com.example.blogapp.core.domain.use_cases.validation.ValidateData
 import com.example.blogapp.core.domain.use_cases.validation.ValidateLink
 import com.example.blogapp.core.domain.use_cases.validation.ValidatePhoneNumber
 import com.example.blogapp.core.domain.use_cases.validation.ValidationPicture
+import com.example.blogapp.feature_login_register.domain.use_cases.CreateUserUseCase
+import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateEmail
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidatePassword
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateRePassword
@@ -32,6 +36,20 @@ object AppModule {
             validateContent = ValidateContent(),
             validateLink = ValidateLink(),
             validatePicture = ValidationPicture()
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(): UserRepository {
+        return UserRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignInUseCases(repository: UserRepository): SignInUseCases {
+        return SignInUseCases(
+            createUserUseCase = CreateUserUseCase(repository)
         )
     }
 }

@@ -1,6 +1,11 @@
 package com.example.blogapp.feature_login_register.presentation.register_presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.blogapp.core.Global
+import com.example.blogapp.feature_login_register.domain.model.UserRegistrationModel
+import com.example.blogapp.feature_login_register.domain.use_cases.CreateUserUseCase
+import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -8,11 +13,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
     private val validateUseCases: ValidateUseCases,
+    private val userUseCases: SignInUseCases
 ): ViewModel() {
 
     private val _state = MutableStateFlow(RegistrationState())
@@ -25,7 +32,23 @@ class RegistrationViewModel @Inject constructor(
         when (event) {
             RegistrationEvent.ClickRegistration -> {
                 if (isNoneErrors()) {
+                    val user = UserRegistrationModel(
+                        _state.value.firstName,
+                        _state.value.lastName,
+                        _state.value.email,
+                        _state.value.password
+                    )
 
+                    viewModelScope.launch {
+                        val newUser = userUseCases.createUserUseCase.invoke(user)
+
+                        if(newUser != null) {
+                            Global.user = newUser
+                            _eventFlow.emit(RegistrationUiEvent.CreatingAccount)
+                        } else {
+                            _eventFlow.emit(RegistrationUiEvent.Toast("Problem during registration!"))
+                        }
+                    }
                 }
             }
             RegistrationEvent.ClickRules -> {

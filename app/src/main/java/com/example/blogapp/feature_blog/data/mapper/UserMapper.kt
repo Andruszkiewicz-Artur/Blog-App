@@ -9,9 +9,9 @@ import java.time.LocalDateTime
 
 fun UserDto.toUserModel(): UserModel {
     return UserModel(
-        id ?: "", title ?: "", firstName ?: "", lastName ?: "", gender ?: "", email ?: "", dateOfBirth?.toLocalDataTime() ?: LocalDateTime.now(), registerDate ?: "", phone ?: "", picture ?: "",
+        id, title, firstName, lastName, gender, email, dateOfBirth.toLocalDataTime(), registerDate, phone, picture,
         LocationModel(
-            location?.street ?: "", location?.city ?: "", location?.state ?: "", location?.country ?: "", location?.timezone ?: ""
+            location.street, location.city, location.state, location.country
         )
     )
 }

@@ -64,8 +64,11 @@ fun RegistrationPresentation(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                is RegistrationUiEvent.showToast -> {
+                is RegistrationUiEvent.Toast -> {
                     Toast.makeText(context, event.value, Toast.LENGTH_LONG).show()
+                }
+                RegistrationUiEvent.CreatingAccount -> {
+                    navHostController.popBackStack()
                 }
             }
         }
