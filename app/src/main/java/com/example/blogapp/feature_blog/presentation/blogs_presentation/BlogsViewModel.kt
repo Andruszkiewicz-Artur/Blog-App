@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.core.Global
+import com.example.blogapp.core.domain.use_cases.global.GlobalUseCases
 import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @SuppressLint("NewApi")
 @HiltViewModel
 class BlogsViewModel @Inject constructor(
-    private val postUseCases: PostUseCases
+    private val postUseCases: PostUseCases,
+    private val globalUseCases: GlobalUseCases
 ): ViewModel() {
 
     private val _state = MutableStateFlow(BlogsState())
@@ -27,7 +29,7 @@ class BlogsViewModel @Inject constructor(
 
     init {
         setUpPosts()
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             if(Global.user == null) {
                 val userId = Firebase.auth.currentUser?.uid
                 if(userId != null) {
@@ -35,6 +37,11 @@ class BlogsViewModel @Inject constructor(
                     Global.user = user
                 }
             }
+
+            val tags = globalUseCases.takeAllTagsUseCase.invoke()
+            _state.update { it.copy(
+                tags = tags
+            ) }
         }
     }
 

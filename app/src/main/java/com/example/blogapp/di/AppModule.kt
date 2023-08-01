@@ -2,6 +2,8 @@ package com.example.blogapp.di
 
 import com.example.blogapp.core.data.repository.UserRepositoryImpl
 import com.example.blogapp.core.domain.repository.UserRepository
+import com.example.blogapp.core.domain.use_cases.global.GlobalUseCases
+import com.example.blogapp.core.domain.use_cases.global.TakeAllTagsUseCase
 import com.example.blogapp.core.domain.use_cases.validation.ValidateContent
 import com.example.blogapp.core.domain.use_cases.validation.ValidateData
 import com.example.blogapp.core.domain.use_cases.validation.ValidateLink
@@ -80,6 +82,14 @@ object AppModule {
     fun providePostUseCases(repository: UserRepository): PostUseCases {
         return PostUseCases(
             takeUserDataUseCase = TakeUserDataUseCase(repository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideGlobalUseCases(repository: UserRepository): GlobalUseCases {
+        return GlobalUseCases(
+            takeAllTagsUseCase = TakeAllTagsUseCase(repository)
         )
     }
 }

@@ -22,4 +22,6 @@ interface UserRepository {
 
     suspend fun updateProfile(user: UserDto): Resource<UserDto>
 
+    suspend fun takeAllTags(): Resource<List<String>>
+
 }

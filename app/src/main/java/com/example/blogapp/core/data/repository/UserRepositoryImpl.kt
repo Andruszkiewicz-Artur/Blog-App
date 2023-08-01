@@ -11,6 +11,7 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
@@ -257,6 +258,25 @@ class UserRepositoryImpl: UserRepository {
             return Resource.Error(message = "Problem with import data")
         } catch (e: Exception) {
             return Resource.Error(message = "${e.message}")
+        }
+    }
+
+    override suspend fun takeAllTags(): Resource<List<String>> {
+        return try {
+            val path = Firebase.database.reference.child("tags")
+            val snapshot = path.get().await()
+            val tags = mutableListOf<String>()
+
+            for (child in snapshot.children) {
+                tags.add(child.value.toString())
+            }
+
+            if (tags.isEmpty()) {
+                return Resource.Error(message = "Problem with taking data")
+            }
+            Resource.Success(data = tags)
+        } catch (e: Exception) {
+            Resource.Error("${e.message}")
         }
     }
 }
