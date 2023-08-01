@@ -1,6 +1,6 @@
 package com.example.blogapp.feature_blog.domain.model
 
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 data class PostModel(
     val id: String?,
@@ -9,6 +9,6 @@ data class PostModel(
     val likes: Int,
     val link: String?,
     val tags: List<String>,
-    val publishDate: LocalDateTime?,
+    val publishDate: LocalDate?,
     val owner: UserPreviewModel
 )

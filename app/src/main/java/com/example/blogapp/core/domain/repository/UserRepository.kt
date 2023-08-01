@@ -20,4 +20,6 @@ interface UserRepository {
 
     suspend fun changeEmail(newEmail: String, password: String): Result
 
+    suspend fun updateProfile(user: UserDto): Resource<UserDto>
+
 }

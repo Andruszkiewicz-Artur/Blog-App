@@ -1,5 +1,6 @@
 package com.example.blogapp.feature_blog.presentation.post_create_edit_presentation.comp
 
+import android.graphics.drawable.VectorDrawable
 import android.net.Uri
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,7 @@ fun PhotoPresent(
     uri: Uri?,
     imageLink: String?,
     errorMessage: String?,
+    icon: ImageVector = Icons.Outlined.AddPhotoAlternate,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -49,7 +52,7 @@ fun PhotoPresent(
                 )
             } else {
                 Icon(
-                    imageVector = Icons.Outlined.AddPhotoAlternate,
+                    imageVector = icon,
                     contentDescription = null,
                     modifier = Modifier
                         .clip(RoundedCornerShape(20.dp))

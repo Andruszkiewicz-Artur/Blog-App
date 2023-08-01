@@ -12,6 +12,6 @@ data class RegistrationState(
     val rePassword: String = "",
     val rePasswordErrorMessage: String? = null,
     val presentPassword: Boolean = false,
-    val isRules: Boolean = true,
+    val isRules: Boolean = false,
     val rulesErrorMessage: String? = null
 )

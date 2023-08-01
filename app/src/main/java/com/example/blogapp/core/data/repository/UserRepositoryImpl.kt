@@ -15,6 +15,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDate
 
 class UserRepositoryImpl: UserRepository {
 
@@ -29,7 +30,11 @@ class UserRepositoryImpl: UserRepository {
 
             //Create record in database and check is all success
             val path = Firebase.database.reference.child("users").child(userId)
-            path.setValue(user.copy(id = userId)).await()
+            path.setValue(
+                user.copy(
+                    id = userId,
+                    registerDate = LocalDate.now().toString()
+            )).await()
 
             //Return new user data with userId
             val newUser = user.copy(id = userId)
@@ -232,5 +237,26 @@ class UserRepositoryImpl: UserRepository {
             successful = false,
             errorMessage = "General problem with global user"
         )
+    }
+
+    override suspend fun updateProfile(user: UserDto): Resource<UserDto> {
+        try {
+            if(user.id.isBlank()) return Resource.Error(message = "Problem with taking user id")
+
+            var successfulAdding = false
+
+            Firebase.database.reference.child("users").child(user.id).setValue(user)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) successfulAdding = true
+                }
+                .await()
+
+            delay(200)
+
+            if (successfulAdding) return Resource.Success(data = user)
+            return Resource.Error(message = "Problem with import data")
+        } catch (e: Exception) {
+            return Resource.Error(message = "${e.message}")
+        }
     }
 }

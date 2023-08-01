@@ -1,5 +1,6 @@
 package com.example.blogapp.core.domain.model
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class UserModel(
@@ -9,7 +10,7 @@ data class UserModel(
     val lastName: String,
     val gender: String?,
     val email: String,
-    val dateOfBirth: LocalDateTime?,
+    val dateOfBirth: LocalDate?,
     val registerDate: String?,
     val phone: String?,
     val picture: String?,

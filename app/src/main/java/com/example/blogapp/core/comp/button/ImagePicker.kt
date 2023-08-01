@@ -54,7 +54,10 @@ import java.util.Locale
 //}
 
 @Composable
-fun ImagePicker(onImageSelected: (Uri?) -> Unit, onClick: () -> Unit) {
+fun ImagePicker(
+    onImageSelected: (Uri?) -> Unit,
+    onClick: () -> Unit
+) {
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         onImageSelected(uri)
     }

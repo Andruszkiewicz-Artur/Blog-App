@@ -4,10 +4,11 @@ import com.example.blogapp.core.data.dto.ListDto
 import com.example.blogapp.core.data.dto.PostDto
 import com.example.blogapp.core.data.dto.PostPreviewDto
 import com.example.blogapp.core.data.dto.UserPreviewDto
-import com.example.blogapp.core.data.mappers.toLocalDataTime
+import com.example.blogapp.core.data.mappers.toLocalData
 import com.example.blogapp.feature_blog.domain.model.PostModel
 import com.example.blogapp.feature_blog.domain.model.PostPreviewModel
 import com.example.blogapp.feature_blog.domain.model.UserPreviewModel
+import java.time.LocalDate
 
 fun ListDto<PostPreviewDto>.toPostPreviewModel(): Pair<Int, List<PostPreviewModel>> {
     val list: MutableList<PostPreviewModel> = mutableListOf()
@@ -20,7 +21,7 @@ fun ListDto<PostPreviewDto>.toPostPreviewModel(): Pair<Int, List<PostPreviewMode
                 image = it.image,
                 likes = it.likes,
                 tags = it.tags,
-                publishDate = it.publishDate.toLocalDataTime(),
+                publishDate = it.publishDate.toLocalData() ?: LocalDate.now(),
                 owner = UserPreviewModel(
                     id = it.owner.id,
                     title = it.owner.title,
@@ -37,7 +38,7 @@ fun ListDto<PostPreviewDto>.toPostPreviewModel(): Pair<Int, List<PostPreviewMode
 
 fun PostDto.toPostModel(): PostModel {
     return PostModel(
-        id, text, image, likes, link, tags, publishDate?.toLocalDataTime(), UserPreviewModel(
+        id, text, image, likes, link, tags, publishDate?.toLocalData(), UserPreviewModel(
             owner.id, owner.title, owner.firstName, owner.lastName, owner.picture
         )
     )

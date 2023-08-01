@@ -1,5 +1,6 @@
 package com.example.blogapp.feature_blog.domain.model
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class CommentModel(
@@ -7,5 +8,5 @@ data class CommentModel(
     val message: String,
     val owner: UserPreviewModel,
     val post: String,
-    val publishDate: LocalDateTime?
+    val publishDate: LocalDate?
 )

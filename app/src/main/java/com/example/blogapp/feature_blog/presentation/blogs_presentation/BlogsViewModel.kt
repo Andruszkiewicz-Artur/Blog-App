@@ -1,5 +1,7 @@
 package com.example.blogapp.feature_blog.presentation.blogs_presentation
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.core.Global
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@SuppressLint("NewApi")
 @HiltViewModel
 class BlogsViewModel @Inject constructor(
     private val postUseCases: PostUseCases

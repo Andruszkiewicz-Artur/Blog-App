@@ -2,9 +2,10 @@ package com.example.blogapp.feature_blog.data.mapper
 
 import com.example.blogapp.core.data.dto.CommentDto
 import com.example.blogapp.core.data.dto.ListDto
-import com.example.blogapp.core.data.mappers.toLocalDataTime
+import com.example.blogapp.core.data.mappers.toLocalData
 import com.example.blogapp.feature_blog.domain.model.CommentModel
 import com.example.blogapp.feature_blog.domain.model.UserPreviewModel
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 fun ListDto<CommentDto>.toListOfCommentModel(): List<CommentModel> {
@@ -23,7 +24,7 @@ fun ListDto<CommentDto>.toListOfCommentModel(): List<CommentModel> {
                     picture = it.owner.picture
                 ),
                 post = it.post,
-                publishDate = it.publishDate?.toLocalDataTime() ?: LocalDateTime.now()
+                publishDate = it.publishDate?.toLocalData() ?: LocalDate.now()
             )
         )
     }
@@ -47,6 +48,6 @@ fun CommentDto.toCommentModel(): CommentModel {
         message = message,
         owner = owner.toUserPreviewModel(),
         post = post,
-        publishDate = publishDate?.toLocalDataTime() ?: LocalDateTime.now()
+        publishDate = publishDate?.toLocalData() ?: LocalDate.now()
     )
 }

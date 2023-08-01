@@ -17,6 +17,7 @@ import com.example.blogapp.feature_profile.domain.use_cases.ProfileUseCases
 import com.example.blogapp.feature_profile.domain.use_cases.SetUpNewEmailUseCase
 import com.example.blogapp.feature_profile.domain.use_cases.SetUpNewPassword
 import com.example.blogapp.feature_profile.domain.use_cases.SignOutUseCase
+import com.example.blogapp.feature_profile.domain.use_cases.UpdateProfileUseCase
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateEmail
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidatePassword
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateRePassword
@@ -69,7 +70,8 @@ object AppModule {
         return ProfileUseCases(
             signOutUseCase = SignOutUseCase(repository),
             setUpNewPassword = SetUpNewPassword(repository),
-            setUpNewEmailUseCase = SetUpNewEmailUseCase(repository)
+            setUpNewEmailUseCase = SetUpNewEmailUseCase(repository),
+            updateProfileUseCase = UpdateProfileUseCase(repository)
         )
     }
 
