@@ -14,6 +14,7 @@ import com.example.blogapp.feature_login_register.domain.use_cases.ResetPassword
 import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCase
 import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCases
 import com.example.blogapp.feature_profile.domain.use_cases.ProfileUseCases
+import com.example.blogapp.feature_profile.domain.use_cases.SetUpNewEmailUseCase
 import com.example.blogapp.feature_profile.domain.use_cases.SetUpNewPassword
 import com.example.blogapp.feature_profile.domain.use_cases.SignOutUseCase
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateEmail
@@ -67,7 +68,8 @@ object AppModule {
     fun provideProfileUseCases(repository: UserRepository): ProfileUseCases {
         return ProfileUseCases(
             signOutUseCase = SignOutUseCase(repository),
-            setUpNewPassword = SetUpNewPassword(repository)
+            setUpNewPassword = SetUpNewPassword(repository),
+            setUpNewEmailUseCase = SetUpNewEmailUseCase(repository)
         )
     }
 

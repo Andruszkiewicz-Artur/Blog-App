@@ -102,6 +102,13 @@ fun ProfilePresentation(
                     }
                 )
 
+                ButtonStandard(
+                    value = "Change email",
+                    onClick = {
+                        navHostController.navigate(ProfileScreen.ChangeEmail.route)
+                    }
+                )
+
                 Spacer(modifier = Modifier.height(32.dp))
 
                 ButtonStandard(

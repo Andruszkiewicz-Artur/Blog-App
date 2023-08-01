@@ -16,4 +16,8 @@ sealed class ProfileScreen(
         route = "change_password"
     )
 
+    object ChangeEmail: ProfileScreen(
+        route = "change_email"
+    )
+
 }

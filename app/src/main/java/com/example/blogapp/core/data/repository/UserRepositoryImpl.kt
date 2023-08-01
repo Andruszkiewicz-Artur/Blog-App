@@ -96,7 +96,7 @@ class UserRepositoryImpl: UserRepository {
 
     override suspend fun setUpNewPassword(oldPassword: String, newPassword: String): Result {
         try {
-            if(Global.user != null && Global.user?.id != null) {
+            if(Global.user != null) {
                 var canChangePassword = false
                 var user = Firebase.auth.currentUser
                 var logOutUserAfterAll = false
@@ -166,5 +166,71 @@ class UserRepositoryImpl: UserRepository {
         }
     }
 
+    override suspend fun changeEmail(newEmail: String, password: String): Result {
+        try {
+            if(Global.user != null && Global.user?.id != null) {
+                var canChangePassword = false
+                var user = Firebase.auth.currentUser
+                var logOutUserAfterAll = false
 
+                if(user != null) {
+                    val credential = EmailAuthProvider
+                        .getCredential(Global.user!!.email, password)
+
+                    user.reauthenticate(credential)
+                        .addOnCompleteListener {
+                            canChangePassword = true
+                        }.await()
+                } else {
+                    Firebase.auth.signInWithEmailAndPassword(Global.user!!.email, password)
+                        .addOnSuccessListener {
+                            canChangePassword = true
+                            logOutUserAfterAll = true
+                        }.await()
+
+                    user = Firebase.auth.currentUser!!
+                }
+
+                delay(200)
+                if(canChangePassword) {
+                    var successfulChangePassword = false
+
+                    user.updateEmail(newEmail)
+                        .addOnSuccessListener {
+                            successfulChangePassword = true
+                        }.await()
+
+                    delay(100)
+
+                    if (successfulChangePassword) {
+                        Firebase.database.reference.child("users").child(Global.user!!.id!!).child("email").setValue(newEmail)
+                            .addOnCompleteListener {
+                                if(!it.isSuccessful) successfulChangePassword = false
+                            }.await()
+
+                        delay(200)
+                        Global.user = Global.user?.copy(email = newEmail)
+                    }
+
+                    if (logOutUserAfterAll) signOut()
+                    if (successfulChangePassword) return Result(true)
+                }
+
+                return Result(
+                    successful = false,
+                    errorMessage = "Problem with changing email"
+                )
+            }
+        } catch (e: Exception) {
+            return Result(
+                successful = false,
+                errorMessage = "${e.message}"
+            )
+        }
+
+        return Result(
+            successful = false,
+            errorMessage = "General problem with global user"
+        )
+    }
 }
