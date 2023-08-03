@@ -51,7 +51,7 @@ fun BlogPostPresentation(
 ) {
     val formattedTime = remember(postModel.publishDate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val date = postModel.publishDate ?: LocalDate.now()
+            val date = postModel.publishDate ?: LocalDateTime.now()
             date.format(
                 DateTimeFormatter.ofPattern("u LLLL d HH:mm")
             )
@@ -75,11 +75,11 @@ fun BlogPostPresentation(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .clickable {
-                        navHostController.navigate(BlogScreen.User.sendUserId(postModel.owner.id))
+                        navHostController.navigate(BlogScreen.User.sendUserId(postModel.userId))
                     }
             ) {
                 AsyncImage(
-                    model = postModel.owner.picture,
+                    model = null,
                     contentDescription = null,
                     modifier = Modifier
                         .padding(end = 16.dp)
@@ -90,13 +90,13 @@ fun BlogPostPresentation(
                     verticalAlignment = Alignment.Bottom
                 ) {
                     Text(
-                        text = "${postModel.owner.title}.",
+                        text = "",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
 
                     Text(
-                        text = " ${postModel.owner.firstName} ${postModel.owner.lastName}",
+                        text = " ",
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -171,11 +171,11 @@ fun BlogPostPresentation(
             modifier = Modifier
                 .padding(top = 8.dp, bottom = 16.dp)
         ) {
-            postModel.tags.forEach {
-                TagPresentation(
-                    value = it
-                )
-            }
+//            postModel.tags.forEach {
+//                TagPresentation(
+//                    value = it
+//                )
+//            }
         }
 
         Row(

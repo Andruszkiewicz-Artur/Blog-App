@@ -4,9 +4,9 @@ import android.media.Image
 import android.net.Uri
 
 sealed class PostCreateEditEvent {
-    data class EnteredText(val text: String): PostCreateEditEvent()
+    data class EnteredContent(val value: String): PostCreateEditEvent()
     data class SetImage(val image: Uri?): PostCreateEditEvent()
-    data class SetLink(val text: String): PostCreateEditEvent()
+    data class SetLink(val value: String): PostCreateEditEvent()
     data class SetTage(val tag: String): PostCreateEditEvent()
 
     object Save: PostCreateEditEvent()

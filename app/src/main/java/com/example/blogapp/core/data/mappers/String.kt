@@ -19,10 +19,21 @@ import java.util.Locale
 fun String.toLocalData(): LocalDate? {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-   return try {
+    return try {
         LocalDate.parse(this, formatter)
     } catch (e: DateTimeParseException) {
-       Log.d("Error toLocalData", "${e.message}")
+        Log.d("Error toLocalData", "${e.message}")
+        null
+    }
+}
+@SuppressLint("NewApi")
+fun String.toLocalDateTime(): LocalDateTime? {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd || kk:mm:ss");
+
+    return try {
+        LocalDateTime.parse(this, formatter)
+    } catch (e: DateTimeParseException) {
+        Log.d("Error toLocalDataTime", "${e.message}")
         null
     }
 }

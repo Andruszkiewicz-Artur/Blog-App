@@ -1,6 +1,7 @@
 package com.example.blogapp.feature_blog.presentation.post_create_edit_presentation.comp
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,10 +27,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -39,10 +42,12 @@ import com.example.blogapp.core.comp.lazy_column.RowWithObjects
 import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.core.comp.textfield.TextFieldStandard
 import com.example.blogapp.feature_blog.presentation.post_create_edit_presentation.PostCreateEditEvent
+import com.example.blogapp.feature_blog.presentation.post_create_edit_presentation.PostCreateEditUiEvent
 import com.example.blogapp.feature_blog.presentation.post_create_edit_presentation.PostCreateEditViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PostCreateEditPresentation(
     navHostController: NavHostController,
@@ -50,6 +55,20 @@ fun PostCreateEditPresentation(
 ) {
 
     val state = viewModel.state.collectAsState().value
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.sharedFlow.collectLatest { event ->
+            when (event) {
+                PostCreateEditUiEvent.Finish -> {
+                    navHostController.popBackStack()
+                }
+                is PostCreateEditUiEvent.Toast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier
@@ -89,8 +108,8 @@ fun PostCreateEditPresentation(
                 item {
                     Spacer(modifier = Modifier.height(32.dp))
                     PhotoPresent(
-                        uri = state.image,
-                        imageLink = state.post?.image,
+                        uri = state.imageUri,
+                        imageLink = state.imagePath,
                         onClick = {
                             viewModel.onEvent(PostCreateEditEvent.ChoosePickImageOption)
                         },
@@ -103,10 +122,10 @@ fun PostCreateEditPresentation(
                     Spacer(modifier = Modifier.heightIn(32.dp))
 
                     PostTextField(
-                        text = state.post?.text ?: "",
+                        text = state.content,
                         placeholder = "Content...",
                         onValueChange = {
-                            viewModel.onEvent(PostCreateEditEvent.EnteredText(it))
+                            viewModel.onEvent(PostCreateEditEvent.EnteredContent(it))
                         },
                         errorMessage = state.contentErrorMessage
                     )
@@ -115,7 +134,7 @@ fun PostCreateEditPresentation(
 
                     TextFieldStandard(
                         label = "Link",
-                        value = state.post?.link ?: "",
+                        value = state.link,
                         onValueChange = {
                             viewModel.onEvent(PostCreateEditEvent.SetLink(it))
                         },
