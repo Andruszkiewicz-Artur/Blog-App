@@ -28,7 +28,7 @@ fun String.toLocalData(): LocalDate? {
 }
 @SuppressLint("NewApi")
 fun String.toLocalDateTime(): LocalDateTime? {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd || kk:mm:ss");
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'kk:mm:ss.SSSSSS");
 
     return try {
         LocalDateTime.parse(this, formatter)
@@ -38,13 +38,10 @@ fun String.toLocalDateTime(): LocalDateTime? {
     }
 }
 
-fun String.toUserDto(): UserDto? {
-    val gson = Gson()
-    return try {
-        gson.fromJson(this, UserDto::class.java)
-    } catch (e: Exception) {
-        Log.d("Error mapper", "${e.message}")
-        Log.d("Error mapper", "${e.printStackTrace()}")
-        null
-    }
+fun String.replaceDataToDatabase(): String {
+    return this.replace('-', 'm').replace(':', 'd').replace('.', 'e')
+}
+
+fun String.replaceDataFromDatabase(): String {
+    return this.replace('m', '-').replace('d', ':').replace('e', '.')
 }

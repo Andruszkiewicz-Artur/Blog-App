@@ -1,5 +1,6 @@
 package com.example.blogapp.feature_blog.presentation.blogs_presentation.comp
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,121 +28,131 @@ import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsEvent
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsViewModel
 import com.example.blogapp.feature_blog.presentation.unit.comp.BlogsPageChanger
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun BlogsPresentation(
     navHostController: NavHostController,
     viewModel: BlogsViewModel = hiltViewModel()
 ) {
-
-    val state = viewModel.state.collectAsState()
-
+    val state = viewModel.state.collectAsState().value
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = state.isLoading)
+    
     LaunchedEffect(key1 = true) {
         viewModel.updateLikesPost()
     }
 
-    LazyColumn (
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxSize()
-    ) {
-        item {
-            BlogsSorting(
-                showingSortBar = state.value.isPresentedSorting,
-                currentLimit = state.value.limitPosts,
-                setLimitPerPage = {
-                    viewModel.onEvent(BlogsEvent.ClickSorting(it))
-                },
-                onClickShowing = {
-                    viewModel.onEvent(BlogsEvent.ClickShowingSorting)
-                }
-            )
-
-            if (state.value.tags.isNotEmpty()) {
-                LazyRow(
-
-                ) {
-                    item {
-                        TagPresentation(
-                            value = "All",
-                            isChosen = state.value.currentTag == null,
-                            modifier = Modifier
-                                .clickable {
-                                    viewModel.onEvent(BlogsEvent.ChooseTag(null))
-                                }
-                        )
-                    }
-
-                    items(state.value.tags) {
-                        TagPresentation(
-                            value = it,
-                            isChosen = state.value.currentTag == it,
-                            modifier = Modifier
-                                .clickable {
-                                    viewModel.onEvent(BlogsEvent.ChooseTag(it))
-                                }
-                        )
-                    }
-                }
-            }
+    SwipeRefresh(
+        state = swipeRefreshState,
+        onRefresh = {
+            viewModel.onEvent(BlogsEvent.PullToRefresh)
         }
-
-        if (!state.value.isLoading) {
+    ) {
+        LazyColumn (
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxSize()
+        ) {
             item {
-                if (state.value.posts.isEmpty()) {
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxSize()
+                BlogsSorting(
+                    showingSortBar = state.isPresentedSorting,
+                    currentLimit = state.limitPosts,
+                    setLimitPerPage = {
+                        viewModel.onEvent(BlogsEvent.ClickSorting(it))
+                    },
+                    onClickShowing = {
+                        viewModel.onEvent(BlogsEvent.ClickShowingSorting)
+                    }
+                )
+
+                if (state.tags.isNotEmpty()) {
+                    LazyRow(
+
                     ) {
-                        Text(
-                            text = if(state.value.currentTag == null) "Can`t read data database." else "Non posts with this tag!",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f),
-                            modifier = Modifier
-                                .padding(top = 32.dp)
-                        )
+                        item {
+                            TagPresentation(
+                                value = "All",
+                                isChosen = state.currentTag == null,
+                                modifier = Modifier
+                                    .clickable {
+                                        viewModel.onEvent(BlogsEvent.ChooseTag(null))
+                                    }
+                            )
+                        }
+
+                        items(state.tags) {
+                            TagPresentation(
+                                value = it,
+                                isChosen = state.currentTag == it,
+                                modifier = Modifier
+                                    .clickable {
+                                        viewModel.onEvent(BlogsEvent.ChooseTag(it))
+                                    }
+                            )
+                        }
                     }
                 }
             }
 
-            items(state.value.posts) {
-                Spacer(modifier = Modifier.height(12.dp))
-                BlogsItem(
-                    post = it,
-                    onClick = { idPost ->
-                        navHostController.navigate(BlogScreen.Blog.sendPostId(idPost))
-                    },
-                    isLikedPost = state.value.likedPosts.contains(it.id)
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-
-            item {
-                if (state.value.maxPages != null && state.value.posts.isNotEmpty()) {
-                    BlogsPageChanger(
-                        pageLimit = state.value.maxPages ?: 0,
-                        currentPage = state.value.page,
-                        onClick = {
-                            viewModel.onEvent(BlogsEvent.ChangePage(it))
+            if (!state.isLoading) {
+                item {
+                    if (state.posts.isEmpty()) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            Text(
+                                text = if(state.currentTag == null) "Can`t read data database." else "Non posts with this tag!",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f),
+                                modifier = Modifier
+                                    .padding(top = 32.dp)
+                            )
                         }
-                    )
-
-                    Spacer(modifier = Modifier.height(100.dp))
+                    }
                 }
-            }
-        } else {
-            item {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .padding(top = 32.dp)
-                        .fillMaxWidth()
-                ) {
-                    CircularProgressIndicator()
-                    Text(text = "Loading...")
+
+                items(state.posts) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    BlogsItem(
+                        post = it,
+                        onClick = { idPost ->
+                            navHostController.navigate(BlogScreen.Blog.sendPostId(idPost))
+                        },
+                        isLikedPost = state.likedPosts.contains(it.id),
+                        user = state.usersList.get(it.userId)
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+
+                item {
+                    if (state.maxPages != null && state.posts.isNotEmpty()) {
+                        BlogsPageChanger(
+                            pageLimit = state.maxPages ?: 0,
+                            currentPage = state.page,
+                            onClick = {
+                                viewModel.onEvent(BlogsEvent.ChangePage(it))
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(100.dp))
+                    }
+                }
+            } else {
+                item {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .padding(top = 32.dp)
+                            .fillMaxWidth()
+                    ) {
+                        CircularProgressIndicator()
+                        Text(text = "Loading...")
+                    }
                 }
             }
         }

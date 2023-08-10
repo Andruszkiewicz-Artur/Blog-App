@@ -13,7 +13,9 @@ import com.example.blogapp.core.domain.use_cases.validation.ValidatePhoneNumber
 import com.example.blogapp.core.domain.use_cases.validation.ValidationPicture
 import com.example.blogapp.feature_blog.domain.use_cases.CreatePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
+import com.example.blogapp.feature_blog.domain.use_cases.TakePostsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.TakeUserDataUseCase
+import com.example.blogapp.feature_blog.domain.use_cases.TakeUsersUseCase
 import com.example.blogapp.feature_login_register.domain.use_cases.CreateUserUseCase
 import com.example.blogapp.feature_login_register.domain.use_cases.ResetPasswordUseCase
 import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCase
@@ -91,7 +93,9 @@ object AppModule {
     fun providePostUseCases(repository: UserRepository, postRepository: PostRepository): PostUseCases {
         return PostUseCases(
             takeUserDataUseCase = TakeUserDataUseCase(repository),
-            createPostUseCase = CreatePostUseCase(postRepository)
+            createPostUseCase = CreatePostUseCase(postRepository),
+            takePostsUseCase = TakePostsUseCase(postRepository),
+            takeUsersUseCase = TakeUsersUseCase(repository)
         )
     }
 

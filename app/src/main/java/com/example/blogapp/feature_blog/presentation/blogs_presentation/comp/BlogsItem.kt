@@ -1,9 +1,12 @@
 package com.example.blogapp.feature_blog.presentation.blogs_presentation.comp
 
 import android.os.Build
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,6 +15,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material.icons.outlined.Face3
+import androidx.compose.material.icons.outlined.Face4
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,24 +33,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.blogapp.core.comp.text.TagPresentation
+import com.example.blogapp.core.domain.model.UserModel
+import com.example.blogapp.feature_blog.domain.model.PostModel
 import com.example.blogapp.feature_blog.domain.model.PostPreviewModel
+import com.example.blogapp.feature_profile.presentation.change_user_data_presentation.Gender
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun BlogsItem(
-    post: PostPreviewModel,
+    post: PostModel,
+    user: UserModel?,
     isLikedPost: Boolean,
     onClick: (String) -> Unit
 ) {
     val formattedTime = remember(post.publishDate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            post.publishDate.format(
+            val date = post.publishDate ?: LocalDateTime.now()
+            date.format(
                 DateTimeFormatter.ofPattern("u LLLL d HH:mm")
             )
         } else {
-            val simpleDateFormat = SimpleDateFormat("yyyy MM dd HH:mm", Locale.getDefault())
+            val simpleDateFormat = SimpleDateFormat("yyyy MM dd || HH:mm", Locale.getDefault())
             simpleDateFormat.format(post.publishDate)
         }
     }
@@ -59,7 +72,9 @@ fun BlogsItem(
         ),
         modifier = Modifier
             .clickable {
-                onClick(post.id)
+                if (!post.id.isNullOrEmpty()) {
+                    onClick(post.id)
+                }
             }
     ) {
         Column(
@@ -71,23 +86,46 @@ fun BlogsItem(
                 modifier = Modifier
                     .padding(bottom = 8.dp)
             ) {
-                AsyncImage(
-                    model = post.owner.picture,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .size(50.dp)
-                        .clip(CircleShape)
-                )
+                AnimatedContent(targetState = user?.picture != null) { isPicture ->
+                    if (isPicture) {
+                        AsyncImage(
+                            model = user!!.picture,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(end = 16.dp)
+                                .size(50.dp)
+                                .clip(CircleShape)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = if (user?.gender == Gender.Male.toString()) Icons.Outlined.Face else Icons.Outlined.Face3,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(end = 16.dp)
+                                .size(50.dp)
+                        )
+                    }
+                }
+                AnimatedContent(targetState = user != null) { isUser ->
+                    if(isUser) {
+                        Row {
+                            if(user!!.title != null) {
+                                Text(
+                                    text = "${user.title}.",
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
 
-                Text(
-                    text = "${post.owner.title}.",
-                    fontWeight = FontWeight.Bold
-                )
-
-                Text(
-                    text = " ${post.owner.firstName} ${post.owner.lastName}"
-                )
+                            Text(
+                                text = " ${user.firstName} ${user.lastName}"
+                            )
+                        }
+                    } else {
+                        Text(
+                            text = "None information"
+                        )
+                    }
+                }
             }
 
             Text(
@@ -95,14 +133,12 @@ fun BlogsItem(
                 maxLines = 5,
             )
 
-            if(post.tags.isNotEmpty()) {
-                Row(
-                    modifier = Modifier
-                        .padding(top = 16.dp, bottom = 8.dp)
-                ) {
-                    post.tags.forEach {
-                        TagPresentation(value = it)
-                    }
+            FlowRow(
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 8.dp)
+            ) {
+                post.tags?.forEach {
+                    TagPresentation(value = it)
                 }
             }
 

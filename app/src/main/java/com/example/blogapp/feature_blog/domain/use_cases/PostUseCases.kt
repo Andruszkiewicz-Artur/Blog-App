@@ -4,5 +4,7 @@ import com.example.blogapp.core.domain.use_cases.global.TakeAllTagsUseCase
 
 data class PostUseCases(
     val takeUserDataUseCase: TakeUserDataUseCase,
-    val createPostUseCase: CreatePostUseCase
+    val createPostUseCase: CreatePostUseCase,
+    val takePostsUseCase: TakePostsUseCase,
+    val takeUsersUseCase: TakeUsersUseCase
 )
