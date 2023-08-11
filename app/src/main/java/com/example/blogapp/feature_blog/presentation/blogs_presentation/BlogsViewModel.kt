@@ -41,6 +41,10 @@ class BlogsViewModel @Inject constructor(
                 if(userId != null) {
                     val user = postUseCases.takeUserDataUseCase.invoke(userId)
                     Global.user = user
+                    Global.likedPosts = globalUseCases.takeAllLikedPosts.invoke(userId)
+                    _state.update { it.copy(
+                        likedPosts = Global.likedPosts
+                    ) }
                 }
             }
 

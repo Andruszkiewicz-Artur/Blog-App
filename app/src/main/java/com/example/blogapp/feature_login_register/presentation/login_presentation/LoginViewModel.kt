@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.core.Global
+import com.example.blogapp.core.domain.use_cases.global.GlobalUseCases
 import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCases
 import com.example.blogapp.feature_profile.domain.use_cases.ProfileUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
@@ -21,7 +22,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val validateUseCases: ValidateUseCases,
     private val signInUseCases: SignInUseCases,
-    private val profileUseCases: ProfileUseCases
+    private val globalUseCases: GlobalUseCases
 ): ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -56,6 +57,8 @@ class LoginViewModel @Inject constructor(
                             _sharedFlow.emit(LoginUiEvent.Toast("Problem with sign in!"))
                         } else {
                             Global.user = user
+                            if(!user.id.isNullOrEmpty())
+                                Global.likedPosts = globalUseCases.takeAllLikedPosts.invoke(user.id)
                             _sharedFlow.emit(LoginUiEvent.LogIn)
                         }
                     }

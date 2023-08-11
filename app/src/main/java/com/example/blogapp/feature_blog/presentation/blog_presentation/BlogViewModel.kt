@@ -1,7 +1,12 @@
 package com.example.blogapp.feature_blog.presentation.blog_presentation
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.blogapp.core.Global
+import com.example.blogapp.core.domain.unit.Resource
+import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -9,12 +14,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class BlogViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val validateUseCases: ValidateUseCases
+    private val validateUseCases: ValidateUseCases,
+    private val postUseCases: PostUseCases
 ): ViewModel() {
 
     private val _state = MutableStateFlow(BlogState())
@@ -26,13 +33,58 @@ class BlogViewModel @Inject constructor(
     init {
         savedStateHandle.get<String>("postId")?.let { postId ->
             if (postId != "") {
+                viewModelScope.launch {
+                    loadPost(postId)
+                }
             }
         }
     }
 
     fun onEvent(event: BlogEvent) {
         when (event) {
-            BlogEvent.ClickLike -> {
+            BlogEvent.LikePost -> {
+                viewModelScope.launch {
+                    val userId = Global.user?.id
+                    val postId = _state.value.post?.id
+
+                    if (userId != null && postId != null) {
+                        val result = postUseCases.likePostUseCase.invoke(postId, userId)
+
+                        if(result.successful) {
+                            _state.update { it.copy(
+                                isLiked = true,
+                                post = _state.value.post!!.copy(
+                                    likes = _state.value.post!!.likes.inc()
+                                )
+                            ) }
+                            Global.likedPosts = Global.likedPosts.toMutableList() + postId
+                        } else {
+                            _sharedFlow.emit(BlogUiEvent.Toast("${result.errorMessage}"))
+                        }
+                    }
+                }
+            }
+            BlogEvent.DisLikePost -> {
+                viewModelScope.launch {
+                    val userId = Global.user?.id
+                    val postId = _state.value.post?.id
+
+                    if (userId != null && postId != null) {
+                        val result = postUseCases.dislikePostUseCase.invoke(postId, userId)
+
+                        if(result.successful) {
+                            _state.update { it.copy(
+                                isLiked = false,
+                                post = _state.value.post!!.copy(
+                                    likes = _state.value.post!!.likes.dec()
+                                )
+                            ) }
+                            Global.likedPosts = Global.likedPosts.toMutableList().filter { it != postId }
+                        } else {
+                            _sharedFlow.emit(BlogUiEvent.Toast("${result.errorMessage}"))
+                        }
+                    }
+                }
             }
             BlogEvent.AddComment -> {
                 if (isNoneErrors()) {
@@ -67,5 +119,42 @@ class BlogViewModel @Inject constructor(
         }
 
         return !hasError
+    }
+
+    private suspend fun loadPost(postId: String) {
+        _state.update { it.copy(
+            isLoading = true
+        ) }
+
+        val result = postUseCases.takePostUseCase.invoke(postId)
+
+        when (result) {
+            is Resource.Error -> {
+                _sharedFlow.emit(BlogUiEvent.BackFromPost)
+            }
+            is Resource.Success -> {
+                _state.update { it.copy(
+                    post = result.data,
+                    isLiked = Global.likedPosts.contains(postId)
+                ) }
+
+                if(result.data?.userId != null) {
+                    loadUser(result.data.userId)
+                }
+            }
+        }
+
+        _state.update { it.copy(
+            isLoading = false
+        ) }
+    }
+
+    private suspend fun loadUser(userId: String) {
+        val result = postUseCases.takeUserDataUseCase.invoke(userId)
+
+        _state.update { it.copy(
+            user = result,
+            isUserBlog = userId == Global.user?.id
+        ) }
     }
 }

@@ -49,9 +49,12 @@ fun BlogPresentation(
     LaunchedEffect(key1 = true) {
         viewModel.sharedFlow.collectLatest {  event ->
             when (event) {
-                BlogUiEvent.DeletePost -> {
+                BlogUiEvent.BackFromPost -> {
                     navHostController.popBackStack()
                     Toast.makeText(context, "Delete post", Toast.LENGTH_LONG).show()
+                }
+                is BlogUiEvent.Toast -> {
+                    Toast.makeText(context, event.value, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -82,11 +85,15 @@ fun BlogPresentation(
                         isUserBlog = state.isUserBlog,
                         isLiked = state.isLiked,
                         onClickLike = {
-                            viewModel.onEvent(BlogEvent.ClickLike)
+                            viewModel.onEvent(BlogEvent.LikePost)
+                        },
+                        onClickDislike = {
+                            viewModel.onEvent(BlogEvent.DisLikePost)
                         },
                         onClickDelete = {
                             viewModel.onEvent(BlogEvent.DeletePost)
-                        }
+                        },
+                        userModel = state.user
                     )
                 }
 

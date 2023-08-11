@@ -5,6 +5,7 @@ import com.example.blogapp.core.data.repository.UserRepositoryImpl
 import com.example.blogapp.core.domain.repository.PostRepository
 import com.example.blogapp.core.domain.repository.UserRepository
 import com.example.blogapp.core.domain.use_cases.global.GlobalUseCases
+import com.example.blogapp.core.domain.use_cases.global.TakeAllLikedPosts
 import com.example.blogapp.core.domain.use_cases.global.TakeAllTagsUseCase
 import com.example.blogapp.core.domain.use_cases.validation.ValidateContent
 import com.example.blogapp.core.domain.use_cases.validation.ValidateData
@@ -12,7 +13,10 @@ import com.example.blogapp.core.domain.use_cases.validation.ValidateLink
 import com.example.blogapp.core.domain.use_cases.validation.ValidatePhoneNumber
 import com.example.blogapp.core.domain.use_cases.validation.ValidationPicture
 import com.example.blogapp.feature_blog.domain.use_cases.CreatePostUseCase
+import com.example.blogapp.feature_blog.domain.use_cases.DislikePostUseCase
+import com.example.blogapp.feature_blog.domain.use_cases.LikePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
+import com.example.blogapp.feature_blog.domain.use_cases.TakePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.TakePostsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.TakeUserDataUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.TakeUsersUseCase
@@ -95,15 +99,19 @@ object AppModule {
             takeUserDataUseCase = TakeUserDataUseCase(repository),
             createPostUseCase = CreatePostUseCase(postRepository),
             takePostsUseCase = TakePostsUseCase(postRepository),
-            takeUsersUseCase = TakeUsersUseCase(repository)
+            takeUsersUseCase = TakeUsersUseCase(repository),
+            takePostUseCase = TakePostUseCase(postRepository),
+            likePostUseCase = LikePostUseCase(postRepository),
+            dislikePostUseCase = DislikePostUseCase(postRepository)
         )
     }
 
     @Provides
     @Singleton
-    fun provideGlobalUseCases(repository: UserRepository): GlobalUseCases {
+    fun provideGlobalUseCases(repository: UserRepository, postRepository: PostRepository): GlobalUseCases {
         return GlobalUseCases(
-            takeAllTagsUseCase = TakeAllTagsUseCase(repository)
+            takeAllTagsUseCase = TakeAllTagsUseCase(repository),
+            takeAllLikedPosts = TakeAllLikedPosts(postRepository)
         )
     }
 }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -18,6 +19,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material.icons.outlined.Face3
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,8 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.blogapp.core.comp.text.TagPresentation
+import com.example.blogapp.core.domain.model.UserModel
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.domain.model.PostModel
+import com.example.blogapp.feature_profile.presentation.change_user_data_presentation.Gender
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -43,10 +48,12 @@ import java.util.Locale
 @Composable
 fun BlogPostPresentation(
     postModel: PostModel,
+    userModel: UserModel?,
     isUserBlog: Boolean,
     navHostController: NavHostController,
     isLiked: Boolean,
     onClickLike: () -> Unit,
+    onClickDislike: () -> Unit,
     onClickDelete: () -> Unit
 ) {
     val formattedTime = remember(postModel.publishDate) {
@@ -65,46 +72,37 @@ fun BlogPostPresentation(
         modifier = Modifier
             .fillMaxWidth()
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(vertical = 16.dp)
                 .fillMaxWidth()
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .clickable {
-                        navHostController.navigate(BlogScreen.User.sendUserId(postModel.userId))
-                    }
+            Row (
+                verticalAlignment = Alignment.Bottom
             ) {
-                AsyncImage(
-                    model = null,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .size(100.dp)
-                        .clip(CircleShape)
-                )
-                Row (
-                    verticalAlignment = Alignment.Bottom
-                ) {
+                if (userModel != null) {
                     Text(
-                        text = "",
+                        text = if(!userModel.title.isNullOrEmpty()) userModel.title + ". " else "",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
 
                     Text(
-                        text = " ",
+                        text = " ${userModel.firstName} ${userModel.lastName}",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                } else {
+                    Text(
+                        text = "none data",
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
-
-            AnimatedVisibility(visible = isUserBlog) {
+            if (isUserBlog) {
                 Row {
                     Icon(
                         imageVector = Icons.Outlined.Edit,
@@ -133,6 +131,25 @@ fun BlogPostPresentation(
                     )
                 }
             }
+        }
+
+        if (userModel?.picture != null) {
+            AsyncImage(
+                model = userModel.picture,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(100.dp)
+                    .clip(CircleShape)
+            )
+        } else {
+            Icon(
+                imageVector = if(userModel?.gender != Gender.Female.toString()) Icons.Outlined.Face else Icons.Outlined.Face3,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(100.dp)
+            )
         }
 
         AsyncImage(
@@ -171,11 +188,11 @@ fun BlogPostPresentation(
             modifier = Modifier
                 .padding(top = 8.dp, bottom = 16.dp)
         ) {
-//            postModel.tags.forEach {
-//                TagPresentation(
-//                    value = it
-//                )
-//            }
+            postModel.tags?.forEach {
+                TagPresentation(
+                    value = it
+                )
+            }
         }
 
         Row(
@@ -197,7 +214,7 @@ fun BlogPostPresentation(
                             modifier = Modifier
                                 .size(50.dp)
                                 .clickable {
-                                    onClickLike()
+                                    onClickDislike()
                                 }
                         )
                     } else {
