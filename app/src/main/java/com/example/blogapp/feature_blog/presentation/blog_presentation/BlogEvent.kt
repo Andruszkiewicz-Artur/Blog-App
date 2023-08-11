@@ -6,6 +6,6 @@ sealed class BlogEvent {
     object AddComment: BlogEvent()
     object ClickPresentingComment: BlogEvent()
     object DeletePost: BlogEvent()
-
+    object ReloadData: BlogEvent()
     data class EnteredComment(val value: String): BlogEvent()
 }

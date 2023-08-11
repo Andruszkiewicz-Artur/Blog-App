@@ -17,4 +17,6 @@ interface PostRepository {
     suspend fun dislikePost(postId: String, userId: String): Result
 
     suspend fun takeAllLikedPosts(userId: String): Resource<List<String>>
+
+    suspend fun deletePost(postId: String): Result
 }

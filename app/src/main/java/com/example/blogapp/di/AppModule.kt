@@ -13,6 +13,7 @@ import com.example.blogapp.core.domain.use_cases.validation.ValidateLink
 import com.example.blogapp.core.domain.use_cases.validation.ValidatePhoneNumber
 import com.example.blogapp.core.domain.use_cases.validation.ValidationPicture
 import com.example.blogapp.feature_blog.domain.use_cases.CreatePostUseCase
+import com.example.blogapp.feature_blog.domain.use_cases.DeletePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.DislikePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.LikePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
@@ -102,7 +103,8 @@ object AppModule {
             takeUsersUseCase = TakeUsersUseCase(repository),
             takePostUseCase = TakePostUseCase(postRepository),
             likePostUseCase = LikePostUseCase(postRepository),
-            dislikePostUseCase = DislikePostUseCase(postRepository)
+            dislikePostUseCase = DislikePostUseCase(postRepository),
+            deletePostUseCase = DeletePostUseCase(postRepository)
         )
     }
 

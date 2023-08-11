@@ -16,8 +16,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -38,9 +40,16 @@ fun BlogsPresentation(
 ) {
     val state = viewModel.state.collectAsState().value
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = state.isLoading)
+    val isWindowVisible = rememberUpdatedState(true)
     
     LaunchedEffect(key1 = true) {
         viewModel.updateLikesPost()
+    }
+
+    LaunchedEffect(isWindowVisible.value) {
+        if (isWindowVisible.value) {
+            viewModel.onEvent(BlogsEvent.PullToRefresh)
+        }
     }
 
     SwipeRefresh(

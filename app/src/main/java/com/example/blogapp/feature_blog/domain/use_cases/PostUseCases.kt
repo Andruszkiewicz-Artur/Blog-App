@@ -9,5 +9,6 @@ data class PostUseCases(
     val takeUsersUseCase: TakeUsersUseCase,
     val takePostUseCase: TakePostUseCase,
     val likePostUseCase: LikePostUseCase,
-    val dislikePostUseCase: DislikePostUseCase
+    val dislikePostUseCase: DislikePostUseCase,
+    val deletePostUseCase: DeletePostUseCase
 )

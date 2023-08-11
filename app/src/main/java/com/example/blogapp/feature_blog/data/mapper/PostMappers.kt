@@ -5,6 +5,7 @@ import com.example.blogapp.core.data.dto.ListDto
 import com.example.blogapp.core.data.dto.PostDto
 import com.example.blogapp.core.data.dto.PostPreviewDto
 import com.example.blogapp.core.data.dto.UserPreviewDto
+import com.example.blogapp.core.data.mappers.replaceDataToDatabase
 import com.example.blogapp.core.data.mappers.toLocalData
 import com.example.blogapp.core.data.mappers.toLocalDateTime
 import com.example.blogapp.feature_blog.domain.model.PostModel
@@ -61,7 +62,7 @@ fun PostModel.toPostDto(): PostDto {
         likes = likes,
         link = link,
         tags = tags,
-        publishDate = publishDate?.toString() ?: LocalDateTime.now().toString(),
+        publishDate = publishDate?.toString()?.replaceDataToDatabase() ?: LocalDateTime.now().toString().replaceDataToDatabase(),
         userId = userId
     )
 }

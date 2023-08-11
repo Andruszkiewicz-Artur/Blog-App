@@ -24,6 +24,8 @@ class BlogViewModel @Inject constructor(
     private val postUseCases: PostUseCases
 ): ViewModel() {
 
+    private var postId: String? = null
+
     private val _state = MutableStateFlow(BlogState())
     val state = _state.asStateFlow()
 
@@ -33,8 +35,9 @@ class BlogViewModel @Inject constructor(
     init {
         savedStateHandle.get<String>("postId")?.let { postId ->
             if (postId != "") {
+                this.postId = postId
                 viewModelScope.launch {
-                    loadPost(postId)
+                    loadPost()
                 }
             }
         }
@@ -102,7 +105,20 @@ class BlogViewModel @Inject constructor(
             }
             BlogEvent.DeletePost -> {
                 if(_state.value.post?.id != null) {
+                    viewModelScope.launch {
+                        val postId = _state.value.post?.id
+
+                        if(!postId.isNullOrEmpty()) {
+                            val result = postUseCases.deletePostUseCase.invoke(postId)
+
+                            if(result.successful) _sharedFlow.emit(BlogUiEvent.BackFromPost)
+                            else _sharedFlow.emit(BlogUiEvent.Toast("${result.errorMessage}"))
+                        }
+                    }
                 }
+            }
+            BlogEvent.ReloadData -> {
+
             }
         }
     }
@@ -121,32 +137,34 @@ class BlogViewModel @Inject constructor(
         return !hasError
     }
 
-    private suspend fun loadPost(postId: String) {
-        _state.update { it.copy(
-            isLoading = true
-        ) }
+    suspend fun loadPost() {
+        if (postId != null) {
+            _state.update { it.copy(
+                isLoading = true
+            ) }
 
-        val result = postUseCases.takePostUseCase.invoke(postId)
+            val result = postUseCases.takePostUseCase.invoke(postId!!)
 
-        when (result) {
-            is Resource.Error -> {
-                _sharedFlow.emit(BlogUiEvent.BackFromPost)
-            }
-            is Resource.Success -> {
-                _state.update { it.copy(
-                    post = result.data,
-                    isLiked = Global.likedPosts.contains(postId)
-                ) }
+            when (result) {
+                is Resource.Error -> {
+                    _sharedFlow.emit(BlogUiEvent.BackFromPost)
+                }
+                is Resource.Success -> {
+                    _state.update { it.copy(
+                        post = result.data,
+                        isLiked = Global.likedPosts.contains(postId)
+                    ) }
 
-                if(result.data?.userId != null) {
-                    loadUser(result.data.userId)
+                    if(result.data?.userId != null) {
+                        loadUser(result.data.userId)
+                    }
                 }
             }
-        }
 
-        _state.update { it.copy(
-            isLoading = false
-        ) }
+            _state.update { it.copy(
+                isLoading = false
+            ) }
+        }
     }
 
     private suspend fun loadUser(userId: String) {

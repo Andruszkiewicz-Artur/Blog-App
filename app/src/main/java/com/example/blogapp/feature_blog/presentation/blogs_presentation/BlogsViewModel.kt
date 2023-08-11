@@ -165,7 +165,7 @@ class BlogsViewModel @Inject constructor(
             }
             is Resource.Success -> {
                 if (!result.data.isNullOrEmpty()) {
-                    val data = result.data
+                    val data = result.data.toMutableList().sortedByDescending { it.publishDate }
                     _state.update { _state.value.copy(
                         allPosts = data
                     ) }

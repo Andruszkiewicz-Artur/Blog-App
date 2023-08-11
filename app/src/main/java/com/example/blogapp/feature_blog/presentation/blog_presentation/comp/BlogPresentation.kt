@@ -1,5 +1,6 @@
 package com.example.blogapp.feature_blog.presentation.blog_presentation.comp
 
+import android.renderscript.ScriptGroup.Input
 import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -20,24 +21,39 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDownward
 import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogEvent
 import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogUiEvent
 import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogViewModel
+import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsEvent
+import com.maxkeppeker.sheets.core.models.base.Header
+import com.maxkeppeker.sheets.core.models.base.SelectionButton
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.info.InfoDialog
+import com.maxkeppeler.sheets.info.models.InfoBody
+import com.maxkeppeler.sheets.info.models.InfoSelection
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import java.util.Properties
+import kotlin.coroutines.coroutineContext
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BlogPresentation(
     navHostController: NavHostController,
@@ -45,9 +61,12 @@ fun BlogPresentation(
 ) {
     val state = viewModel.state.collectAsState().value
     val context = LocalContext.current
+    val infoState = rememberUseCaseState()
+    val isWindowVisible = rememberUpdatedState(true)
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = true) {
-        viewModel.sharedFlow.collectLatest {  event ->
+        viewModel.sharedFlow.collectLatest { event ->
             when (event) {
                 BlogUiEvent.BackFromPost -> {
                     navHostController.popBackStack()
@@ -59,6 +78,33 @@ fun BlogPresentation(
             }
         }
     }
+
+    LaunchedEffect(isWindowVisible.value) {
+        if (isWindowVisible.value) {
+            coroutineScope.launch {
+                if (state.isLoading.not()) {
+                    viewModel.loadPost()
+                }
+            }
+        }
+    }
+
+    InfoDialog(
+        state = infoState,
+        selection = InfoSelection(
+            negativeButton = SelectionButton(text = "No"),
+            positiveButton = SelectionButton(text = "No"),
+            onPositiveClick = {
+                viewModel.onEvent(BlogEvent.DeletePost)
+            }
+        ),
+        header = Header.Default(
+            title = "Deleting post"
+        ),
+        body = InfoBody.Default(
+            bodyText = "Are you sure?"
+        )
+    )
 
     if (state.isLoading) {
         Column(
@@ -91,7 +137,7 @@ fun BlogPresentation(
                             viewModel.onEvent(BlogEvent.DisLikePost)
                         },
                         onClickDelete = {
-                            viewModel.onEvent(BlogEvent.DeletePost)
+                            infoState.show()
                         },
                         userModel = state.user
                     )

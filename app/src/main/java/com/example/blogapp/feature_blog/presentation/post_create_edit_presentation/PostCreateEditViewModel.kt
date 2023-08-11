@@ -1,13 +1,18 @@
 package com.example.blogapp.feature_blog.presentation.post_create_edit_presentation
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.core.Global
+import com.example.blogapp.core.domain.unit.Resource
 import com.example.blogapp.core.domain.unit.Result
 import com.example.blogapp.core.domain.use_cases.global.GlobalUseCases
 import com.example.blogapp.feature_blog.domain.model.PostModel
 import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
+import com.example.blogapp.feature_profile.domain.use_cases.ProfileUseCases
+import com.example.blogapp.feature_profile.domain.use_cases.UpdateProfileUseCase
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,6 +21,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +29,8 @@ class PostCreateEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val validateUseCases: ValidateUseCases,
     private val globalUseCases: GlobalUseCases,
-    private val postUseCases: PostUseCases
+    private val postUseCases: PostUseCases,
+    private val profileUseCases: ProfileUseCases
 ): ViewModel() {
 
     private val _state = MutableStateFlow(PostCreateEditState())
@@ -34,8 +41,39 @@ class PostCreateEditViewModel @Inject constructor(
 
     init {
         savedStateHandle.get<String>("postId").let { postId ->
-            if(Global.user != null && postId.isNullOrEmpty()) {
+            if(!postId.isNullOrEmpty()) {
+                viewModelScope.launch {
+                    if (Global.user == null) {
+                        _sharedFlow.emit(PostCreateEditUiEvent.Toast("You are not login yet"))
+                        _sharedFlow.emit(PostCreateEditUiEvent.Finish)
+                    } else {
+                        val result = postUseCases.takePostUseCase.invoke(postId)
 
+                        when (result) {
+                            is Resource.Error -> {
+                                _sharedFlow.emit(PostCreateEditUiEvent.Toast("Problem with loading post"))
+                                _sharedFlow.emit(PostCreateEditUiEvent.Finish)
+                            }
+                            is Resource.Success -> {
+                                val post = result.data
+                                if (post == null) {
+                                    _sharedFlow.emit(PostCreateEditUiEvent.Toast("Problem with loading post"))
+                                    _sharedFlow.emit(PostCreateEditUiEvent.Finish)
+                                }
+                                Log.d("Check result", "${post ?: "none"}")
+                                _state.update { it.copy(
+                                    idPost = post!!.id,
+                                    content = post.text,
+                                    link = post.link ?: "",
+                                    likes = post.likes,
+                                    publishDate = post.publishDate,
+                                    imagePath = post.image,
+                                    chosenTags = post.tags ?: emptyList()
+                                ) }
+                            }
+                        }
+                    }
+                }
             } else {
                 viewModelScope.launch {
                     _sharedFlow.emit(PostCreateEditUiEvent.Finish)
@@ -50,6 +88,7 @@ class PostCreateEditViewModel @Inject constructor(
         }
     }
 
+    @SuppressLint("NewApi")
     fun onEvent(event: PostCreateEditEvent) {
         when (event) {
             is PostCreateEditEvent.EnteredContent -> {
@@ -67,7 +106,7 @@ class PostCreateEditViewModel @Inject constructor(
                             likes = _state.value.likes,
                             link = _state.value.link.ifBlank { null },
                             tags = _state.value.chosenTags.ifEmpty { null },
-                            publishDate = _state.value.publishDate,
+                            publishDate = _state.value.publishDate ?: LocalDateTime.now(),
                             userId = Global.user!!.id!!
                         ))
 

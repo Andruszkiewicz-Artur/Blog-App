@@ -21,13 +21,15 @@ class PostRepositoryImpl: PostRepository {
 
     override suspend fun createPost(postDto: PostDto): Result {
         return try {
+
             val database = Firebase.database.reference
             val userId = postDto.userId
-            val postId = System.currentTimeMillis().toString()
-            val newPost = postDto.copy(
-                id = postId,
-                publishDate = postDto.publishDate.replaceDataToDatabase()
-            )
+            val postId = postDto.id.ifBlank { System.currentTimeMillis().toString() }
+            val newPost = if(postDto.id.isBlank()) postDto.copy(
+                id = System.currentTimeMillis().toString()
+            ) else {
+                postDto
+            }
             var successfulAddNewPost = false
 
             val value: MutableMap<String, Any> = hashMapOf(
@@ -87,7 +89,10 @@ class PostRepositoryImpl: PostRepository {
             val postJson = post.value.toString()
             val postDto = gson.fromJson(postJson, PostDto::class.java)
 
-            Resource.Success(postDto)
+            Resource.Success(
+                postDto.copy(
+                    publishDate = postDto.publishDate.replaceDataFromDatabase()
+            ) )
         } catch (e: Exception) {
             Log.e("Check Firebase Error", "Error fetching posts", e)
             Resource.Error("Error fetching posts")
@@ -145,8 +150,20 @@ class PostRepositoryImpl: PostRepository {
 
             Resource.Success(onlyLikedPosts)
         } catch (e: Exception) {
-            Log.e("Check Firebase Error", "Error fetching posts", e)
+            Log.e("Check Firebase Error", "Error fetching liked posts", e)
             Resource.Error("Error fetching posts")
+        }
+    }
+
+    override suspend fun deletePost(postId: String): Result {
+        return try {
+            Result(Firebase.database.reference.child("posts").child(postId).removeValue().isSuccessful)
+        } catch (e: Exception) {
+            Log.e("Check Firebase Error", "Error deleting post", e)
+            Result(
+                false,
+                "Error deleting post"
+            )
         }
     }
 }
