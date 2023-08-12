@@ -4,6 +4,8 @@ import android.renderscript.ScriptGroup.Input
 import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogEvent
 import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogUiEvent
 import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogViewModel
@@ -53,7 +56,7 @@ import kotlinx.coroutines.launch
 import java.util.Properties
 import kotlin.coroutines.coroutineContext
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BlogPresentation(
     navHostController: NavHostController,
@@ -61,9 +64,11 @@ fun BlogPresentation(
 ) {
     val state = viewModel.state.collectAsState().value
     val context = LocalContext.current
-    val infoState = rememberUseCaseState()
+    val infoDeletePostState = rememberUseCaseState()
+    val infoDeleteCommentState = rememberUseCaseState()
     val isWindowVisible = rememberUpdatedState(true)
     val coroutineScope = rememberCoroutineScope()
+    var commentToDelete = ""
 
     LaunchedEffect(key1 = true) {
         viewModel.sharedFlow.collectLatest { event ->
@@ -90,10 +95,10 @@ fun BlogPresentation(
     }
 
     InfoDialog(
-        state = infoState,
+        state = infoDeletePostState,
         selection = InfoSelection(
             negativeButton = SelectionButton(text = "No"),
-            positiveButton = SelectionButton(text = "No"),
+            positiveButton = SelectionButton(text = "Yes"),
             onPositiveClick = {
                 viewModel.onEvent(BlogEvent.DeletePost)
             }
@@ -102,7 +107,24 @@ fun BlogPresentation(
             title = "Deleting post"
         ),
         body = InfoBody.Default(
-            bodyText = "Are you sure?"
+            bodyText = "Are you sure with deleting post?"
+        )
+    )
+
+    InfoDialog(
+        state = infoDeleteCommentState,
+        selection = InfoSelection(
+            negativeButton = SelectionButton(text = "No"),
+            positiveButton = SelectionButton(text = "Yes"),
+            onPositiveClick = {
+                viewModel.onEvent(BlogEvent.DeleteComment(commentToDelete))
+            }
+        ),
+        header = Header.Default(
+            title = "Deleting comment"
+        ),
+        body = InfoBody.Default(
+            bodyText = "Are you sure with deleting comment?"
         )
     )
 
@@ -137,7 +159,7 @@ fun BlogPresentation(
                             viewModel.onEvent(BlogEvent.DisLikePost)
                         },
                         onClickDelete = {
-                            infoState.show()
+                            infoDeletePostState.show()
                         },
                         userModel = state.user
                     )
@@ -215,7 +237,20 @@ fun BlogPresentation(
                 items(state.comments) { comment ->
                     BlogCommentPresentation(
                         commentModel = comment,
-                        navHostController = navHostController
+                        user = state.usersList[comment.userId],
+                        onClickUser = {
+                            navHostController.navigate(BlogScreen.User.sendUserId(comment.userId))
+                        },
+                        onClickDelete = {
+                            commentToDelete = comment.id
+                            infoDeleteCommentState.show()
+                        },
+                        modifier = Modifier
+                            .animateItemPlacement(
+                                animationSpec = tween(
+                                    500
+                                )
+                            )
                     )
                 }
             }

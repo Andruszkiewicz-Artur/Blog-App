@@ -45,3 +45,11 @@ fun String.replaceDataToDatabase(): String {
 fun String.replaceDataFromDatabase(): String {
     return this.replace('m', '-').replace('d', ':').replace('e', '.')
 }
+
+fun String.replaceTextToDatabase(): String {
+    return this.replace(' ', '1')
+}
+
+fun String.replaceTextFromDatabase(): String {
+    return this.replace('1', ' ')
+}

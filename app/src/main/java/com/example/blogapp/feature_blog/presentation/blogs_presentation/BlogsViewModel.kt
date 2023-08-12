@@ -158,7 +158,6 @@ class BlogsViewModel @Inject constructor(
 
         val result = postUseCases.takePostsUseCase()
 
-        Log.d("check result", "${result.data}")
         when (result) {
             is Resource.Error -> {
                 _sharedFlow.emit(BlogsUiEvent.Toast("Problem with taking data"))

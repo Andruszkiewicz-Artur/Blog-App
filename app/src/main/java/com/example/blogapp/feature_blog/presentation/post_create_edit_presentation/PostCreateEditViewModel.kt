@@ -29,8 +29,7 @@ class PostCreateEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val validateUseCases: ValidateUseCases,
     private val globalUseCases: GlobalUseCases,
-    private val postUseCases: PostUseCases,
-    private val profileUseCases: ProfileUseCases
+    private val postUseCases: PostUseCases
 ): ViewModel() {
 
     private val _state = MutableStateFlow(PostCreateEditState())
@@ -60,7 +59,6 @@ class PostCreateEditViewModel @Inject constructor(
                                     _sharedFlow.emit(PostCreateEditUiEvent.Toast("Problem with loading post"))
                                     _sharedFlow.emit(PostCreateEditUiEvent.Finish)
                                 }
-                                Log.d("Check result", "${post ?: "none"}")
                                 _state.update { it.copy(
                                     idPost = post!!.id,
                                     content = post.text,

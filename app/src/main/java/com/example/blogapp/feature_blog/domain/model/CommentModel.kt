@@ -4,9 +4,9 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class CommentModel(
-    val id: String?,
+    val id: String,
     val message: String,
-    val owner: UserPreviewModel,
-    val post: String,
-    val publishDate: LocalDate?
+    val userId: String,
+    val postId: String,
+    val publishDate: LocalDateTime
 )

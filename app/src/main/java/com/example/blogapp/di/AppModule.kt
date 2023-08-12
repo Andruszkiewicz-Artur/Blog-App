@@ -1,7 +1,9 @@
 package com.example.blogapp.di
 
+import com.example.blogapp.core.data.repository.CommentRepositoryImpl
 import com.example.blogapp.core.data.repository.PostRepositoryImpl
 import com.example.blogapp.core.data.repository.UserRepositoryImpl
+import com.example.blogapp.core.domain.repository.CommentRepository
 import com.example.blogapp.core.domain.repository.PostRepository
 import com.example.blogapp.core.domain.repository.UserRepository
 import com.example.blogapp.core.domain.use_cases.global.GlobalUseCases
@@ -13,10 +15,13 @@ import com.example.blogapp.core.domain.use_cases.validation.ValidateLink
 import com.example.blogapp.core.domain.use_cases.validation.ValidatePhoneNumber
 import com.example.blogapp.core.domain.use_cases.validation.ValidationPicture
 import com.example.blogapp.feature_blog.domain.use_cases.CreatePostUseCase
+import com.example.blogapp.feature_blog.domain.use_cases.CreatingCommentUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.DeletePostUseCase
+import com.example.blogapp.feature_blog.domain.use_cases.DeletingCommentUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.DislikePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.LikePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
+import com.example.blogapp.feature_blog.domain.use_cases.TakeCommentsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.TakePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.TakePostsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.TakeUserDataUseCase
@@ -74,6 +79,12 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideCommentRepository(): CommentRepository {
+        return CommentRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
     fun provideSignInUseCases(repository: UserRepository): SignInUseCases {
         return SignInUseCases(
             createUserUseCase = CreateUserUseCase(repository),
@@ -95,7 +106,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePostUseCases(repository: UserRepository, postRepository: PostRepository): PostUseCases {
+    fun providePostUseCases(
+        repository: UserRepository,
+        postRepository: PostRepository,
+        commentRepository: CommentRepository
+    ): PostUseCases {
         return PostUseCases(
             takeUserDataUseCase = TakeUserDataUseCase(repository),
             createPostUseCase = CreatePostUseCase(postRepository),
@@ -104,13 +119,19 @@ object AppModule {
             takePostUseCase = TakePostUseCase(postRepository),
             likePostUseCase = LikePostUseCase(postRepository),
             dislikePostUseCase = DislikePostUseCase(postRepository),
-            deletePostUseCase = DeletePostUseCase(postRepository)
+            deletePostUseCase = DeletePostUseCase(postRepository),
+            addCommentUseCase = CreatingCommentUseCase(commentRepository),
+            takeCommentsUseCase = TakeCommentsUseCase(commentRepository),
+            deletingCommentUseCase = DeletingCommentUseCase(commentRepository)
         )
     }
 
     @Provides
     @Singleton
-    fun provideGlobalUseCases(repository: UserRepository, postRepository: PostRepository): GlobalUseCases {
+    fun provideGlobalUseCases(
+        repository: UserRepository,
+        postRepository: PostRepository
+    ): GlobalUseCases {
         return GlobalUseCases(
             takeAllTagsUseCase = TakeAllTagsUseCase(repository),
             takeAllLikedPosts = TakeAllLikedPosts(postRepository)

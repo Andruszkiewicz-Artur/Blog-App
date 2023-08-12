@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.domain.unit.Resource
+import com.example.blogapp.feature_blog.domain.model.CommentModel
 import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,6 +40,7 @@ class BlogViewModel @Inject constructor(
                 this.postId = postId
                 viewModelScope.launch {
                     loadPost()
+                    loadComments(postId)
                 }
             }
         }
@@ -91,6 +94,48 @@ class BlogViewModel @Inject constructor(
             }
             BlogEvent.AddComment -> {
                 if (isNoneErrors()) {
+                    viewModelScope.launch {
+                        val postId = _state.value.post?.id
+                        val userId = Global.user?.id
+                        val user = Global.user
+
+                        if(postId.isNullOrEmpty().not() && userId.isNullOrEmpty().not()) {
+                            val newComment = CommentModel(
+                                id = System.currentTimeMillis().toString(),
+                                message = _state.value.comment,
+                                userId = userId!!,
+                                postId = postId!!,
+                                publishDate = LocalDateTime.now()
+                            )
+
+                            val result = postUseCases.addCommentUseCase.invoke(
+                                postId,
+                                userId,
+                                commentModel = CommentModel(
+                                    id = System.currentTimeMillis().toString(),
+                                    message = _state.value.comment,
+                                    userId = userId,
+                                    postId = postId,
+                                    publishDate = LocalDateTime.now()
+                                )
+                            )
+
+                            if(result.successful) {
+                                val newList = _state.value.comments.toMutableList()
+                                newList.add(0, newComment)
+
+                                _state.update {  it.copy(
+                                    comments = newList,
+                                    isCommentAddPresented = false,
+                                    comment = "",
+                                    usersList = _state.value.usersList.plus(Pair(userId, user!!))
+                                ) }
+                                _sharedFlow.emit(BlogUiEvent.Toast("Add new comment"))
+                            } else {
+                                _sharedFlow.emit(BlogUiEvent.Toast(result.errorMessage ?: "Problem with adding comment"))
+                            }
+                        }
+                    }
                 }
             }
             BlogEvent.ClickPresentingComment -> {
@@ -117,8 +162,28 @@ class BlogViewModel @Inject constructor(
                     }
                 }
             }
-            BlogEvent.ReloadData -> {
+            is BlogEvent.DeleteComment -> {
+                val commentId = event.value
+                if (!postId.isNullOrEmpty() && !commentId.isEmpty()) {
+                    viewModelScope.launch {
+                        val result = postUseCases.deletingCommentUseCase.invoke(commentId, postId!!)
 
+                        if (result.successful) {
+                            val commentToDelete = _state.value.comments.find { it.id == commentId }
+
+                            if(commentToDelete != null) {
+                                val newList = _state.value.comments.toMutableList()
+                                newList.remove(commentToDelete)
+                                _state.update {  it.copy(
+                                    comments = newList
+                                ) }
+                                _sharedFlow.emit(BlogUiEvent.Toast("Delete comment"))
+                            } else {
+                                _sharedFlow.emit(BlogUiEvent.Toast("${result.errorMessage}"))
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -128,11 +193,9 @@ class BlogViewModel @Inject constructor(
 
         val hasError = !content.successful
 
-        if (hasError) {
-            _state.update { it.copy(
-                commentMessageError = content.errorMessage
-            ) }
-        }
+        _state.update { it.copy(
+            commentMessageError = content.errorMessage
+        ) }
 
         return !hasError
     }
@@ -174,5 +237,33 @@ class BlogViewModel @Inject constructor(
             user = result,
             isUserBlog = userId == Global.user?.id
         ) }
+    }
+
+    private suspend fun loadComments(postId: String) {
+        val result = postUseCases.takeCommentsUseCase.invoke(postId)
+
+        when (result) {
+            is Resource.Error -> {
+                _sharedFlow.emit(BlogUiEvent.Toast("${result.message}"))
+            }
+            is Resource.Success -> {
+                _state.update {  it.copy(
+                    comments = result.data?.sortedByDescending { it.publishDate } ?: emptyList()
+                ) }
+                takeUsers()
+            }
+        }
+    }
+
+    private suspend fun takeUsers() {
+        val listUsersToTakeData = _state.value.comments.map { it.userId }.distinct()
+
+        val newUsersList = postUseCases.takeUsersUseCase.invoke(listUsersToTakeData)
+
+        _state.update {
+            it.copy(
+                usersList = newUsersList
+            )
+        }
     }
 }

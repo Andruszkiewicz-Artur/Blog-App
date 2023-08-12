@@ -48,7 +48,9 @@ fun BlogsPresentation(
 
     LaunchedEffect(isWindowVisible.value) {
         if (isWindowVisible.value) {
-            viewModel.onEvent(BlogsEvent.PullToRefresh)
+            if (state.isLoading.not()) {
+                viewModel.onEvent(BlogsEvent.PullToRefresh)
+            }
         }
     }
 

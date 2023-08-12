@@ -10,7 +10,7 @@ fun List<PostDto>.toPostModel(): List<PostModel> {
         values.add(
             PostModel(
                 id = it.id,
-                text = it.text,
+                text = it.text.replaceTextFromDatabase(),
                 image = it.image,
                 likes = it.likes,
                 link = it.link,
