@@ -20,4 +20,6 @@ interface PostRepository {
     suspend fun takeAllLikedPosts(userId: String): Resource<List<String>>
 
     suspend fun deletePost(postId: String): Result
+
+    suspend fun takeUserPosts(userId: String): Resource<List<PostDto>>
 }

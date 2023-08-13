@@ -13,5 +13,6 @@ data class PostUseCases(
     val deletePostUseCase: DeletePostUseCase,
     val addCommentUseCase: CreatingCommentUseCase,
     val takeCommentsUseCase: TakeCommentsUseCase,
-    val deletingCommentUseCase: DeletingCommentUseCase
+    val deletingCommentUseCase: DeletingCommentUseCase,
+    val takeUserPostsUseCase: TakeUserPostsUseCase
 )

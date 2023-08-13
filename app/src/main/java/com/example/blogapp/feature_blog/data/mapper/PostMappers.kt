@@ -35,3 +35,13 @@ fun PostModel.toPostDto(): PostDto {
         userId = userId
     )
 }
+
+fun List<PostDto>.toListOfPostModel(): List<PostModel> {
+    val newList = mutableListOf<PostModel>()
+
+    this.forEach {
+        newList.add(it.toPostModel())
+    }
+
+    return newList
+}

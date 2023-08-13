@@ -2,6 +2,7 @@ package com.example.blogapp.core.data.repository
 
 import android.util.Log
 import com.example.blogapp.core.Global
+import com.example.blogapp.core.data.dto.PostDto
 import com.example.blogapp.core.data.dto.UserDto
 import com.example.blogapp.core.domain.repository.UserRepository
 import com.example.blogapp.core.domain.unit.Resource

@@ -81,7 +81,15 @@ fun BlogPostPresentation(
                 .fillMaxWidth()
         ) {
             Row (
-                verticalAlignment = Alignment.Bottom
+                verticalAlignment = Alignment.Bottom,
+                modifier = Modifier
+                    .clickable {
+                        navHostController.navigate(
+                            BlogScreen.User.sendUserId(
+                                userModel?.id ?: ""
+                            )
+                        )
+                    }
             ) {
                 if (userModel != null) {
                     Text(

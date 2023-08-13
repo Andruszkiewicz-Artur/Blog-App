@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material.icons.outlined.Face3
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.PersonPinCircle
 import androidx.compose.material3.Icon
@@ -29,6 +31,7 @@ import coil.compose.AsyncImage
 import com.example.blogapp.core.comp.button.ButtonStandard
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.core.navigation.graph_profile.ProfileScreen
+import com.example.blogapp.feature_profile.presentation.change_user_data_presentation.Gender
 import com.example.blogapp.feature_profile.presentation.profile_presentation.ProfileViewModel
 
 @Composable
@@ -65,7 +68,7 @@ fun ProfilePresentation(
                     )
                 } else {
                     Icon(
-                        imageVector = Icons.Outlined.AccountCircle,
+                        imageVector = if (state.user.gender != null && state.user.gender == Gender.Female.toString()) Icons.Outlined.Face3 else Icons.Outlined.Face,
                         contentDescription = null,
                         modifier = Modifier
                             .size(200.dp)

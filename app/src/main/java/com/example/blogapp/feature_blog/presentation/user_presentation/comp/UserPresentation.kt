@@ -1,6 +1,8 @@
 package com.example.blogapp.feature_blog.presentation.user_presentation.comp
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,16 +14,21 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.core.Global
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.presentation.unit.comp.BlogsPageChanger
-import com.example.blogapp.feature_blog.presentation.user_presentation.UserEvent
+import com.example.blogapp.feature_blog.presentation.user_presentation.UserUiEvent
 import com.example.blogapp.feature_blog.presentation.user_presentation.UserViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun UserPresentation(
@@ -29,6 +36,18 @@ fun UserPresentation(
     viewModel: UserViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.sharedFlow.collectLatest { event ->
+            when (event) {
+                UserUiEvent.BackFromUser -> {
+                    Toast.makeText(context, "Problem with taking data", Toast.LENGTH_LONG).show()
+                    navHostController.popBackStack()
+                }
+            }
+        }
+    }
 
     if (state.value.isLoading) {
         Column(
@@ -58,6 +77,22 @@ fun UserPresentation(
                         style = MaterialTheme.typography.displayMedium
                     )
                     Spacer(modifier = Modifier.height(8.dp))
+
+                    if (state.value.posts.isEmpty()) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Non posts yet",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Light,
+                                modifier = Modifier
+                                    .padding(vertical = 12.dp)
+                            )
+                        }
+                    }
                 }
 
                 items(state.value.posts) {
@@ -65,20 +100,9 @@ fun UserPresentation(
                         post = it,
                         onClick = {
                             navHostController.navigate(BlogScreen.Blog.sendPostId(it))
-                        }
+                        },
+                        isLikedPost = Global.likedPosts.contains(it.id)
                     )
-                }
-
-                item {
-                    if(state.value.countPages > 1) {
-                        BlogsPageChanger(
-                            pageLimit = state.value.countPages,
-                            currentPage = state.value.page,
-                            onClick = {
-                                viewModel.onEvent(UserEvent.ChangePage(it))
-                            }
-                        )
-                    }
                 }
             }
         }

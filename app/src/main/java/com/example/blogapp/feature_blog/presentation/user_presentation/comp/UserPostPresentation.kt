@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,19 +26,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.blogapp.core.comp.text.TagPresentation
+import com.example.blogapp.feature_blog.domain.model.PostModel
 import com.example.blogapp.feature_blog.domain.model.PostPreviewModel
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @Composable
 fun UserPostPresentation(
-    post: PostPreviewModel,
+    post: PostModel,
+    isLikedPost: Boolean,
     onClick: (String) -> Unit
 ) {
     val formattedTime = remember(post.publishDate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            post.publishDate.format(
+            val time = post.publishDate ?: LocalDateTime.now()
+            time.format(
                 DateTimeFormatter.ofPattern("u LLLL d HH:mm")
             )
         } else {
@@ -58,7 +63,7 @@ fun UserPostPresentation(
         ),
         modifier = Modifier
             .clickable {
-                onClick(post.id)
+                onClick(post.id ?: "")
             }
     ) {
         Column(
@@ -70,7 +75,7 @@ fun UserPostPresentation(
                 maxLines = 5,
             )
 
-            if(post.tags.isNotEmpty()) {
+            if(!post.tags.isNullOrEmpty()) {
                 Row(
                     modifier = Modifier
                         .padding(top = 16.dp, bottom = 8.dp)
@@ -93,9 +98,9 @@ fun UserPostPresentation(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.ThumbUp,
+                        imageVector = if(isLikedPost) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onBackground,
+                        tint = if(isLikedPost) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
                             .padding(end = 8.dp)
                             .size(20.dp)

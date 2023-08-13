@@ -25,6 +25,7 @@ import com.example.blogapp.feature_blog.domain.use_cases.TakeCommentsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.TakePostUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.TakePostsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.TakeUserDataUseCase
+import com.example.blogapp.feature_blog.domain.use_cases.TakeUserPostsUseCase
 import com.example.blogapp.feature_blog.domain.use_cases.TakeUsersUseCase
 import com.example.blogapp.feature_login_register.domain.use_cases.CreateUserUseCase
 import com.example.blogapp.feature_login_register.domain.use_cases.ResetPasswordUseCase
@@ -122,7 +123,8 @@ object AppModule {
             deletePostUseCase = DeletePostUseCase(postRepository),
             addCommentUseCase = CreatingCommentUseCase(commentRepository),
             takeCommentsUseCase = TakeCommentsUseCase(commentRepository),
-            deletingCommentUseCase = DeletingCommentUseCase(commentRepository)
+            deletingCommentUseCase = DeletingCommentUseCase(commentRepository),
+            takeUserPostsUseCase = TakeUserPostsUseCase(postRepository)
         )
     }
 

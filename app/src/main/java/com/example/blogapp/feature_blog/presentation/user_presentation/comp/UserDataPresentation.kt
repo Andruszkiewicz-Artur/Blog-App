@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material.icons.outlined.Face3
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.blogapp.core.domain.model.UserModel
+import com.example.blogapp.feature_profile.presentation.change_user_data_presentation.Gender
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -46,13 +51,22 @@ fun UserDataPresentation(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            AsyncImage(
-                model = userModel.picture,
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(200.dp)
-            )
+            if (userModel.picture != null) {
+                AsyncImage(
+                    model = userModel.picture,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(200.dp)
+                )
+            } else {
+                Icon(
+                    imageVector = if (userModel.gender != null && userModel.gender == Gender.Female.toString()) Icons.Outlined.Face3 else Icons.Outlined.Face,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(200.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))

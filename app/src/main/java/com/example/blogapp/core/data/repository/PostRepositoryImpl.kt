@@ -34,7 +34,7 @@ class PostRepositoryImpl: PostRepository {
             var successfulAddNewPost = false
 
             val value: MutableMap<String, Any> = hashMapOf(
-                "users/$userId/posts/$postId" to postId,
+                "users/$userId/posts/$postId" to true,
                 "posts/$postId" to newPost
             )
 
@@ -165,6 +165,34 @@ class PostRepositoryImpl: PostRepository {
                 false,
                 "Error deleting post"
             )
+        }
+    }
+
+    override suspend fun takeUserPosts(userId: String): Resource<List<PostDto>> {
+        return try {
+            val postsIdFromUser = Firebase.database.reference
+                .child("users")
+                .child(userId)
+                .child("posts")
+                .get()
+                .await()
+
+            val listOfPosts = mutableListOf<PostDto>()
+
+            postsIdFromUser.children.forEach {
+                val post = takePost(it.key.toString())
+
+                if (post.data != null) {
+                    listOfPosts.add(post.data)
+                }
+            }
+
+            if (listOfPosts.isEmpty()) {
+                return Resource.Error(message = "Problem with taking data")
+            }
+            Resource.Success(data = listOfPosts)
+        } catch (e: Exception) {
+            Resource.Error("${e.message}")
         }
     }
 }
