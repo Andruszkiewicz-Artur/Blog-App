@@ -11,5 +11,4 @@ sealed class PostCreateEditEvent {
 
     object Save: PostCreateEditEvent()
     object PickImage: PostCreateEditEvent()
-    object ChoosePickImageOption: PostCreateEditEvent()
 }

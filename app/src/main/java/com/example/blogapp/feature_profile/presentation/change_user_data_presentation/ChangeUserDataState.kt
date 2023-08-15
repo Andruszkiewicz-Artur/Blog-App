@@ -19,7 +19,6 @@ data class ChangeUserDataState(
     val city: String = "",
     val street: String = "",
     val state: String = "",
-    val chooseOptionTakePicture: Boolean = false
 )
 
 

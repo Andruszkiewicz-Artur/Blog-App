@@ -1,9 +1,12 @@
 package com.example.blogapp.core.data.repository
 
+import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.data.dto.PostDto
 import com.example.blogapp.core.data.dto.UserDto
+import com.example.blogapp.core.data.mappers.replaceDataFromDatabase
 import com.example.blogapp.core.domain.repository.UserRepository
 import com.example.blogapp.core.domain.unit.Resource
 import com.example.blogapp.core.domain.unit.Result
@@ -14,6 +17,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
@@ -23,14 +27,11 @@ class UserRepositoryImpl: UserRepository {
 
     override suspend fun createUser(user: UserDto, password: String): Resource<UserDto> {
         try {
-            //Create user and take him id
             Firebase.auth.createUserWithEmailAndPassword(user.email, password).await()
 
-            //Check user id. If is null throw error
             val userId = Firebase.auth.currentUser?.uid
                 ?: return Resource.Error(message = "Can`t take user id")
 
-            //Create record in database and check is all success
             val path = Firebase.database.reference.child("users").child(userId)
             path.setValue(
                 user.copy(
@@ -38,9 +39,9 @@ class UserRepositoryImpl: UserRepository {
                     registerDate = LocalDate.now().toString()
             )).await()
 
-            //Return new user data with userId
-            val newUser = user.copy(id = userId)
-            return Resource.Success(data = newUser)
+            return Resource.Success(data = user.copy(
+                id = userId
+            ))
         } catch (e: FirebaseAuthException) {
             return Resource.Error(message = "${e.message}")
         } catch (e: FirebaseException) {
@@ -65,7 +66,17 @@ class UserRepositoryImpl: UserRepository {
                 ?: return Resource.Error(message = "Problem with taking data")
 
             val gson = Gson()
-            val userDto = gson.fromJson(user.toString(), UserDto::class.java)
+            var userDto = gson.fromJson(user.toString(), UserDto::class.java)
+
+            if (userDto.picture != null) {
+                val urlImage = takeImage(userDto.picture!!)
+
+                if (urlImage.data != null) {
+                    userDto = userDto.copy(
+                        picture = urlImage.data,
+                    )
+                }
+            }
 
             return Resource.Success(data = userDto)
         } catch (e: FirebaseException) {
@@ -246,8 +257,23 @@ class UserRepositoryImpl: UserRepository {
             if(user.id.isBlank()) return Resource.Error(message = "Problem with taking user id")
 
             var successfulAdding = false
+            var userDto = user
 
-            Firebase.database.reference.child("users").child(user.id).setValue(user)
+            if(user.picture != null && user.picture.contains("content://media/picker")) {
+
+                val result = setUpImage(
+                    uri = user.picture.toUri()
+                )
+
+                userDto = user.copy(
+                    picture = result.data
+                )
+
+                Log.d("Check", "${result.data}")
+            }
+
+
+            Firebase.database.reference.child("users").child(user.id).setValue(userDto)
                 .addOnCompleteListener {
                     if (it.isSuccessful) successfulAdding = true
                 }
@@ -278,6 +304,43 @@ class UserRepositoryImpl: UserRepository {
             Resource.Success(data = tags)
         } catch (e: Exception) {
             Resource.Error("${e.message}")
+        }
+    }
+
+    private suspend fun setUpImage(uri: Uri): Resource<String> {
+        return try {
+            val photoId = System.currentTimeMillis().toString()
+
+            val photoRef = Firebase.storage.reference
+                .child("user")
+                .child("$photoId.jpg")
+
+            photoRef.putFile(uri).addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let { throw it }
+                }
+            }.await()
+
+            Resource.Success(data = photoId)
+        } catch (e: Exception) {
+            Log.e("Error userRepository/setUpImage", "Exception: ${e.message}", e)
+            Resource.Error(message = "Problem with set up photo")
+        }
+    }
+
+    private suspend fun takeImage(idImage: String): Resource<String> {
+        return try {
+            val photoRef = Firebase.storage.reference
+                .child("user")
+                .child("$idImage.jpg")
+                .downloadUrl
+                .await()
+                .toString()
+
+            Resource.Success(data = photoRef)
+        } catch (e: Exception) {
+            Log.e("Error userRepository/takeImage", "Exception: ${e.message}", e)
+            Resource.Error(message = "Problem with taking photo")
         }
     }
 }

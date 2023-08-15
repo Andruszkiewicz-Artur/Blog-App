@@ -1,5 +1,6 @@
 package com.example.blogapp.core.domain.repository
 
+import android.content.Context
 import com.example.blogapp.core.data.dto.CommentDto
 import com.example.blogapp.core.data.dto.PostDto
 import com.example.blogapp.core.domain.unit.Resource

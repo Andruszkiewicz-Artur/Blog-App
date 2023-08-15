@@ -1,6 +1,7 @@
 package com.example.blogapp.feature_blog.presentation.post_create_edit_presentation
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -97,16 +98,18 @@ class PostCreateEditViewModel @Inject constructor(
             PostCreateEditEvent.Save -> {
                 if (isNoneErrors() && Global.user?.id != null) {
                     viewModelScope.launch {
-                        val result = postUseCases.createPostUseCase.invoke(PostModel(
-                            id = _state.value.idPost,
-                            text = _state.value.content,
-                            image = if(_state.value.imageUri == null) _state.value.imagePath else _state.value.imageUri.toString(),
-                            likes = _state.value.likes,
-                            link = _state.value.link.ifBlank { null },
-                            tags = _state.value.chosenTags.ifEmpty { null },
-                            publishDate = _state.value.publishDate ?: LocalDateTime.now(),
-                            userId = Global.user!!.id!!
-                        ))
+                        val result = postUseCases.createPostUseCase.invoke(
+                            PostModel(
+                                id = _state.value.idPost,
+                                text = _state.value.content,
+                                image = if(_state.value.imageUri == null) _state.value.imagePath else _state.value.imageUri.toString(),
+                                likes = _state.value.likes,
+                                link = _state.value.link.ifBlank { null },
+                                tags = _state.value.chosenTags.ifEmpty { null },
+                                publishDate = _state.value.publishDate ?: LocalDateTime.now(),
+                                userId = Global.user!!.id!!
+                            )
+                        )
 
                         if (result.successful) {
                             _sharedFlow.emit(PostCreateEditUiEvent.Finish)
@@ -147,11 +150,6 @@ class PostCreateEditViewModel @Inject constructor(
             PostCreateEditEvent.PickImage -> {
                 _state.update {  it.copy(
                     isImagePicker = false
-                ) }
-            }
-            PostCreateEditEvent.ChoosePickImageOption -> {
-                _state.update {  it.copy(
-                    isImagePicker = true
                 ) }
             }
         }

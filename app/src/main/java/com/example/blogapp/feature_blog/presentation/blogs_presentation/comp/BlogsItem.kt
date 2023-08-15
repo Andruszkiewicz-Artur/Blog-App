@@ -138,7 +138,11 @@ fun BlogsItem(
                     .padding(top = 16.dp, bottom = 8.dp)
             ) {
                 post.tags?.forEach {
-                    TagPresentation(value = it)
+                    TagPresentation(
+                        value = it,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                    )
                 }
             }
 

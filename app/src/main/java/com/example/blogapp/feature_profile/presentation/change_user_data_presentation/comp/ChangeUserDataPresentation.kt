@@ -2,6 +2,9 @@ package com.example.blogapp.feature_profile.presentation.change_user_data_presen
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -46,7 +49,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.blogapp.core.comp.button.ImagePicker
 import com.example.blogapp.core.comp.textfield.TextFieldStandard
 import com.example.blogapp.feature_blog.presentation.post_create_edit_presentation.PostCreateEditEvent
 import com.example.blogapp.feature_blog.presentation.post_create_edit_presentation.comp.PhotoPresent
@@ -73,6 +75,13 @@ fun ChangeUserDataPresentation(
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val dataPickerState = rememberUseCaseState()
+
+    val singlePhotoPicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = {
+            viewModel.onEvent(ChangeUserDataEvent.SetImage(it))
+        }
+    )
 
     DateTimeDialog(
         state = dataPickerState,
@@ -140,7 +149,11 @@ fun ChangeUserDataPresentation(
                         imageLink = state.imageUrl,
                         icon = Icons.Outlined.AccountCircle,
                         onClick = {
-                            viewModel.onEvent(ChangeUserDataEvent.ChoosePickImageOption)
+                            singlePhotoPicker.launch(
+                                PickVisualMediaRequest(
+                                    ActivityResultContracts.PickVisualMedia.ImageOnly
+                                )
+                            )
                         },
                         errorMessage = null
                     )
@@ -292,17 +305,6 @@ fun ChangeUserDataPresentation(
                     )
                 }
             }
-        }
-
-        if (state.chooseOptionTakePicture) {
-            ImagePicker(
-                onImageSelected = {
-                    viewModel.onEvent(ChangeUserDataEvent.SetImage(it))
-                },
-                onClick = {
-                    viewModel.onEvent(ChangeUserDataEvent.PickImage)
-                }
-            )
         }
     }
 

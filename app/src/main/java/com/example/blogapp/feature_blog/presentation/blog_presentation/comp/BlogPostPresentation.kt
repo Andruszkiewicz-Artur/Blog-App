@@ -160,14 +160,21 @@ fun BlogPostPresentation(
             )
         }
 
-        AsyncImage(
-            model = postModel.image,
-            contentDescription = null,
-            alignment = Alignment.Center,
+        Row(
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
                 .fillMaxWidth()
-        )
+        ) {
+            AsyncImage(
+                model = postModel.image,
+                contentDescription = null,
+                alignment = Alignment.Center,
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .fillMaxWidth(0.8f)
+            )
+        }
 
         Text(
             text = postModel.text,

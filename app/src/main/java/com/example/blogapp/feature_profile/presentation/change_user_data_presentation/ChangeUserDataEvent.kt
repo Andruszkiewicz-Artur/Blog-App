@@ -16,7 +16,5 @@ sealed class ChangeUserDataEvent {
     data class EnteredState(val value: String): ChangeUserDataEvent()
     data class EnteredDateOfBirthDay(val value: LocalDate): ChangeUserDataEvent()
 
-    object PickImage: ChangeUserDataEvent()
-    object ChoosePickImageOption: ChangeUserDataEvent()
     object SaveUserProfile: ChangeUserDataEvent()
 }

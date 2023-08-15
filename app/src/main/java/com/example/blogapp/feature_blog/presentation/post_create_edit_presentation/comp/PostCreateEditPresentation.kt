@@ -2,6 +2,9 @@ package com.example.blogapp.feature_blog.presentation.post_create_edit_presentat
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,9 +39,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.blogapp.core.comp.button.ImagePicker
-import com.example.blogapp.core.comp.image.ImagePresentation
-import com.example.blogapp.core.comp.lazy_column.RowWithObjects
 import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.core.comp.textfield.TextFieldStandard
 import com.example.blogapp.feature_blog.presentation.post_create_edit_presentation.PostCreateEditEvent
@@ -56,6 +56,13 @@ fun PostCreateEditPresentation(
 
     val state = viewModel.state.collectAsState().value
     val context = LocalContext.current
+
+    val singlePhotoPicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = {
+            viewModel.onEvent(PostCreateEditEvent.SetImage(it))
+        }
+    )
 
     LaunchedEffect(key1 = true) {
         viewModel.sharedFlow.collectLatest { event ->
@@ -111,7 +118,11 @@ fun PostCreateEditPresentation(
                         uri = state.imageUri,
                         imageLink = state.imagePath,
                         onClick = {
-                            viewModel.onEvent(PostCreateEditEvent.ChoosePickImageOption)
+                            singlePhotoPicker.launch(
+                                PickVisualMediaRequest(
+                                    ActivityResultContracts.PickVisualMedia.ImageOnly
+                                )
+                            )
                         },
                         errorMessage = state.pictureErrorMessage
                     )
@@ -169,17 +180,6 @@ fun PostCreateEditPresentation(
                         }
                     }
                 }
-            }
-
-            if (state.isImagePicker) {
-                ImagePicker(
-                    onImageSelected = {
-                        viewModel.onEvent(PostCreateEditEvent.SetImage(it))
-                    },
-                    onClick = {
-                        viewModel.onEvent(PostCreateEditEvent.PickImage)
-                    }
-                )
             }
         }
     }

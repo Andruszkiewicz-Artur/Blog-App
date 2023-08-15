@@ -1,6 +1,10 @@
 package com.example.blogapp.core.data.repository
 
+import android.app.Application
+import android.content.Context
+import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import com.example.blogapp.core.data.dto.CommentDto
 import com.example.blogapp.core.data.dto.PostDto
 import com.example.blogapp.core.data.dto.UserDto
@@ -12,26 +16,53 @@ import com.example.blogapp.core.domain.unit.Result
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParseException
+import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
+import java.io.File
+import java.io.FileInputStream
 
 class PostRepositoryImpl: PostRepository {
 
     override suspend fun createPost(postDto: PostDto): Result {
-        return try {
+        val database = Firebase.database.reference
+        val userId = postDto.userId
+        val postId = postDto.id.ifBlank { System.currentTimeMillis().toString() }
+        var newPost = if(postDto.id.isBlank()) postDto.copy(
+            id = System.currentTimeMillis().toString()
+        ) else {
+            postDto
+        }
+        var successfulAddNewPost = false
 
-            val database = Firebase.database.reference
-            val userId = postDto.userId
-            val postId = postDto.id.ifBlank { System.currentTimeMillis().toString() }
-            val newPost = if(postDto.id.isBlank()) postDto.copy(
-                id = System.currentTimeMillis().toString()
-            ) else {
-                postDto
+        return try {
+            if(postDto.image != null) {
+                val imagePath = postDto.image
+                if(imagePath.contains("content://media/picker")) {
+                    val result = setUpImage(
+                        uri = imagePath.toUri()
+                    )
+
+                    if (result.data.isNullOrEmpty()) return Result(false, "Problem with adding post")
+
+                    when (result) {
+                        is Resource.Error -> {
+                            return Result(false, "Problem with adding post")
+                        }
+                        is Resource.Success -> {
+                            newPost = newPost.copy(
+                                image = result.data
+                            )
+                        }
+                    }
+                }
             }
-            var successfulAddNewPost = false
 
             val value: MutableMap<String, Any> = hashMapOf(
                 "users/$userId/posts/$postId" to true,
@@ -62,14 +93,13 @@ class PostRepositoryImpl: PostRepository {
 
             val postsList = mutableListOf<PostDto>()
 
-            val gson = Gson()
             posts.children.forEachIndexed { index, postSnapshot ->
                 try {
                     val postJson = postSnapshot.value.toString()
-                    val postDto = gson.fromJson(postJson, PostDto::class.java)
-                    postsList.add(postDto.copy(
-                        publishDate = postDto.publishDate.replaceDataFromDatabase()
-                    ))
+                    val jsonObject = JsonParser.parseString(postJson).asJsonObject
+                    val postDto = PostDto(jsonObject)
+
+                    postsList.add(postDto)
                 } catch (e: JsonSyntaxException) {
                     Log.e("Check JSON Parse Error", "Error parsing JSON: $index", e)
                 }
@@ -88,12 +118,20 @@ class PostRepositoryImpl: PostRepository {
 
             val gson = Gson()
             val postJson = post.value.toString()
-            val postDto = gson.fromJson(postJson, PostDto::class.java)
+            var postDto = gson.fromJson(postJson, PostDto::class.java)
 
-            Resource.Success(
-                postDto.copy(
-                    publishDate = postDto.publishDate.replaceDataFromDatabase()
-            ) )
+            if (postDto.image != null) {
+                val urlImage = takeImage(postDto.image!!)
+
+                if (urlImage.data != null) {
+                    postDto = postDto.copy(
+                        image = urlImage.data,
+                        publishDate = postDto.publishDate.replaceDataFromDatabase()
+                    )
+                }
+            }
+
+            Resource.Success(postDto)
         } catch (e: Exception) {
             Log.e("Check Firebase Error", "Error fetching posts", e)
             Resource.Error("Error fetching posts")
@@ -193,6 +231,44 @@ class PostRepositoryImpl: PostRepository {
             Resource.Success(data = listOfPosts)
         } catch (e: Exception) {
             Resource.Error("${e.message}")
+        }
+    }
+
+
+    private suspend fun setUpImage(uri: Uri): Resource<String> {
+        return try {
+            val photoId = System.currentTimeMillis().toString()
+
+            val photoRef = Firebase.storage.reference
+                .child("post")
+                .child("$photoId.jpg")
+
+            photoRef.putFile(uri).addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let { throw it }
+                }
+            }.await()
+
+            Resource.Success(data = photoId)
+        } catch (e: Exception) {
+            Log.e("Error postRepository/setUpImage", "Exception: ${e.message}", e)
+            Resource.Error(message = "Problem with set up photo")
+        }
+    }
+
+    private suspend fun takeImage(idImage: String): Resource<String> {
+        return try {
+            val photoRef = Firebase.storage.reference
+                .child("post")
+                .child("$idImage.jpg")
+                .downloadUrl
+                .await()
+                .toString()
+
+            Resource.Success(data = photoRef)
+        } catch (e: Exception) {
+            Log.e("Error postRepository/takeImage", "Exception: ${e.message}", e)
+            Resource.Error(message = "Problem with taking photo")
         }
     }
 }

@@ -55,19 +55,9 @@ class ChangeUserDataViewModel @Inject constructor(
 
     fun onEvent(event: ChangeUserDataEvent) {
         when (event) {
-            ChangeUserDataEvent.ChoosePickImageOption -> {
-                _state.update {  it.copy(
-                    chooseOptionTakePicture = true
-                ) }
-            }
-            ChangeUserDataEvent.PickImage -> {
-                _state.update {  it.copy(
-                    chooseOptionTakePicture = false
-                ) }
-            }
             is ChangeUserDataEvent.SetImage -> {
                 _state.update {  it.copy(
-                    chooseOptionTakePicture = false
+                    imagePath = event.uri
                 ) }
             }
             is ChangeUserDataEvent.EnteredFirstName -> {
@@ -136,7 +126,7 @@ class ChangeUserDataViewModel @Inject constructor(
                                 dateOfBirth = _state.value.dateOfBirth,
                                 registerDate = user.registerDate,
                                 phone = _state.value.phoneNumber.ifBlank { null },
-                                picture = _state.value.imageUrl,
+                                picture = _state.value.imagePath?.toString() ?: _state.value.imageUrl,
                                 location = LocationModel(
                                     country = _state.value.country.ifBlank { null },
                                     city = _state.value.city.ifBlank { null },
