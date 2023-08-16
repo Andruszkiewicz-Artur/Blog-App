@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blogapp.R
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.domain.unit.Resource
 import com.example.blogapp.core.domain.unit.Result
@@ -44,20 +45,20 @@ class PostCreateEditViewModel @Inject constructor(
             if(!postId.isNullOrEmpty()) {
                 viewModelScope.launch {
                     if (Global.user == null) {
-                        _sharedFlow.emit(PostCreateEditUiEvent.Toast("You are not login yet"))
+                        _sharedFlow.emit(PostCreateEditUiEvent.Toast(R.string.YourNotLoginYet))
                         _sharedFlow.emit(PostCreateEditUiEvent.Finish)
                     } else {
                         val result = postUseCases.takePostUseCase.invoke(postId)
 
                         when (result) {
                             is Resource.Error -> {
-                                _sharedFlow.emit(PostCreateEditUiEvent.Toast("Problem with loading post"))
+                                _sharedFlow.emit(PostCreateEditUiEvent.Toast(R.string.ProblemWithLoadingPost))
                                 _sharedFlow.emit(PostCreateEditUiEvent.Finish)
                             }
                             is Resource.Success -> {
                                 val post = result.data
                                 if (post == null) {
-                                    _sharedFlow.emit(PostCreateEditUiEvent.Toast("Problem with loading post"))
+                                    _sharedFlow.emit(PostCreateEditUiEvent.Toast(R.string.ProblemWithLoadingPost))
                                     _sharedFlow.emit(PostCreateEditUiEvent.Finish)
                                 }
                                 _state.update { it.copy(
@@ -114,7 +115,7 @@ class PostCreateEditViewModel @Inject constructor(
                         if (result.successful) {
                             _sharedFlow.emit(PostCreateEditUiEvent.Finish)
                         } else {
-                            _sharedFlow.emit(PostCreateEditUiEvent.Toast("Problem with creating new post"))
+                            _sharedFlow.emit(PostCreateEditUiEvent.Toast(R.string.ProblemWithCreatingNewPost))
                         }
                     }
                 }

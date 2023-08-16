@@ -49,6 +49,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.R
 import com.example.blogapp.core.comp.textfield.TextFieldStandard
 import com.example.blogapp.feature_blog.presentation.post_create_edit_presentation.PostCreateEditEvent
 import com.example.blogapp.feature_blog.presentation.post_create_edit_presentation.comp.PhotoPresent
@@ -97,7 +98,7 @@ fun ChangeUserDataPresentation(
                     navHostController.popBackStack()
                 }
                 is ChangeUserDataUiEvent.Toast -> {
-                    Toast.makeText(context, event.value, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getString(event.value), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -140,7 +141,7 @@ fun ChangeUserDataPresentation(
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Change user data",
+                        text = context.getString(R.string.ChangeUserData),
                         style = MaterialTheme.typography.titleLarge
                     )
                     Spacer(modifier = Modifier.height(32.dp))
@@ -176,7 +177,7 @@ fun ChangeUserDataPresentation(
                     }
 
                     TextFieldStandard(
-                        label = "First name",
+                        label = context.getString(R.string.FirstName),
                         value = state.firstName,
                         onValueChange = {
                             viewModel.onEvent(ChangeUserDataEvent.EnteredFirstName(it))
@@ -188,7 +189,7 @@ fun ChangeUserDataPresentation(
                         }
                     )
                     TextFieldStandard(
-                        label = "Last name",
+                        label = context.getString(R.string.LastName),
                         value = state.lastName,
                         onValueChange = {
                             viewModel.onEvent(ChangeUserDataEvent.EnteredLastName(it))
@@ -223,16 +224,16 @@ fun ChangeUserDataPresentation(
                             }
                     ) {
                         Text(
-                            text = "Date of birth: ",
+                            text = "${context.getString(R.string.Birthday)}: ",
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "${state.dateOfBirth ?: "date not chosen yet!"}"
+                            text = "${state.dateOfBirth ?: context.getString(R.string.DataNoteChosenYet)}"
                         )
                     }
 
                     TextFieldStandard(
-                        label = "Phone number",
+                        label = context.getString(R.string.PhoneNumber),
                         value = state.phoneNumber,
                         onValueChange = {
                             viewModel.onEvent(ChangeUserDataEvent.EnteredPhoneNumber(it))
@@ -248,7 +249,7 @@ fun ChangeUserDataPresentation(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "Localization",
+                        text = context.getString(R.string.Localication),
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
                             .fillMaxWidth(0.9f)
@@ -257,7 +258,7 @@ fun ChangeUserDataPresentation(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     TextFieldStandard(
-                        label = "Country",
+                        label = context.getString(R.string.Country),
                         value = state.country,
                         onValueChange = {
                             viewModel.onEvent(ChangeUserDataEvent.EnteredCountry(it))
@@ -269,7 +270,7 @@ fun ChangeUserDataPresentation(
                     )
 
                     TextFieldStandard(
-                        label = "City",
+                        label = context.getString(R.string.City),
                         value = state.city,
                         onValueChange = {
                             viewModel.onEvent(ChangeUserDataEvent.EnteredCity(it))
@@ -281,7 +282,7 @@ fun ChangeUserDataPresentation(
                     )
 
                     TextFieldStandard(
-                        label = "Street",
+                        label = context.getString(R.string.Street),
                         value = state.street,
                         onValueChange = {
                             viewModel.onEvent(ChangeUserDataEvent.EnteredStreet(it))
@@ -293,7 +294,7 @@ fun ChangeUserDataPresentation(
                     )
 
                     TextFieldStandard(
-                        label = "State",
+                        label = context.getString(R.string.State),
                         value = state.state,
                         onValueChange = {
                             viewModel.onEvent(ChangeUserDataEvent.EnteredState(it))

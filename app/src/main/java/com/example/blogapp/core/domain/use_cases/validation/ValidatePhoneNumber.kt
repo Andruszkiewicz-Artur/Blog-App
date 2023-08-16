@@ -1,6 +1,7 @@
 package com.example.blogapp.core.domain.use_cases.validation
 
 import android.util.Patterns
+import com.example.blogapp.R
 import com.example.blogapp.core.domain.unit.Result
 
 class ValidatePhoneNumber {
@@ -9,7 +10,7 @@ class ValidatePhoneNumber {
         if (!Patterns.PHONE.matcher(phoneNumber).matches()) {
             return Result(
                 successful = false,
-                errorMessage = "Incorrect phone number"
+                errorMessage = R.string.WrongPhoneNumebr.toString()
             )
         }
 

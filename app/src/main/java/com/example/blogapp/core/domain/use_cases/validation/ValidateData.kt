@@ -1,5 +1,6 @@
 package com.example.blogapp.core.domain.use_cases.validation
 
+import com.example.blogapp.R
 import com.example.blogapp.core.domain.unit.Result
 
 class ValidateData {
@@ -8,19 +9,19 @@ class ValidateData {
         if (data.isBlank()) {
             return Result(
                 successful = false,
-                errorMessage = "Field is empty"
+                errorMessage = R.string.FieldCantBeEmpty.toString()
             )
         }
         if(data.length < min) {
             return Result(
                 successful = false,
-                errorMessage = "Is to short"
+                errorMessage = R.string.IsToShotr.toString()
             )
         }
         if(data.length > max) {
             return Result(
                 successful = false,
-                errorMessage = "Is to Long"
+                errorMessage = R.string.IsToLogn.toString()
             )
         }
 

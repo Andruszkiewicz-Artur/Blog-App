@@ -24,7 +24,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.blogapp.R
 
 @Composable
 fun BlogsSorting(
@@ -34,6 +36,7 @@ fun BlogsSorting(
     onClickShowing: () -> Unit
 ) {
     var sliderPosition by rememberSaveable { mutableStateOf(currentLimit) }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -46,7 +49,7 @@ fun BlogsSorting(
                 .fillMaxWidth()
         ) {
             Text(
-                text = "Posts",
+                text = context.getString(R.string.Posts),
                 style = MaterialTheme.typography.displayLarge
             )
 
@@ -88,7 +91,7 @@ fun BlogsSorting(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Limit posts per page: "
+                        text = context.getString(R.string.LimitPostsPerPage)
                     )
                     Text(
                         text = "${sliderPosition}",
@@ -131,7 +134,7 @@ fun BlogsSorting(
                     Button(onClick = {
                         setLimitPerPage(sliderPosition.toInt())
                     }) {
-                        Text(text = "Sort")
+                        Text(text = context.getString(R.string.Sort))
                     }
                 }
             }

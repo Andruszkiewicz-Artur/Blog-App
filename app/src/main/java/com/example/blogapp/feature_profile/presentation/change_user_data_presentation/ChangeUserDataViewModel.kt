@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blogapp.R
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.domain.model.LocationModel
 import com.example.blogapp.core.domain.model.UserModel
@@ -144,7 +145,7 @@ class ChangeUserDataViewModel @Inject constructor(
                                     Global.user = result
                                     _sharedFlow.emit(ChangeUserDataUiEvent.Save)
                                 } else {
-                                    _sharedFlow.emit(ChangeUserDataUiEvent.Toast("Problem with saving!"))
+                                    _sharedFlow.emit(ChangeUserDataUiEvent.Toast(R.string.ProblemWithSavingData))
                                 }
                             }
                         }

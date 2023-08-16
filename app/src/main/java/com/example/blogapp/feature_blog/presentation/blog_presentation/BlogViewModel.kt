@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blogapp.R
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.domain.unit.Resource
 import com.example.blogapp.feature_blog.domain.model.CommentModel
@@ -65,7 +66,7 @@ class BlogViewModel @Inject constructor(
                             ) }
                             Global.likedPosts = Global.likedPosts.toMutableList() + postId
                         } else {
-                            _sharedFlow.emit(BlogUiEvent.Toast("${result.errorMessage}"))
+                            _sharedFlow.emit(BlogUiEvent.Toast(R.string.ProblemWithLikingPost))
                         }
                     }
                 }
@@ -87,7 +88,7 @@ class BlogViewModel @Inject constructor(
                             ) }
                             Global.likedPosts = Global.likedPosts.toMutableList().filter { it != postId }
                         } else {
-                            _sharedFlow.emit(BlogUiEvent.Toast("${result.errorMessage}"))
+                            _sharedFlow.emit(BlogUiEvent.Toast(R.string.ProblemWithDislikingPost))
                         }
                     }
                 }
@@ -130,9 +131,9 @@ class BlogViewModel @Inject constructor(
                                     comment = "",
                                     usersList = _state.value.usersList.plus(Pair(userId, user!!))
                                 ) }
-                                _sharedFlow.emit(BlogUiEvent.Toast("Add new comment"))
+                                _sharedFlow.emit(BlogUiEvent.Toast(R.string.AddingComment))
                             } else {
-                                _sharedFlow.emit(BlogUiEvent.Toast(result.errorMessage ?: "Problem with adding comment"))
+                                _sharedFlow.emit(BlogUiEvent.Toast(R.string.ProblemWithAddingComment))
                             }
                         }
                     }
@@ -157,7 +158,7 @@ class BlogViewModel @Inject constructor(
                             val result = postUseCases.deletePostUseCase.invoke(postId)
 
                             if(result.successful) _sharedFlow.emit(BlogUiEvent.BackFromPost)
-                            else _sharedFlow.emit(BlogUiEvent.Toast("${result.errorMessage}"))
+                            else _sharedFlow.emit(BlogUiEvent.Toast(R.string.ProblemWithDeletignPost))
                         }
                     }
                 }
@@ -177,9 +178,9 @@ class BlogViewModel @Inject constructor(
                                 _state.update {  it.copy(
                                     comments = newList
                                 ) }
-                                _sharedFlow.emit(BlogUiEvent.Toast("Delete comment"))
+                                _sharedFlow.emit(BlogUiEvent.Toast(R.string.delete_comment))
                             } else {
-                                _sharedFlow.emit(BlogUiEvent.Toast("${result.errorMessage}"))
+                                _sharedFlow.emit(BlogUiEvent.Toast(R.string.ProblemWithDeletingPost))
                             }
                         }
                     }
@@ -244,7 +245,7 @@ class BlogViewModel @Inject constructor(
 
         when (result) {
             is Resource.Error -> {
-                _sharedFlow.emit(BlogUiEvent.Toast("${result.message}"))
+                _sharedFlow.emit(BlogUiEvent.Toast(R.string.ProblemWihtLoadingComments))
             }
             is Resource.Success -> {
                 _state.update {  it.copy(

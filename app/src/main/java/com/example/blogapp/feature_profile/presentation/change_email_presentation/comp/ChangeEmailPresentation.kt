@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.R
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.comp.button.ButtonStandard
 import com.example.blogapp.core.comp.textfield.TextFieldStandard
@@ -58,7 +59,7 @@ fun ChangeEmailPresentation(
                     navHostController.popBackStack()
                 }
                 is ChangeEmailUiEvent.Toast -> {
-                    Toast.makeText(context, event.value, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getText(event.value), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -73,12 +74,12 @@ fun ChangeEmailPresentation(
         item {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Change email",
+                text = context.getString(R.string.ChangeEmail),
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextFieldStandard(
-                label = "Password",
+                label = context.getString(R.string.Password),
                 value = state.password,
                 isPresentPassword = state.presentPassword,
                 onValueChange = {
@@ -99,13 +100,13 @@ fun ChangeEmailPresentation(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Current email: ${Global.user?.email ?: ""}",
+                text = "${context.getString(R.string.CurrentEmail)}: ${Global.user?.email ?: ""}",
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
             )
             Spacer(modifier = Modifier.height(8.dp))
             TextFieldStandard(
-                label = "New email",
+                label = context.getString(R.string.NewEmail),
                 value = state.newEmail,
                 onValueChange = {
                     viewModel.onEvent(ChangeEmailEvent.EnteredEmail(it))
@@ -120,7 +121,7 @@ fun ChangeEmailPresentation(
             )
             Spacer(modifier = Modifier.height(32.dp))
             ButtonStandard(
-                value = "Change email",
+                value = context.getString(R.string.ChangeEmail),
                 onClick = {
                     viewModel.onEvent(ChangeEmailEvent.ClickChangeEmail)
                 }

@@ -25,10 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.blogapp.R
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.domain.model.UserModel
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
@@ -46,6 +48,7 @@ fun BlogCommentPresentation(
     onClickDelete: () -> Unit,
     modifier: Modifier
 ) {
+    val context = LocalContext.current
     val formattedTime = remember(commentModel.publishDate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             commentModel.publishDate.format(
@@ -122,7 +125,7 @@ fun BlogCommentPresentation(
                             }
                         } else {
                             Text(
-                                text = "None information"
+                                text = context.getString(R.string.NoneInformation)
                             )
                         }
                     }

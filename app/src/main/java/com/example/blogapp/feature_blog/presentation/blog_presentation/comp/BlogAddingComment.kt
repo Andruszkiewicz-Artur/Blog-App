@@ -21,8 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.blogapp.R
 import com.example.blogapp.core.comp.button.ButtonStandard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,6 +36,7 @@ fun BlogAddingComment(
     errorMessage: String?,
     onClickAdd: () -> Unit
 ) {
+    val context = LocalContext.current
 
     Column {
         TextField(
@@ -78,7 +81,7 @@ fun BlogAddingComment(
                 .fillMaxWidth()
         ) {
             ButtonStandard(
-                value = "Add",
+                value = context.getString(R.string.Add),
                 onClick = {
                     onClickAdd()
                 },

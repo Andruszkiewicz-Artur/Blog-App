@@ -1,6 +1,7 @@
 package com.example.notes.feature_profile.domain.use_case.validationUseCases
 
 import android.util.Patterns
+import com.example.blogapp.R
 import com.example.blogapp.core.domain.unit.Result
 
 class ValidateEmail {
@@ -9,13 +10,13 @@ class ValidateEmail {
         if (email.isBlank()) {
             return Result(
                 successful = false,
-                errorMessage = "Field is empty"
+                errorMessage = R.string.FieldCantBeEmpty.toString()
             )
         }
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             return Result(
                 successful = false,
-                errorMessage = "Email is incorrect"
+                errorMessage = R.string.EmailIsWrong.toString()
             )
         }
 

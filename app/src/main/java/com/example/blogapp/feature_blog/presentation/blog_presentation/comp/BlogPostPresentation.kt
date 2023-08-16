@@ -30,10 +30,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.blogapp.R
 import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.core.domain.model.UserModel
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
@@ -56,6 +58,7 @@ fun BlogPostPresentation(
     onClickDislike: () -> Unit,
     onClickDelete: () -> Unit
 ) {
+    val context = LocalContext.current
     val formattedTime = remember(postModel.publishDate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val date = postModel.publishDate ?: LocalDateTime.now()
@@ -104,7 +107,7 @@ fun BlogPostPresentation(
                     )
                 } else {
                     Text(
-                        text = "none data",
+                        text = context.getString(R.string.NoneData),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -186,13 +189,13 @@ fun BlogPostPresentation(
 
         if(postModel.link != null) {
             Text(
-                text = "Link: ${postModel.link}",
+                text = "${context.getString(R.string.Link)}: ${postModel.link}",
                 fontWeight = FontWeight.Bold
             )
         }
 
         Text(
-            text = "Tags",
+            text = context.getString(R.string.Tags),
             style = MaterialTheme.typography.displayMedium,
             modifier = Modifier
                 .padding(top = 16.dp)

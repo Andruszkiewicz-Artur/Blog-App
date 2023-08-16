@@ -2,6 +2,7 @@ package com.example.blogapp.feature_login_register.presentation.forget_password_
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blogapp.R
 import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +36,7 @@ class ForgetPasswordViewModel @Inject constructor(
                         if (result.successful) {
                             _sharedFlow.emit(ForgetPasswordUiEvent.SendEmail)
                         } else {
-                            _sharedFlow.emit(ForgetPasswordUiEvent.Toast("Problem with sending email!"))
+                            _sharedFlow.emit(ForgetPasswordUiEvent.Toast(R.string.ProblemWithSendingEmail))
                         }
                     }
                 }

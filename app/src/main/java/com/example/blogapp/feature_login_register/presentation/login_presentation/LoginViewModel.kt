@@ -3,6 +3,7 @@ package com.example.blogapp.feature_login_register.presentation.login_presentati
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blogapp.R
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.domain.use_cases.global.GlobalUseCases
 import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCases
@@ -54,7 +55,7 @@ class LoginViewModel @Inject constructor(
                         val user = signInUseCases.signInUseCase.invoke(_state.value.email, _state.value.password, _state.value.loginPermanently)
 
                         if(user == null) {
-                            _sharedFlow.emit(LoginUiEvent.Toast("Problem with sign in!"))
+                            _sharedFlow.emit(LoginUiEvent.Toast(R.string.ProblemWithSingIn))
                         } else {
                             Global.user = user
                             if(!user.id.isNullOrEmpty())

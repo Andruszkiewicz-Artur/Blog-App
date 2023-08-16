@@ -1,6 +1,7 @@
 package com.example.blogapp.core.domain.use_cases.validation
 
 import android.net.Uri
+import com.example.blogapp.R
 import com.example.blogapp.core.domain.unit.Result
 
 class ValidationPicture {
@@ -9,7 +10,7 @@ class ValidationPicture {
         if (uri == null && path == null) {
             return Result(
                 false,
-                "You don`t choose picture yet"
+                R.string.NotPickPictureYet.toString()
             )
         }
 

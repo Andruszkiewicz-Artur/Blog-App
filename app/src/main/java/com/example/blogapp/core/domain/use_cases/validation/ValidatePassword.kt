@@ -1,5 +1,6 @@
 package com.example.notes.feature_profile.domain.use_case.validationUseCases
 
+import com.example.blogapp.R
 import com.example.blogapp.core.domain.unit.Result
 
 class ValidatePassword {
@@ -8,7 +9,7 @@ class ValidatePassword {
         if (password.count() < 8) {
             return Result(
                 successful = false,
-                errorMessage = "Password need at least 8 chars"
+                errorMessage = R.string.PasswordNeedAtLeast.toString()
             )
         }
 
@@ -16,7 +17,7 @@ class ValidatePassword {
         if (!containsLetterAndDigits) {
             return Result(
                 successful = false,
-                errorMessage = "Password need at least one letter and one digit"
+                errorMessage = R.string.RequareAboutPassword.toString()
             )
         }
 

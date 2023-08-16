@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.R
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.comp.button.ButtonStandard
 import com.example.blogapp.core.comp.textfield.TextFieldStandard
@@ -68,7 +69,7 @@ fun LoginPresentation(
                     navHostController.popBackStack()
                 }
                 is LoginUiEvent.Toast -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getText(event.message), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -83,14 +84,14 @@ fun LoginPresentation(
     ) {
         item {
             Text(
-                text = "Welcome back!",
+                text = context.getString(R.string.WelcomeBack),
                 style = MaterialTheme.typography.titleLarge
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "You can log in here!",
+                text = context.getString(R.string.LogInDescription),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Light
             )
@@ -98,7 +99,7 @@ fun LoginPresentation(
             Spacer(modifier = Modifier.height(32.dp))
 
             TextFieldStandard(
-                label = "Email",
+                label = context.getString(R.string.Email),
                 value = state.email,
                 onValueChange = {
                     viewModel.onEvent(LoginEvent.EnteredEmail(it))
@@ -113,7 +114,7 @@ fun LoginPresentation(
             )
 
             TextFieldStandard(
-                label = "Password",
+                label = context.getString(R.string.Password),
                 value = state.password,
                 onValueChange = {
                     viewModel.onEvent(LoginEvent.EnteredPassword(it))
@@ -143,11 +144,11 @@ fun LoginPresentation(
                     clickOn = {
                         viewModel.onEvent(LoginEvent.ClickLoginPermanently)
                     },
-                    value = "Remember me",
+                    value = context.getString(R.string.RememberMe),
                 )
 
                 Text(
-                    text = "Forget Password?",
+                    text = context.getString(R.string.ForegPassword),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .clickable {
@@ -160,7 +161,7 @@ fun LoginPresentation(
             Spacer(modifier = Modifier.width(16.dp))
 
             ButtonStandard(
-                value = "Log in",
+                value = context.getString(R.string.LogIn),
                 onClick = {
                     viewModel.onEvent(LoginEvent.ClickLogIn)
                 }
@@ -173,9 +174,9 @@ fun LoginPresentation(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
             ) {
-                Text(text = "You don`t have account? ")
+                Text(text = "${context.getText(R.string.DontHaveAccout)} ")
                 Text(
-                    text = "Sign Up!",
+                    text = context.getString(R.string.SignUp),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .clickable {

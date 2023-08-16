@@ -1,6 +1,7 @@
 package com.example.blogapp.core.domain.use_cases.validation
 
 import android.util.Patterns
+import com.example.blogapp.R
 import com.example.blogapp.core.domain.unit.Result
 
 class ValidateLink {
@@ -10,19 +11,19 @@ class ValidateLink {
         if(link.isBlank()) {
             return Result(
                 false,
-                "You need add link"
+                R.string.FieldCantBeEmpty.toString()
             )
         }
         if(link.length in 6..300) {
             return Result(
                 false,
-                "Link can have from 6 to 300 chars"
+                R.string.RangeFiled.toString()
             )
         }
         if(!Patterns.WEB_URL.matcher(link).matches()) {
             return Result(
                 false,
-                "Link is incorrect."
+                R.string.LinkIsWrong.toString()
             )
         }
 

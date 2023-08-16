@@ -13,10 +13,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.blogapp.R
 import com.example.blogapp.core.comp.button.ButtonStandard
 import com.example.blogapp.core.navigation.screen_login_register.LoginRegisterScreen
 
@@ -24,6 +26,7 @@ import com.example.blogapp.core.navigation.screen_login_register.LoginRegisterSc
 fun ProfileSignInPresentation(
     navHostController: NavHostController
 ) {
+    val context = LocalContext.current
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -32,7 +35,7 @@ fun ProfileSignInPresentation(
             .fillMaxSize()
     ) {
         Text(
-            text = "You don`t login yet, or you don`t have account?",
+            text = context.getString(R.string.YouDontLoginYet),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold
@@ -41,7 +44,7 @@ fun ProfileSignInPresentation(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Use button below!",
+            text = context.getString(R.string.UseButtonBelow),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Light
         )
@@ -49,19 +52,19 @@ fun ProfileSignInPresentation(
         Spacer(modifier = Modifier.height(32.dp))
 
         ButtonStandard(
-            value = "Sign In",
+            value = context.getString(R.string.SignIn),
             onClick = { navHostController.navigate(LoginRegisterScreen.Login.route) }
         )
 
         Text(
-            text = "Or",
+            text = context.getString(R.string.Or),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
                 .padding(vertical = 8.dp)
         )
 
         ButtonStandard(
-            value = "Register",
+            value = context.getString(R.string.SignUp),
             onClick = { navHostController.navigate(LoginRegisterScreen.Register.route) }
         )
     }

@@ -3,6 +3,7 @@ package com.example.blogapp.feature_profile.presentation.change_password_present
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blogapp.R
 import com.example.blogapp.feature_profile.domain.use_cases.ProfileUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +38,7 @@ class ChangePasswordViewModel @Inject constructor(
                             _sharedFlow.emit(ChangePasswordUiEvent.ResetPassword)
                         } else {
                             Log.d("Error during changing password", "${result.errorMessage}")
-                            _sharedFlow.emit(ChangePasswordUiEvent.Toast("Problem with changing password!"))
+                            _sharedFlow.emit(ChangePasswordUiEvent.Toast(R.string.ProblemWithChangingPassword))
                         }
                     }
                 }

@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.R
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.presentation.unit.comp.BlogsPageChanger
@@ -42,7 +43,7 @@ fun UserPresentation(
         viewModel.sharedFlow.collectLatest { event ->
             when (event) {
                 UserUiEvent.BackFromUser -> {
-                    Toast.makeText(context, "Problem with taking data", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, R.string.ProblemWithTakingData, Toast.LENGTH_LONG).show()
                     navHostController.popBackStack()
                 }
             }
@@ -58,7 +59,7 @@ fun UserPresentation(
                 .fillMaxWidth()
         ) {
             CircularProgressIndicator()
-            Text(text = "Loading...")
+            Text(text = context.getString(R.string.Loading))
         }
     } else {
         LazyColumn(
@@ -73,7 +74,7 @@ fun UserPresentation(
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Posts",
+                        text = context.getString(R.string.Posts),
                         style = MaterialTheme.typography.displayMedium
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -85,7 +86,7 @@ fun UserPresentation(
                                 .fillMaxWidth()
                         ) {
                             Text(
-                                text = "Non posts yet",
+                                text = context.getString(R.string.NotYetPosts),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Light,
                                 modifier = Modifier

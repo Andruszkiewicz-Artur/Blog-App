@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.R
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.comp.button.ButtonStandard
 import com.example.blogapp.core.comp.textfield.TextFieldStandard
@@ -87,14 +88,14 @@ fun RegistrationPresentation(
     ) {
         item {
             Text(
-                text = "Welcome!",
+                text = context.getString(R.string.Welcome),
                 style = MaterialTheme.typography.titleLarge
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "You can create here your own profile now!\nLets do this!",
+                text = context.getString(R.string.RegistrationDescription),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Light,
                 textAlign = TextAlign.Center
@@ -103,7 +104,7 @@ fun RegistrationPresentation(
             Spacer(modifier = Modifier.height(32.dp))
 
             TextFieldStandard(
-                label = "First name",
+                label = context.getString(R.string.FirstName),
                 value = state.firstName,
                 onValueChange = {
                     viewModel.onEvent(RegistrationEvent.EnteredFirstName(it))
@@ -118,7 +119,7 @@ fun RegistrationPresentation(
             )
 
             TextFieldStandard(
-                label = "Last name",
+                label = context.getString(R.string.LastName),
                 value = state.lastName,
                 onValueChange = {
                     viewModel.onEvent(RegistrationEvent.EnteredLastName(it))
@@ -133,7 +134,7 @@ fun RegistrationPresentation(
             )
 
             TextFieldStandard(
-                label = "Email",
+                label = context.getString(R.string.Email),
                 value = state.email,
                 onValueChange = {
                     viewModel.onEvent(RegistrationEvent.EnteredEmail(it))
@@ -148,7 +149,7 @@ fun RegistrationPresentation(
             )
 
             TextFieldStandard(
-                label = "Password",
+                label = context.getString(R.string.Password),
                 value = state.password,
                 onValueChange = {
                     viewModel.onEvent(RegistrationEvent.EnteredPassword(it))
@@ -168,7 +169,7 @@ fun RegistrationPresentation(
             )
 
             TextFieldStandard(
-                label = "Re-Password",
+                label = context.getString(R.string.RePassword),
                 value = state.rePassword,
                 onValueChange = {
                     viewModel.onEvent(RegistrationEvent.EnteredRePassword(it))
@@ -198,7 +199,7 @@ fun RegistrationPresentation(
                     clickOn = {
                         viewModel.onEvent(RegistrationEvent.ClickRules)
                     },
-                    value = "I now Terms of Service and Privacy Policy this app!",
+                    value = context.getString(R.string.TermsDescription),
                     errorMessage = state.rulesErrorMessage
                 )
             }
@@ -207,7 +208,7 @@ fun RegistrationPresentation(
             Spacer(modifier = Modifier.height(16.dp))
 
             ButtonStandard(
-                value = "Sign Up",
+                value = context.getString(R.string.SignUp),
                 onClick = {
                     viewModel.onEvent(RegistrationEvent.ClickRegistration)
                 }
@@ -220,9 +221,9 @@ fun RegistrationPresentation(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
             ) {
-                Text(text = "You have account? ")
+                Text(text = "${context.getString(R.string.HaveAccount)} ")
                 Text(
-                    text = "Sign In!",
+                    text = "${context.getString(R.string.SignIn)}!",
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .clickable {

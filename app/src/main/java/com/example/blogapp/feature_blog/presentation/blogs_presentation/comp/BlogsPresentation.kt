@@ -1,6 +1,7 @@
 package com.example.blogapp.feature_blog.presentation.blogs_presentation.comp
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,16 +23,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.R
 import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsEvent
+import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsUiEvent
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsViewModel
 import com.example.blogapp.feature_blog.presentation.unit.comp.BlogsPageChanger
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun BlogsPresentation(
@@ -41,9 +46,16 @@ fun BlogsPresentation(
     val state = viewModel.state.collectAsState().value
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = state.isLoading)
     val isWindowVisible = rememberUpdatedState(true)
+    val context = LocalContext.current
     
     LaunchedEffect(key1 = true) {
-        viewModel.updateLikesPost()
+        viewModel.sharedFlow.collectLatest { event ->
+            when (event) {
+                is BlogsUiEvent.Toast -> {
+                    Toast.makeText(context, context.getString(event.value), Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     LaunchedEffect(isWindowVisible.value) {
@@ -83,7 +95,7 @@ fun BlogsPresentation(
                     ) {
                         item {
                             TagPresentation(
-                                value = "All",
+                                value = context.getString(R.string.All),
                                 isChosen = state.currentTag == null,
                                 modifier = Modifier
                                     .clickable {
@@ -116,7 +128,7 @@ fun BlogsPresentation(
                                 .fillMaxSize()
                         ) {
                             Text(
-                                text = if(state.currentTag == null) "Can`t read data database." else "Non posts with this tag!",
+                                text = if(state.currentTag == null) context.getString(R.string.ProblemWithReadDatabase) else context.getString(R.string.NonPostWithThisTag),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f),
                                 modifier = Modifier
@@ -162,7 +174,7 @@ fun BlogsPresentation(
                             .fillMaxWidth()
                     ) {
                         CircularProgressIndicator()
-                        Text(text = "Loading...")
+                        Text(text = context.getString(R.string.Loading))
                     }
                 }
             }

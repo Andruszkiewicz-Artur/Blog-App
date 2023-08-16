@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.R
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogEvent
 import com.example.blogapp.feature_blog.presentation.blog_presentation.BlogUiEvent
@@ -75,10 +76,10 @@ fun BlogPresentation(
             when (event) {
                 BlogUiEvent.BackFromPost -> {
                     navHostController.popBackStack()
-                    Toast.makeText(context, "Delete post", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getString(R.string.DeletingPost), Toast.LENGTH_LONG).show()
                 }
                 is BlogUiEvent.Toast -> {
-                    Toast.makeText(context, event.value, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getString(event.value), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -97,34 +98,34 @@ fun BlogPresentation(
     InfoDialog(
         state = infoDeletePostState,
         selection = InfoSelection(
-            negativeButton = SelectionButton(text = "No"),
-            positiveButton = SelectionButton(text = "Yes"),
+            negativeButton = SelectionButton(text = context.getString(R.string.No)),
+            positiveButton = SelectionButton(text = context.getString(R.string.Yes)),
             onPositiveClick = {
                 viewModel.onEvent(BlogEvent.DeletePost)
             }
         ),
         header = Header.Default(
-            title = "Deleting post"
+            title = context.getString(R.string.DeletingPost)
         ),
         body = InfoBody.Default(
-            bodyText = "Are you sure with deleting post?"
+            bodyText = context.getString(R.string.AreYouSureWithDeletingPost)
         )
     )
 
     InfoDialog(
         state = infoDeleteCommentState,
         selection = InfoSelection(
-            negativeButton = SelectionButton(text = "No"),
-            positiveButton = SelectionButton(text = "Yes"),
+            negativeButton = SelectionButton(text = context.getString(R.string.No)),
+            positiveButton = SelectionButton(text = context.getString(R.string.Yes)),
             onPositiveClick = {
                 viewModel.onEvent(BlogEvent.DeleteComment(commentToDelete))
             }
         ),
         header = Header.Default(
-            title = "Deleting comment"
+            title = context.getString(R.string.DeletingComment)
         ),
         body = InfoBody.Default(
-            bodyText = "Are you sure with deleting comment?"
+            bodyText = context.getString(R.string.AreYouSureWithDeletingComment)
         )
     )
 
@@ -137,7 +138,7 @@ fun BlogPresentation(
                 .fillMaxWidth()
         ) {
             CircularProgressIndicator()
-            Text(text = "Loading...")
+            Text(text = context.getString(R.string.Loading))
         }
     } else {
         LazyColumn(
@@ -173,7 +174,7 @@ fun BlogPresentation(
                             .fillMaxWidth()
                     ) {
                         Text(
-                            text = "Comments",
+                            text = context.getString(R.string.Comments),
                             style = MaterialTheme.typography.displayMedium,
                             modifier = Modifier
                                 .padding(top = 16.dp)
@@ -209,7 +210,7 @@ fun BlogPresentation(
                             onValueChange = {
                                 viewModel.onEvent(BlogEvent.EnteredComment(it))
                             },
-                            placeholder = "Add you comment...",
+                            placeholder = context.getString(R.string.AddYourComment),
                             errorMessage = state.commentMessageError,
                             onClickAdd = {
                                 viewModel.onEvent(BlogEvent.AddComment)
@@ -224,7 +225,7 @@ fun BlogPresentation(
                                 .fillMaxWidth()
                         ) {
                             Text(
-                                text = "Non comments yet",
+                                text = context.getString(R.string.NonCommentsYet),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Light,
                                 modifier = Modifier

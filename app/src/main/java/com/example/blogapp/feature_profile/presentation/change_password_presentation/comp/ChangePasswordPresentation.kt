@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.R
 import com.example.blogapp.core.comp.button.ButtonStandard
 import com.example.blogapp.core.comp.textfield.TextFieldStandard
 import com.example.blogapp.feature_login_register.presentation.register_presentation.RegistrationEvent
@@ -58,7 +59,7 @@ fun ChangePasswordPresentation(
                     navHostController.popBackStack()
                 }
                 is ChangePasswordUiEvent.Toast -> {
-                    Toast.makeText(context, event.value, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getText(event.value), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -73,12 +74,12 @@ fun ChangePasswordPresentation(
         item {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Change password",
+                text = context.getString(R.string.ChangePassword),
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextFieldStandard(
-                label = "Old password",
+                label = context.getString(R.string.OldPassword),
                 value = state.oldPassword,
                 isPresentPassword = state.presentPassword,
                 onValueChange = {
@@ -99,7 +100,7 @@ fun ChangePasswordPresentation(
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextFieldStandard(
-                label = "New password",
+                label = context.getString(R.string.NewPassword),
                 value = state.newPassword,
                 isPresentPassword = state.presentPassword,
                 onValueChange = {
@@ -119,7 +120,7 @@ fun ChangePasswordPresentation(
             )
             Spacer(modifier = Modifier.height(8.dp))
             TextFieldStandard(
-                label = "New re-password",
+                label = context.getString(R.string.RePassword),
                 value = state.newRePassword,
                 isPresentPassword = state.presentPassword,
                 onValueChange = {
@@ -140,7 +141,7 @@ fun ChangePasswordPresentation(
             )
             Spacer(modifier = Modifier.height(32.dp))
             ButtonStandard(
-                value = "Reset password",
+                value = context.getString(R.string.ResetPassword),
                 onClick = {
                     viewModel.onEvent(ChangePasswordEvent.ClickSetUpButton)
                 }

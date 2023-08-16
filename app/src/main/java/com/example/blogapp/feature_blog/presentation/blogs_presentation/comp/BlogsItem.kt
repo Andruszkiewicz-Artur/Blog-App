@@ -29,9 +29,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.blogapp.R
 import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.core.domain.model.UserModel
 import com.example.blogapp.feature_blog.domain.model.PostModel
@@ -50,6 +52,7 @@ fun BlogsItem(
     isLikedPost: Boolean,
     onClick: (String) -> Unit
 ) {
+    val context = LocalContext.current
     val formattedTime = remember(post.publishDate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val date = post.publishDate ?: LocalDateTime.now()
@@ -122,7 +125,7 @@ fun BlogsItem(
                         }
                     } else {
                         Text(
-                            text = "None information"
+                            text = context.getString(R.string.NoneInformation)
                         )
                     }
                 }

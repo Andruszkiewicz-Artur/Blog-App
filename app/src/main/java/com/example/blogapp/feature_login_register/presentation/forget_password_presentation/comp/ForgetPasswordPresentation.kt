@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.R
 import com.example.blogapp.core.comp.button.ButtonStandard
 import com.example.blogapp.core.comp.textfield.TextFieldStandard
 import com.example.blogapp.feature_login_register.presentation.forget_password_presentation.ForgetPasswordEvent
@@ -49,7 +50,7 @@ fun ForgetPasswordPresentation(
                     navHostController.popBackStack()
                 }
                 is ForgetPasswordUiEvent.Toast -> {
-                    Toast.makeText(context, event.value, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getText(event.value), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -64,14 +65,14 @@ fun ForgetPasswordPresentation(
     ) {
         item {
             Text(
-                text = "Forget password?",
+                text = context.getString(R.string.ForegPassword),
                 style = MaterialTheme.typography.titleLarge
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "You can write email here and on the email, after coming mail, you can change password to your account.",
+                text = context.getString(R.string.DescriptionAboutForgetPassword),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Light,
                 textAlign = TextAlign.Center
@@ -80,7 +81,7 @@ fun ForgetPasswordPresentation(
             Spacer(modifier = Modifier.height(32.dp))
 
             TextFieldStandard(
-                label = "Email",
+                label = context.getString(R.string.Email),
                 value = state.email,
                 onValueChange = {
                     viewModel.onEvent(ForgetPasswordEvent.EnteredEmail(it))
@@ -97,7 +98,7 @@ fun ForgetPasswordPresentation(
             Spacer(modifier = Modifier.height(16.dp))
 
             ButtonStandard(
-                value = "Send email",
+                value = context.getString(R.string.SendEmail),
                 onClick = {
                     viewModel.onEvent(ForgetPasswordEvent.ClickSendEmail)
                 }

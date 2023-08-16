@@ -2,6 +2,7 @@ package com.example.blogapp.feature_login_register.presentation.register_present
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blogapp.R
 import com.example.blogapp.core.Global
 import com.example.blogapp.feature_login_register.domain.model.UserRegistrationModel
 import com.example.blogapp.feature_login_register.domain.use_cases.CreateUserUseCase
@@ -46,7 +47,7 @@ class RegistrationViewModel @Inject constructor(
                             Global.user = newUser
                             _eventFlow.emit(RegistrationUiEvent.CreatingAccount)
                         } else {
-                            _eventFlow.emit(RegistrationUiEvent.Toast("Problem during registration!"))
+                            _eventFlow.emit(RegistrationUiEvent.Toast(R.string.ProblemWithRegistration))
                         }
                     }
                 }

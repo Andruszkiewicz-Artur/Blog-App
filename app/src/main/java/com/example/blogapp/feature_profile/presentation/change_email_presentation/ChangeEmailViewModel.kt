@@ -2,6 +2,7 @@ package com.example.blogapp.feature_profile.presentation.change_email_presentati
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blogapp.R
 import com.example.blogapp.feature_profile.domain.use_cases.ProfileUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +36,7 @@ class ChangeEmailViewModel @Inject constructor(
                         if (result.successful) {
                             _sharedFlow.emit(ChangeEmailUiEvent.ChangeEmail)
                         } else {
-                            _sharedFlow.emit(ChangeEmailUiEvent.Toast("Problem with changing email"))
+                            _sharedFlow.emit(ChangeEmailUiEvent.Toast(R.string.ProblemWithChangingEmail))
                         }
                     }
                 }

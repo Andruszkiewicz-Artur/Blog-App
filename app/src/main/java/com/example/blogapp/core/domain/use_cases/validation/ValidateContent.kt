@@ -1,5 +1,6 @@
 package com.example.blogapp.core.domain.use_cases.validation
 
+import com.example.blogapp.R
 import com.example.blogapp.core.domain.unit.Result
 
 class ValidateContent {
@@ -8,7 +9,7 @@ class ValidateContent {
         if(content.isBlank()) {
             return Result(
                 successful = false,
-                errorMessage = "Text field can`t be empty"
+                errorMessage = R.string.FieldCantBeEmpty.toString()
             )
         }
 

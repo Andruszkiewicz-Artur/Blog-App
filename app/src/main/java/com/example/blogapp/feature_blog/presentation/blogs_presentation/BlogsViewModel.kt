@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blogapp.R
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.domain.unit.Resource
 import com.example.blogapp.core.domain.use_cases.global.GlobalUseCases
@@ -160,7 +161,7 @@ class BlogsViewModel @Inject constructor(
 
         when (result) {
             is Resource.Error -> {
-                _sharedFlow.emit(BlogsUiEvent.Toast("Problem with taking data"))
+                _sharedFlow.emit(BlogsUiEvent.Toast(R.string.ProblemWithTakingData))
             }
             is Resource.Success -> {
                 if (!result.data.isNullOrEmpty()) {
@@ -170,7 +171,7 @@ class BlogsViewModel @Inject constructor(
                     ) }
                     setUpPosts()
                 } else {
-                    _sharedFlow.emit(BlogsUiEvent.Toast("Problem with taking data"))
+                    _sharedFlow.emit(BlogsUiEvent.Toast(R.string.ProblemWithTakingData))
                 }
             }
         }

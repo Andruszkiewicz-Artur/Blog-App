@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.blogapp.R
 import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.core.comp.textfield.TextFieldStandard
 import com.example.blogapp.feature_blog.presentation.post_create_edit_presentation.PostCreateEditEvent
@@ -71,7 +72,7 @@ fun PostCreateEditPresentation(
                     navHostController.popBackStack()
                 }
                 is PostCreateEditUiEvent.Toast -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getString(event.message), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -124,7 +125,7 @@ fun PostCreateEditPresentation(
                                 )
                             )
                         },
-                        errorMessage = state.pictureErrorMessage
+                        errorMessage = context.getString(state.pictureErrorMessage?.toInt() ?: 0)
                     )
                 }
 
@@ -134,22 +135,22 @@ fun PostCreateEditPresentation(
 
                     PostTextField(
                         text = state.content,
-                        placeholder = "Content...",
+                        placeholder = context.getString(R.string.Content),
                         onValueChange = {
                             viewModel.onEvent(PostCreateEditEvent.EnteredContent(it))
                         },
-                        errorMessage = state.contentErrorMessage
+                        errorMessage = context.getString(state.contentErrorMessage?.toInt() ?: 0)
                     )
 
                     Spacer(modifier = Modifier.heightIn(16.dp))
 
                     TextFieldStandard(
-                        label = "Link",
+                        label = context.getString(R.string.Link),
                         value = state.link,
                         onValueChange = {
                             viewModel.onEvent(PostCreateEditEvent.SetLink(it))
                         },
-                        errorMessage = state.linkErrorMessage
+                        errorMessage = context.getString(state.linkErrorMessage?.toInt() ?: 0)
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -159,7 +160,7 @@ fun PostCreateEditPresentation(
                             .fillMaxWidth()
                     ) {
                         Text(
-                            text = "Tags",
+                            text = context.getString(R.string.Tags),
                             style = MaterialTheme.typography.titleLarge
                         )
                     }
