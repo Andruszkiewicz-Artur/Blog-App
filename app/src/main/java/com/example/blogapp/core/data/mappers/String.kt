@@ -53,3 +53,10 @@ fun String.replaceTextToDatabase(): String {
 fun String.replaceTextFromDatabase(): String {
     return this.replace('1', ' ')
 }
+
+fun String.capitalizeFirstLetter(): String {
+    if (this.isEmpty()) {
+        return this
+    }
+    return this.substring(0, 1).toUpperCase() + this.substring(1).toLowerCase()
+}

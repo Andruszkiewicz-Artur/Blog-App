@@ -6,6 +6,7 @@ import androidx.core.net.toUri
 import com.example.blogapp.core.Global
 import com.example.blogapp.core.data.dto.PostDto
 import com.example.blogapp.core.data.dto.UserDto
+import com.example.blogapp.core.data.mappers.capitalizeFirstLetter
 import com.example.blogapp.core.data.mappers.replaceDataFromDatabase
 import com.example.blogapp.core.domain.repository.UserRepository
 import com.example.blogapp.core.domain.unit.Resource
@@ -40,7 +41,9 @@ class UserRepositoryImpl: UserRepository {
             )).await()
 
             return Resource.Success(data = user.copy(
-                id = userId
+                id = userId,
+                firstName = user.firstName.capitalizeFirstLetter(),
+                lastName = user.lastName.capitalizeFirstLetter()
             ))
         } catch (e: FirebaseAuthException) {
             return Resource.Error(message = "${e.message}")
@@ -78,7 +81,10 @@ class UserRepositoryImpl: UserRepository {
                 }
             }
 
-            return Resource.Success(data = userDto)
+            return Resource.Success(data = userDto.copy(
+                firstName = userDto.firstName.capitalizeFirstLetter(),
+                lastName = userDto.lastName.capitalizeFirstLetter()
+            ))
         } catch (e: FirebaseException) {
             return Resource.Error(message = "${e.message}")
         } catch (e: Exception) {
@@ -102,7 +108,10 @@ class UserRepositoryImpl: UserRepository {
                 }
 
                 is Resource.Success -> {
-                    Resource.Success(data = result.data)
+                    Resource.Success(data = result.data?.copy(
+                        firstName = result.data.firstName.capitalizeFirstLetter(),
+                        lastName = result.data.lastName.capitalizeFirstLetter()
+                    ))
                 }
             }
         } catch (e: FirebaseAuthException) {
@@ -252,12 +261,14 @@ class UserRepositoryImpl: UserRepository {
         )
     }
 
-    override suspend fun updateProfile(user: UserDto): Resource<UserDto> {
-        try {
+    override suspend fun updateProfile(user: UserDto, previousUserSetUp: UserDto): Resource<UserDto> {
+        return try {
             if(user.id.isBlank()) return Resource.Error(message = "Problem with taking user id")
 
-            var successfulAdding = false
+            val database = Firebase.database.reference
             var userDto = user
+            val beginPath = "users/${user.id}"
+            val updateProfile: MutableMap<String, Any> = hashMapOf()
 
             if(user.picture != null && user.picture.contains("content://media/picker")) {
 
@@ -265,26 +276,37 @@ class UserRepositoryImpl: UserRepository {
                     uri = user.picture.toUri()
                 )
 
-                userDto = user.copy(
-                    picture = result.data
-                )
-
-                Log.d("Check", "${result.data}")
+                if (result.data != null) updateProfile["$beginPath/picture"] = result.data
             }
 
+            if (userDto.firstName != previousUserSetUp.firstName) updateProfile.put("$beginPath/firstName", userDto.firstName)
+            if (userDto.lastName != previousUserSetUp.lastName) updateProfile.put("$beginPath/lastName", userDto.lastName)
+            if (userDto.gender != previousUserSetUp.gender && !userDto.gender.isNullOrEmpty()) updateProfile.put("$beginPath/gender", userDto.gender!!)
+            if (userDto.phone != previousUserSetUp.phone && !userDto.phone.isNullOrEmpty()) updateProfile.put("$beginPath/phone", userDto.phone!!)
+            if (userDto.dateOfBirth != previousUserSetUp.dateOfBirth && !userDto.dateOfBirth.isNullOrEmpty()) updateProfile.put("$beginPath/dateOfBirth", userDto.dateOfBirth!!)
+            if (userDto.title != previousUserSetUp.title && !userDto.title.isNullOrEmpty()) updateProfile.put("$beginPath/title", userDto.title!!)
+            if (userDto.location?.country != previousUserSetUp.location?.country && !userDto.location?.country.isNullOrEmpty()) updateProfile.put("$beginPath/location/country", userDto.location!!.country!!)
+            if (userDto.location?.city != previousUserSetUp.location?.city && !userDto.location?.city.isNullOrEmpty()) updateProfile["$beginPath/location/city"] = userDto.location!!.city!!
+            if (userDto.location?.street != previousUserSetUp.location?.street && !userDto.location?.street.isNullOrEmpty()) updateProfile.put("$beginPath/location/street", userDto.location!!.street!!)
+            if (userDto.location?.state != previousUserSetUp.location?.state && !userDto.location?.state.isNullOrEmpty()) updateProfile.put("$beginPath/location/state", userDto.location!!.state!!)
 
-            Firebase.database.reference.child("users").child(user.id).setValue(userDto)
+            Log.d("Check", "${updateProfile}")
+
+            database.updateChildren(updateProfile)
                 .addOnCompleteListener {
-                    if (it.isSuccessful) successfulAdding = true
+                    if (!it.isSuccessful) {
+                        if (it.exception != null) throw(it.exception!!)
+                    }
                 }
                 .await()
 
-            delay(200)
 
-            if (successfulAdding) return Resource.Success(data = user)
-            return Resource.Error(message = "Problem with import data")
+            Resource.Success(data = user.copy(
+                firstName = user.firstName.capitalizeFirstLetter(),
+                lastName = user.lastName.capitalizeFirstLetter()
+            ) )
         } catch (e: Exception) {
-            return Resource.Error(message = "${e.message}")
+            Resource.Error(message = "${e.message}")
         }
     }
 

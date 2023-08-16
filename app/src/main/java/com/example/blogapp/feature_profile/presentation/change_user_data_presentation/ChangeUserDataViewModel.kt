@@ -116,30 +116,36 @@ class ChangeUserDataViewModel @Inject constructor(
 
                     if(user != null) {
                         viewModelScope.launch {
-                            val result = profileUseCases.updateProfileUseCase.invoke(user = UserModel(
-                                id = user.id,
-                                title = if(_state.value.title != null) _state.value.title.toString() else null,
-                                firstName = _state.value.firstName,
-                                lastName = _state.value.lastName,
-                                gender = if(_state.value.gender != null) _state.value.gender.toString() else null,
-                                email = user.email,
-                                dateOfBirth = _state.value.dateOfBirth,
-                                registerDate = user.registerDate,
-                                phone = _state.value.phoneNumber.ifBlank { null },
-                                picture = _state.value.imagePath?.toString() ?: _state.value.imageUrl,
-                                location = LocationModel(
-                                    country = _state.value.country.ifBlank { null },
-                                    city = _state.value.city.ifBlank { null },
-                                    street = _state.value.street.ifBlank { null },
-                                    state = _state.value.state.ifBlank { null },
+                            val globalUser = Global.user
+                            if (globalUser != null) {
+                                val result = profileUseCases.updateProfileUseCase.invoke(
+                                    user = UserModel(
+                                        id = user.id,
+                                        title = if(_state.value.title != null) _state.value.title.toString() else null,
+                                        firstName = _state.value.firstName,
+                                        lastName = _state.value.lastName,
+                                        gender = if(_state.value.gender != null) _state.value.gender.toString() else null,
+                                        email = user.email,
+                                        dateOfBirth = _state.value.dateOfBirth,
+                                        registerDate = user.registerDate,
+                                        phone = _state.value.phoneNumber.ifBlank { null },
+                                        picture = _state.value.imagePath?.toString() ?: _state.value.imageUrl,
+                                        location = LocationModel(
+                                            country = _state.value.country.ifBlank { null },
+                                            city = _state.value.city.ifBlank { null },
+                                            street = _state.value.street.ifBlank { null },
+                                            state = _state.value.state.ifBlank { null },
+                                        )
+                                    ),
+                                    globalUser
                                 )
-                            ))
 
-                            if(result != null) {
-                                Global.user = result
-                                _sharedFlow.emit(ChangeUserDataUiEvent.Save)
-                            } else {
-                                _sharedFlow.emit(ChangeUserDataUiEvent.Toast("Problem with saving!"))
+                                if(result != null) {
+                                    Global.user = result
+                                    _sharedFlow.emit(ChangeUserDataUiEvent.Save)
+                                } else {
+                                    _sharedFlow.emit(ChangeUserDataUiEvent.Toast("Problem with saving!"))
+                                }
                             }
                         }
                     }

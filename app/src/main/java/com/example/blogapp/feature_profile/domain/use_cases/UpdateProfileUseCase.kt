@@ -1,6 +1,7 @@
 package com.example.blogapp.feature_profile.domain.use_cases
 
 import android.util.Log
+import com.example.blogapp.core.data.dto.UserDto
 import com.example.blogapp.core.data.mappers.toUserDto
 import com.example.blogapp.core.domain.model.UserModel
 import com.example.blogapp.core.domain.repository.UserRepository
@@ -12,8 +13,8 @@ class UpdateProfileUseCase @Inject constructor(
     private val repository: UserRepository
 ) {
 
-    suspend fun invoke(user: UserModel): UserModel? {
-        val result = repository.updateProfile(user.toUserDto())
+    suspend fun invoke(user: UserModel, previousUserSetUp: UserModel): UserModel? {
+        val result = repository.updateProfile(user.toUserDto(), previousUserSetUp.toUserDto())
 
         return when (result) {
             is Resource.Error -> {

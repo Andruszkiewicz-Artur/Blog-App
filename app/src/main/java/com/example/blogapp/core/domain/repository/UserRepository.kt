@@ -21,7 +21,7 @@ interface UserRepository {
 
     suspend fun changeEmail(newEmail: String, password: String): Result
 
-    suspend fun updateProfile(user: UserDto): Resource<UserDto>
+    suspend fun updateProfile(user: UserDto, previousUserSetUp: UserDto): Resource<UserDto>
 
     suspend fun takeAllTags(): Resource<List<String>>
 }

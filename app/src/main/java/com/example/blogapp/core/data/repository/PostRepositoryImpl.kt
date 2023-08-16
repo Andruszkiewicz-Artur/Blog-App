@@ -74,6 +74,7 @@ class PostRepositoryImpl: PostRepository {
                     successfulAddNewPost = it.isSuccessful
                 }
 
+
             delay(200)
 
             if(!successfulAddNewPost) return Result(false, "Problem with adding post")
