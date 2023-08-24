@@ -11,3 +11,5 @@ It is an application where users can share posts by themselves. It is possible t
 - Coil
 - Navigation
 - Gson
+- Material
+- Jetpack Compose 
