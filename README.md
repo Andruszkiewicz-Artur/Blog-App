@@ -6,6 +6,7 @@ It is an application where users can share posts by themselves. It is possible t
 - Firebase
 - Dagger hilt
 - Clean Architecture
+- Use Cases
 - Coroutines
 - Coil
 - Navigation
