@@ -94,4 +94,10 @@
     <string name="YouDontLoginYet">Nie jesteś jeszcze zalogowany, lub nie masz konta?</string>
     <string name="UseButtonBelow">Skorzystaj z poniższego przycisku</string>
     <string name="Or">Lub</string>
+    <string name="MakeAPost">Dodaj post</string>
+    <string name="LogOut">Wyloguj się</string>
+    <string name="EditPost">Edytuj post</string>
+    <string name="Post">Opublikuj</string>
+    <string name="ProblemWithDeletingComment">Problem z usuwaniem komentarza</string>
+    <string name="Profile">Profil</string>
 </resources>

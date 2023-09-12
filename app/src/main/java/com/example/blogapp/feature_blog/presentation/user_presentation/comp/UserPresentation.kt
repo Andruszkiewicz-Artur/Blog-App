@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -85,15 +86,17 @@ fun UserPresentation(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .padding(top = 32.dp)
+                    .padding(it)
                     .fillMaxWidth()
             ) {
+                Spacer(modifier = Modifier.width(32.dp))
                 CircularProgressIndicator()
                 Text(text = context.getString(R.string.Loading))
             }
         } else {
             LazyColumn(
                 modifier = Modifier
+                    .padding(it)
                     .padding(horizontal = 16.dp)
             ) {
                 if (state.value.user != null) {

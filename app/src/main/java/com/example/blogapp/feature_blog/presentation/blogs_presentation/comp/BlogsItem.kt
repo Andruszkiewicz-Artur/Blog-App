@@ -74,6 +74,7 @@ fun BlogsItem(
             defaultElevation = 8.dp
         ),
         modifier = Modifier
+            .padding(horizontal = 16.dp)
             .clickable {
                 if (!post.id.isNullOrEmpty()) {
                     onClick(post.id)

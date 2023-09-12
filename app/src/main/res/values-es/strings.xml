@@ -94,4 +94,10 @@
     <string name="YouDontLoginYet">Todavía no has iniciado sesión, ¿o no tienes una cuenta?</string>
     <string name="UseButtonBelow">Usa el botón de abajo</string>
     <string name="Or">O</string>
+    <string name="MakeAPost">Hacer una publicación</string>
+    <string name="LogOut">Cerrar sesión</string>
+    <string name="EditPost">Editar publicación</string>
+    <string name="Post">Publicar</string>
+    <string name="ProblemWithDeletingComment">Problema al eliminar un comentario</string>
+    <string name="Profile">Perfil</string>
 </resources>

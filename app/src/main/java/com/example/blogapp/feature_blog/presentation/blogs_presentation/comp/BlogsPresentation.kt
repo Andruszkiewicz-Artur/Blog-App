@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -74,18 +75,20 @@ fun BlogsPresentation(
     ) {
         LazyColumn (
             modifier = Modifier
-                .padding(horizontal = 16.dp)
                 .fillMaxSize()
         ) {
             item {
                 Text(
                     text = context.getString(R.string.Posts),
-                    style = MaterialTheme.typography.displayLarge
+                    style = MaterialTheme.typography.displayLarge,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
                 )
 
                 if (state.tags.isNotEmpty()) {
                     LazyRow {
                         item {
+                            Spacer(modifier = Modifier.width(16.dp))
                             TagPresentation(
                                 value = context.getString(R.string.All),
                                 isChosen = state.currentTag == null,
@@ -106,6 +109,10 @@ fun BlogsPresentation(
                                     }
                             )
                         }
+
+                        item {
+                            Spacer(modifier = Modifier.width(16.dp))
+                        }
                     }
                 }
             }
@@ -118,6 +125,7 @@ fun BlogsPresentation(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
                                 .fillMaxSize()
+                                .padding(vertical = 16.dp)
                         ) {
                             Text(
                                 text = if(state.currentTag == null) context.getString(R.string.ProblemWithReadDatabase) else context.getString(R.string.NonPostWithThisTag),

@@ -159,6 +159,7 @@ fun BlogCommentPresentation(
             ) {
                 Text(
                     text = formattedTime,
+                    style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Light
                 )
             }

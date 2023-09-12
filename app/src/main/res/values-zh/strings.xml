@@ -94,4 +94,10 @@
     <string name="YouDontLoginYet">您尚未登录，或者您还没有帐户？</string>
     <string name="UseButtonBelow">请使用下面的按钮</string>
     <string name="Or">或</string>
+    <string name="MakeAPost">发帖</string>
+    <string name="LogOut">退出</string>
+    <string name="EditPost">编辑帖子</string>
+    <string name="Post">发布</string>
+    <string name="ProblemWithDeletingComment">删除评论问题</string>
+    <string name="Profile">个人资料</string>
 </resources>

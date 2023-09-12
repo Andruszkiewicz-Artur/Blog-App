@@ -78,60 +78,55 @@ fun BlogPostPresentation(
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+        Row (
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-        ) {
-            Row (
-                verticalAlignment = Alignment.Bottom,
-                modifier = Modifier
-                    .clickable {
-                        navHostController.navigate(
-                            BlogScreen.User.sendUserId(
-                                userModel?.id ?: ""
-                            )
+                .clickable {
+                    navHostController.navigate(
+                        BlogScreen.User.sendUserId(
+                            userModel?.id ?: ""
                         )
-                    }
-            ) {
-                if (userModel != null) {
-                    Text(
-                        text = if(!userModel.title.isNullOrEmpty()) userModel.title + ". " else "",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Text(
-                        text = " ${userModel.firstName} ${userModel.lastName}",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                } else {
-                    Text(
-                        text = context.getString(R.string.NoneData),
-                        style = MaterialTheme.typography.titleMedium
                     )
                 }
+        ) {
+            if (userModel?.picture != null) {
+                AsyncImage(
+                    model = userModel.picture,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(70.dp)
+                        .clip(CircleShape)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Outlined.Face,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(50.dp)
+                )
             }
-        }
 
-        if (userModel?.picture != null) {
-            AsyncImage(
-                model = userModel.picture,
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(end = 16.dp)
-                    .size(100.dp)
-                    .clip(CircleShape)
-            )
-        } else {
-            Icon(
-                imageVector = Icons.Outlined.Face,
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(end = 16.dp)
-                    .size(100.dp)
-            )
+            if (userModel != null) {
+                Text(
+                    text = if(!userModel.title.isNullOrEmpty()) userModel.title + ". " else "",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = " ${userModel.firstName} ${userModel.lastName}",
+                    style = MaterialTheme.typography.titleMedium
+                )
+            } else {
+                Text(
+                    text = context.getString(R.string.NoneData),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
 
         Row(
@@ -167,7 +162,7 @@ fun BlogPostPresentation(
 
         Text(
             text = context.getString(R.string.Tags),
-            style = MaterialTheme.typography.displayMedium,
+            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
                 .padding(top = 16.dp)
         )
@@ -222,14 +217,13 @@ fun BlogPostPresentation(
                 }
                 Text(
                     text = " ${postModel.likes}",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
 
             Text(
                 text = formattedTime,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Light
             )
         }

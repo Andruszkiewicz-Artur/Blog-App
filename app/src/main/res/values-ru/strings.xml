@@ -94,4 +94,10 @@
     <string name="YouDontLoginYet">Вы еще не вошли в систему или у вас еще нет учетной записи?</string>
     <string name="UseButtonBelow">Используйте кнопку ниже</string>
     <string name="Or">Или</string>
+    <string name="MakeAPost">Создать пост</string>
+    <string name="LogOut">Выйти</string>
+    <string name="EditPost">Редактировать пост</string>
+    <string name="Post">Пост</string>
+    <string name="ProblemWithDeletingComment">Проблема с удалением комментария</string>
+    <string name="Profile">Профиль</string>
 </resources>
