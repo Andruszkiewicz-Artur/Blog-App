@@ -1,6 +1,7 @@
 package com.example.blogapp.feature_blog.presentation.post_create_edit_presentation
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.R
 import com.example.blogapp.core.Global
+import com.example.blogapp.core.data.extension.getString
 import com.example.blogapp.core.domain.unit.Resource
 import com.example.blogapp.core.domain.unit.Result
 import com.example.blogapp.core.domain.use_cases.global.GlobalUseCases
@@ -31,7 +33,8 @@ class PostCreateEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val validateUseCases: ValidateUseCases,
     private val globalUseCases: GlobalUseCases,
-    private val postUseCases: PostUseCases
+    private val postUseCases: PostUseCases,
+    private val application: Application
 ): ViewModel() {
 
     private val _state = MutableStateFlow(PostCreateEditState())
@@ -169,9 +172,9 @@ class PostCreateEditViewModel @Inject constructor(
 
         if (hasError) {
             _state.update { it.copy(
-                pictureErrorMessage = content.errorMessage,
-                linkErrorMessage = link.errorMessage,
-                contentErrorMessage = content.errorMessage
+                pictureErrorMessage = getString(content.errorMessage, application),
+                linkErrorMessage = getString(link.errorMessage, application),
+                contentErrorMessage = getString(content.errorMessage, application)
             ) }
         }
 

@@ -42,12 +42,7 @@ fun BottomBar(
 
     if (isBottomBar) {
         BottomAppBar(
-            contentColor = MaterialTheme.colorScheme.secondaryContainer,
-            modifier = Modifier
-                .padding(start = 32.dp)
-                .padding(bottom = 16.dp)
-                .offset(x = -16.dp)
-                .clip(RoundedCornerShape(20.dp))
+            contentColor = MaterialTheme.colorScheme.secondaryContainer
         ) {
             screens.forEach { screen ->
                 AddItem(

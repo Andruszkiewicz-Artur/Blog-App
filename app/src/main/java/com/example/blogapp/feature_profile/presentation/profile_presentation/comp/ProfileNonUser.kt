@@ -37,15 +37,14 @@ fun ProfileSignInPresentation(
         Text(
             text = context.getString(R.string.YouDontLoginYet),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.SemiBold
+            style = MaterialTheme.typography.titleLarge
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = context.getString(R.string.UseButtonBelow),
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Light
         )
 
@@ -58,7 +57,7 @@ fun ProfileSignInPresentation(
 
         Text(
             text = context.getString(R.string.Or),
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .padding(vertical = 8.dp)
         )

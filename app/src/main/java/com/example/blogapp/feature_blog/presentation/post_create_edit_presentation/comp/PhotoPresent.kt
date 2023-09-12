@@ -36,9 +36,7 @@ fun PhotoPresent(
 ) {
     val context = LocalContext.current
 
-    Column(
-
-    ) {
+    Column {
         AnimatedContent(targetState = (uri != null || !imageLink.isNullOrEmpty())) { isImage ->
             if (isImage) {
                 AsyncImage(

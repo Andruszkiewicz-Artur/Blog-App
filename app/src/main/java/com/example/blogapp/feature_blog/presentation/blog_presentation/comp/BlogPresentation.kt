@@ -1,5 +1,6 @@
 package com.example.blogapp.feature_blog.presentation.blog_presentation.comp
 
+import android.annotation.SuppressLint
 import android.renderscript.ScriptGroup.Input
 import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
@@ -17,15 +18,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDownward
 import androidx.compose.material.icons.outlined.ArrowUpward
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,6 +43,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
@@ -57,6 +66,7 @@ import kotlinx.coroutines.launch
 import java.util.Properties
 import kotlin.coroutines.coroutineContext
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BlogPresentation(
@@ -129,133 +139,177 @@ fun BlogPresentation(
         )
     )
 
-    if (state.isLoading) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .padding(top = 32.dp)
-                .fillMaxWidth()
-        ) {
-            CircularProgressIndicator()
-            Text(text = context.getString(R.string.Loading))
-        }
-    } else {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-        ) {
-            if (state.post != null) {
-                item {
-                    BlogPostPresentation(
-                        postModel = state.post,
-                        navHostController = navHostController,
-                        isUserBlog = state.isUserBlog,
-                        isLiked = state.isLiked,
-                        onClickLike = {
-                            viewModel.onEvent(BlogEvent.LikePost)
-                        },
-                        onClickDislike = {
-                            viewModel.onEvent(BlogEvent.DisLikePost)
-                        },
-                        onClickDelete = {
-                            infoDeletePostState.show()
-                        },
-                        userModel = state.user
-                    )
-                }
-
-                item {
-                    Row(
-                        verticalAlignment = Alignment.Bottom,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = context.getString(R.string.Comments),
-                            style = MaterialTheme.typography.displayMedium,
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(text = stringResource(id = R.string.Post))
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navHostController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Rounded.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
+                },
+                actions = {
+                    if (state.isUserBlog) {
+                        Icon(
+                            imageVector = Icons.Outlined.Edit,
+                            contentDescription = null,
                             modifier = Modifier
-                                .padding(top = 16.dp)
+                                .size(40.dp)
+                                .clickable {
+                                    navHostController.navigate(
+                                        BlogScreen.PostCreateEdit.sendPostId(
+                                            state.post?.id ?: ""
+                                        )
+                                    )
+                                }
                         )
-                        AnimatedContent(targetState = state.isCommentAddPresented) {
-                            if(it) {
-                                Icon(
-                                    imageVector = Icons.Outlined.ArrowUpward,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(30.dp)
-                                        .clickable {
-                                            viewModel.onEvent(BlogEvent.ClickPresentingComment)
-                                        }
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Outlined.ArrowDownward,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(30.dp)
-                                        .clickable {
-                                            viewModel.onEvent(BlogEvent.ClickPresentingComment)
-                                        }
-                                )
-                            }
-                        }
-                    }
 
-                    AnimatedVisibility(visible = state.isCommentAddPresented) {
-                        BlogAddingComment(
-                            value = state.comment,
-                            onValueChange = {
-                                viewModel.onEvent(BlogEvent.EnteredComment(it))
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Icon(
+                            imageVector = Icons.Outlined.Delete,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clickable {
+                                    viewModel.onEvent(BlogEvent.DeletePost)
+                                }
+                        )
+                    }
+                }
+            )
+        }
+    ) {
+        if (state.isLoading) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxWidth()
+            ) {
+                Spacer(modifier = Modifier.height(32.dp))
+                CircularProgressIndicator()
+                Text(text = context.getString(R.string.Loading))
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .padding(it)
+            ) {
+                if (state.post != null) {
+                    item {
+                        BlogPostPresentation(
+                            postModel = state.post,
+                            navHostController = navHostController,
+                            isLiked = state.isLiked,
+                            onClickLike = {
+                                viewModel.onEvent(BlogEvent.LikePost)
                             },
-                            placeholder = context.getString(R.string.AddYourComment),
-                            errorMessage = state.commentMessageError,
-                            onClickAdd = {
-                                viewModel.onEvent(BlogEvent.AddComment)
-                            }
+                            onClickDislike = {
+                                viewModel.onEvent(BlogEvent.DisLikePost)
+                            },
+                            userModel = state.user
                         )
                     }
 
-                    if (state.comments.isEmpty()) {
-                        Box(
-                            contentAlignment = Alignment.Center,
+                    item {
+                        Row(
+                            verticalAlignment = Alignment.Bottom,
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier
                                 .fillMaxWidth()
                         ) {
                             Text(
-                                text = context.getString(R.string.NonCommentsYet),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Light,
+                                text = context.getString(R.string.Comments),
+                                style = MaterialTheme.typography.displayMedium,
                                 modifier = Modifier
-                                    .padding(vertical = 12.dp)
+                                    .padding(top = 16.dp)
+                            )
+                            AnimatedContent(targetState = state.isCommentAddPresented) {
+                                if(it) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.ArrowUpward,
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .clickable {
+                                                viewModel.onEvent(BlogEvent.ClickPresentingComment)
+                                            }
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Outlined.ArrowDownward,
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .clickable {
+                                                viewModel.onEvent(BlogEvent.ClickPresentingComment)
+                                            }
+                                    )
+                                }
+                            }
+                        }
+
+                        AnimatedVisibility(visible = state.isCommentAddPresented) {
+                            BlogAddingComment(
+                                value = state.comment,
+                                onValueChange = {
+                                    viewModel.onEvent(BlogEvent.EnteredComment(it))
+                                },
+                                placeholder = context.getString(R.string.AddYourComment),
+                                errorMessage = state.commentMessageError,
+                                onClickAdd = {
+                                    viewModel.onEvent(BlogEvent.AddComment)
+                                }
                             )
                         }
-                    }
-                }
-                
-                items(state.comments) { comment ->
-                    BlogCommentPresentation(
-                        commentModel = comment,
-                        user = state.usersList[comment.userId],
-                        onClickUser = {
-                            navHostController.navigate(BlogScreen.User.sendUserId(comment.userId))
-                        },
-                        onClickDelete = {
-                            commentToDelete = comment.id
-                            infoDeleteCommentState.show()
-                        },
-                        modifier = Modifier
-                            .animateItemPlacement(
-                                animationSpec = tween(
-                                    500
+
+                        if (state.comments.isEmpty()) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = context.getString(R.string.NonCommentsYet),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Light,
+                                    modifier = Modifier
+                                        .padding(vertical = 12.dp)
                                 )
-                            )
-                    )
+                            }
+                        }
+                    }
+
+                    items(state.comments) { comment ->
+                        BlogCommentPresentation(
+                            commentModel = comment,
+                            user = state.usersList[comment.userId],
+                            onClickUser = {
+                                navHostController.navigate(BlogScreen.User.sendUserId(comment.userId))
+                            },
+                            onClickDelete = {
+                                commentToDelete = comment.id
+                                infoDeleteCommentState.show()
+                            },
+                            modifier = Modifier
+                                .animateItemPlacement(
+                                    animationSpec = tween(
+                                        500
+                                    )
+                                )
+                        )
+                    }
                 }
             }
         }
     }
-
 }

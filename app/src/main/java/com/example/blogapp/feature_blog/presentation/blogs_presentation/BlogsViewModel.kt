@@ -60,29 +60,6 @@ class BlogsViewModel @Inject constructor(
 
     fun onEvent(event: BlogsEvent) {
         when (event) {
-            is BlogsEvent.ChangePage -> {
-                viewModelScope.launch {
-                    _state.update { it.copy(
-                        page = event.page
-                    ) }
-                    setUpPosts()
-                }
-            }
-            BlogsEvent.ClickShowingSorting -> {
-                _state.update { it.copy(
-                    isPresentedSorting = !_state.value.isPresentedSorting
-                ) }
-            }
-            is BlogsEvent.ClickSorting -> {
-                if (_state.value.limitPosts != event.newLimit) {
-                    viewModelScope.launch {
-                        _state.update { it.copy(
-                            limitPosts = event.newLimit
-                        ) }
-                        setUpPosts()
-                    }
-                }
-            }
             is BlogsEvent.ChooseTag -> {
                 if (_state.value.currentTag != event.tag) {
                     viewModelScope.launch {
@@ -103,8 +80,6 @@ class BlogsViewModel @Inject constructor(
 
     private suspend fun setUpPosts() {
         val currentTag = _state.value.currentTag
-        val limitPosts = _state.value.limitPosts
-        val page = _state.value.page
         val allPosts = _state.value.allPosts
 
         val filteredPosts = if (currentTag != null) {
@@ -113,27 +88,13 @@ class BlogsViewModel @Inject constructor(
             allPosts
         }
 
-        val count = filteredPosts.size
-        val maxPages = count / limitPosts
-
-        val startIndex = (page - 1) * limitPosts
-        val endIndex = minOf(page * limitPosts, count)
-        val newPresentingPosts = filteredPosts.subList(startIndex, endIndex)
-
         _state.update {
             it.copy(
-                posts = newPresentingPosts,
-                maxPages = maxPages
+                posts = filteredPosts,
             )
         }
 
         takeUsers()
-    }
-
-    fun updateLikesPost() {
-        _state.update {  it.copy(
-            likedPosts = Global.likedPosts
-        ) }
     }
 
     private suspend fun takeUsers() {

@@ -221,9 +221,13 @@ fun RegistrationPresentation(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
             ) {
-                Text(text = "${context.getString(R.string.HaveAccount)} ")
+                Text(
+                    text = "${context.getString(R.string.HaveAccount)} ",
+                    style = MaterialTheme.typography.bodySmall
+                )
                 Text(
                     text = "${context.getString(R.string.SignIn)}!",
+                    style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .clickable {

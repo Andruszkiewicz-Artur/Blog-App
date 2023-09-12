@@ -1,9 +1,11 @@
 package com.example.blogapp.feature_profile.presentation.change_password_presentation
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.R
+import com.example.blogapp.core.data.extension.getString
 import com.example.blogapp.feature_profile.domain.use_cases.ProfileUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ChangePasswordViewModel @Inject constructor(
     private val validateUseCases: ValidateUseCases,
-    private val profileUseCases: ProfileUseCases
+    private val profileUseCases: ProfileUseCases,
+    private val application: Application
 ): ViewModel() {
 
     private val _state = MutableStateFlow(ChangePasswordState())
@@ -79,9 +82,9 @@ class ChangePasswordViewModel @Inject constructor(
 
         if (hasError) {
             _state.update { it.copy(
-                oldPasswordErrorMessage = oldPassword.errorMessage,
-                newPasswordErrorMessage = newPassword.errorMessage,
-                newRePasswordErrorMessage = newRePassword.errorMessage
+                oldPasswordErrorMessage = getString(oldPassword.errorMessage, application),
+                newPasswordErrorMessage = getString(newPassword.errorMessage, application),
+                newRePasswordErrorMessage = getString(newRePassword.errorMessage, application)
             ) }
         }
 

@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -23,11 +24,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +41,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -48,7 +56,7 @@ import com.example.blogapp.feature_blog.presentation.post_create_edit_presentati
 import kotlinx.coroutines.flow.collectLatest
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PostCreateEditPresentation(
     navHostController: NavHostController,
@@ -57,6 +65,7 @@ fun PostCreateEditPresentation(
 
     val state = viewModel.state.collectAsState().value
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val singlePhotoPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
@@ -82,23 +91,33 @@ fun PostCreateEditPresentation(
         modifier = Modifier
             .fillMaxSize(),
         floatingActionButton = {
-            ExtendedFloatingActionButton(
+            SmallFloatingActionButton(
                 onClick = {
                     viewModel.onEvent(PostCreateEditEvent.Save)
-                },
-                shape = CircleShape,
-                contentColor = MaterialTheme.colorScheme.primaryContainer
+                }
             ) {
                 Icon(
                     imageVector = if(state.isCreating) Icons.Outlined.Save else Icons.Outlined.Create,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .size(40.dp)
-                        .clip(CircleShape)
+                    contentDescription = null
                 )
             }
+        },
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = if (state.idPost == null) R.string.MakeAPost else R.string.EditPost)
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navHostController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Rounded.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
+                }
+            )
         }
     ) {
         Box(
@@ -125,7 +144,7 @@ fun PostCreateEditPresentation(
                                 )
                             )
                         },
-                        errorMessage = context.getString(state.pictureErrorMessage?.toInt() ?: 0)
+                        errorMessage = state.pictureErrorMessage
                     )
                 }
 
@@ -135,22 +154,26 @@ fun PostCreateEditPresentation(
 
                     PostTextField(
                         text = state.content,
-                        placeholder = context.getString(R.string.Content),
+                        placeholder = stringResource(R.string.Content),
                         onValueChange = {
                             viewModel.onEvent(PostCreateEditEvent.EnteredContent(it))
                         },
-                        errorMessage = context.getString(state.contentErrorMessage?.toInt() ?: 0)
+                        errorMessage = state.contentErrorMessage
                     )
 
                     Spacer(modifier = Modifier.heightIn(16.dp))
 
                     TextFieldStandard(
-                        label = context.getString(R.string.Link),
+                        label = stringResource(R.string.Link),
                         value = state.link,
                         onValueChange = {
                             viewModel.onEvent(PostCreateEditEvent.SetLink(it))
                         },
-                        errorMessage = context.getString(state.linkErrorMessage?.toInt() ?: 0)
+                        imeAction = ImeAction.Done,
+                        onClickDone = {
+                            keyboardController?.hide()
+                        },
+                        errorMessage = state.linkErrorMessage
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -160,7 +183,7 @@ fun PostCreateEditPresentation(
                             .fillMaxWidth()
                     ) {
                         Text(
-                            text = context.getString(R.string.Tags),
+                            text = stringResource(R.string.Tags),
                             style = MaterialTheme.typography.titleLarge
                         )
                     }

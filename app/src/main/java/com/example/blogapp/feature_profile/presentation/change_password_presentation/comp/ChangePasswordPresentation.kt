@@ -1,5 +1,6 @@
 package com.example.blogapp.feature_profile.presentation.change_password_presentation.comp
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -7,7 +8,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -35,7 +43,8 @@ import com.example.blogapp.feature_profile.presentation.change_password_presenta
 import com.example.blogapp.feature_profile.presentation.change_password_presentation.ChangePasswordViewModel
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalComposeUiApi::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ChangePasswordPresentation(
     navHostController: NavHostController,
@@ -65,88 +74,102 @@ fun ChangePasswordPresentation(
         }
     }
 
-    LazyColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = context.getString(R.string.ChangePassword),
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-            TextFieldStandard(
-                label = context.getString(R.string.OldPassword),
-                value = state.oldPassword,
-                isPresentPassword = state.presentPassword,
-                onValueChange = {
-                    viewModel.onEvent(ChangePasswordEvent.EnteredOldPassword(it))
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = context.getString(R.string.ChangePassword)
+                    )
                 },
-                clickVisibilityPassword = {
-                    viewModel.onEvent(ChangePasswordEvent.ClickPresentPassword)
-                },
-                keyboardType = KeyboardType.Password,
-                errorMessage = state.oldPasswordErrorMessage,
-                onClickNext = {
-                    focusRequester.requestFocus()
-                },
-                isPassword = true,
-                modifier = Modifier
-                    .focusRequester(focusRequester)
-
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            TextFieldStandard(
-                label = context.getString(R.string.NewPassword),
-                value = state.newPassword,
-                isPresentPassword = state.presentPassword,
-                onValueChange = {
-                    viewModel.onEvent(ChangePasswordEvent.EnteredNewPassword(it))
-                },
-                clickVisibilityPassword = {
-                    viewModel.onEvent(ChangePasswordEvent.ClickPresentPassword)
-                },
-                keyboardType = KeyboardType.Password,
-                errorMessage = state.newPasswordErrorMessage,
-                onClickNext = {
-                    focusRequester.requestFocus()
-                },
-                isPassword = true,
-                modifier = Modifier
-                    .focusRequester(focusRequester)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            TextFieldStandard(
-                label = context.getString(R.string.RePassword),
-                value = state.newRePassword,
-                isPresentPassword = state.presentPassword,
-                onValueChange = {
-                    viewModel.onEvent(ChangePasswordEvent.EnteredNewRePassword(it))
-                },
-                clickVisibilityPassword = {
-                    viewModel.onEvent(ChangePasswordEvent.ClickPresentPassword)
-                },
-                keyboardType = KeyboardType.Password,
-                errorMessage = state.newRePasswordErrorMessage,
-                imeAction = ImeAction.Done,
-                onClickDone = {
-                    keyboardController?.hide()
-                },
-                isPassword = true,
-                modifier = Modifier
-                    .focusRequester(focusRequester)
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-            ButtonStandard(
-                value = context.getString(R.string.ResetPassword),
-                onClick = {
-                    viewModel.onEvent(ChangePasswordEvent.ClickSetUpButton)
+                navigationIcon = {
+                    IconButton(onClick = { navHostController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Rounded.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
                 }
             )
         }
-    }
+    ) {
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal =16.dp)
+                .padding(it)
+        ) {
+            item {
+                TextFieldStandard(
+                    label = context.getString(R.string.OldPassword),
+                    value = state.oldPassword,
+                    isPresentPassword = state.presentPassword,
+                    onValueChange = {
+                        viewModel.onEvent(ChangePasswordEvent.EnteredOldPassword(it))
+                    },
+                    clickVisibilityPassword = {
+                        viewModel.onEvent(ChangePasswordEvent.ClickPresentPassword)
+                    },
+                    keyboardType = KeyboardType.Password,
+                    errorMessage = state.oldPasswordErrorMessage,
+                    onClickNext = {
+                        focusRequester.requestFocus()
+                    },
+                    isPassword = true,
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
 
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                TextFieldStandard(
+                    label = context.getString(R.string.NewPassword),
+                    value = state.newPassword,
+                    isPresentPassword = state.presentPassword,
+                    onValueChange = {
+                        viewModel.onEvent(ChangePasswordEvent.EnteredNewPassword(it))
+                    },
+                    clickVisibilityPassword = {
+                        viewModel.onEvent(ChangePasswordEvent.ClickPresentPassword)
+                    },
+                    keyboardType = KeyboardType.Password,
+                    errorMessage = state.newPasswordErrorMessage,
+                    onClickNext = {
+                        focusRequester.requestFocus()
+                    },
+                    isPassword = true,
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldStandard(
+                    label = context.getString(R.string.RePassword),
+                    value = state.newRePassword,
+                    isPresentPassword = state.presentPassword,
+                    onValueChange = {
+                        viewModel.onEvent(ChangePasswordEvent.EnteredNewRePassword(it))
+                    },
+                    clickVisibilityPassword = {
+                        viewModel.onEvent(ChangePasswordEvent.ClickPresentPassword)
+                    },
+                    keyboardType = KeyboardType.Password,
+                    errorMessage = state.newRePasswordErrorMessage,
+                    imeAction = ImeAction.Done,
+                    onClickDone = {
+                        keyboardController?.hide()
+                    },
+                    isPassword = true,
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
+                )
+                Spacer(modifier = Modifier.height(32.dp))
+                ButtonStandard(
+                    value = context.getString(R.string.ResetPassword),
+                    onClick = {
+                        viewModel.onEvent(ChangePasswordEvent.ClickSetUpButton)
+                    }
+                )
+            }
+        }
+    }
 }

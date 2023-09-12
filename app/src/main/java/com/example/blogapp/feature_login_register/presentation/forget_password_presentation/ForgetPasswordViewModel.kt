@@ -1,8 +1,10 @@
 package com.example.blogapp.feature_login_register.presentation.forget_password_presentation
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.R
+import com.example.blogapp.core.data.extension.getString
 import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ForgetPasswordViewModel @Inject constructor(
     private val validateUseCases: ValidateUseCases,
-    private val signInUseCases: SignInUseCases
+    private val signInUseCases: SignInUseCases,
+    private val application: Application
 ): ViewModel() {
 
     private val _state = MutableStateFlow(ForgetPasswordState())
@@ -56,7 +59,7 @@ class ForgetPasswordViewModel @Inject constructor(
 
         if (hasError) {
             _state.update { it.copy(
-                emailErrorMessage = email.errorMessage
+                emailErrorMessage = getString(email.errorMessage, application)
             ) }
         }
 

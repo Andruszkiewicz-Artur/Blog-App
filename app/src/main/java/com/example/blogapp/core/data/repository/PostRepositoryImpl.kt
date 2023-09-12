@@ -30,13 +30,19 @@ import java.io.FileInputStream
 
 class PostRepositoryImpl: PostRepository {
 
+    companion object {
+        private const val TAG = "PostRepositoryImpl"
+    }
+
     override suspend fun createPost(postDto: PostDto): Result {
         val database = Firebase.database.reference
         val userId = postDto.userId
         val postId = postDto.id.ifBlank { System.currentTimeMillis().toString() }
-        var newPost = if(postDto.id.isBlank()) postDto.copy(
-            id = System.currentTimeMillis().toString()
-        ) else {
+        var newPost = if(postDto.id.isBlank()) {
+            postDto.copy(
+                id = System.currentTimeMillis().toString()
+            )
+        } else {
             postDto
         }
         var successfulAddNewPost = false
@@ -44,11 +50,13 @@ class PostRepositoryImpl: PostRepository {
         return try {
             if(postDto.image != null) {
                 val imagePath = postDto.image
-                if(imagePath.contains("content://media/picker")) {
+                Log.d(TAG, "imagePath: $imagePath")
+
+                if(imagePath.contains("content")) {
                     val result = setUpImage(
                         uri = imagePath.toUri()
                     )
-
+                    Log.d(TAG, "result: $result")
                     if (result.data.isNullOrEmpty()) return Result(false, "Problem with adding post")
 
                     when (result) {
@@ -197,7 +205,14 @@ class PostRepositoryImpl: PostRepository {
 
     override suspend fun deletePost(postId: String): Result {
         return try {
-            Result(Firebase.database.reference.child("posts").child(postId).removeValue().isSuccessful)
+            var result = false
+            Firebase.database.reference.child("posts").child(postId).removeValue()
+                .addOnSuccessListener {
+                    result = true
+                }
+
+            delay(1000)
+            Result(result)
         } catch (e: Exception) {
             Log.e("Check Firebase Error", "Error deleting post", e)
             Result(
@@ -252,7 +267,7 @@ class PostRepositoryImpl: PostRepository {
 
             Resource.Success(data = photoId)
         } catch (e: Exception) {
-            Log.e("Error postRepository/setUpImage", "Exception: ${e.message}", e)
+            Log.e(TAG, "Exception: ${e.message}", e)
             Resource.Error(message = "Problem with set up photo")
         }
     }

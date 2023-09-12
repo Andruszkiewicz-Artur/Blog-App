@@ -8,6 +8,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -44,9 +46,14 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) {
-                    RootNavHost(
-                        navHostController
-                    )
+                    Box(
+                        modifier = Modifier
+                            .padding(it)
+                    ) {
+                        RootNavHost(
+                            navHostController
+                        )
+                    }
                 }
             }
         }

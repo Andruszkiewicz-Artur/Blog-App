@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,17 +37,17 @@ fun CheckBoxLoginRegister(
             )
 
             Text(
-                text = value
+                text = value,
+                style = MaterialTheme.typography.bodySmall
             )
         }
 
         AnimatedVisibility(visible = errorMessage != null) {
             Text(
                 text = errorMessage.toString(),
+                style = MaterialTheme.typography.bodySmall,
                 color = Color.Red,
-                fontWeight = FontWeight.Light,
-                modifier = Modifier
-                    .padding(start = 8.dp)
+                fontWeight = FontWeight.Light
             )
         }
 

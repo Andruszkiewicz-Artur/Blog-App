@@ -1,15 +1,18 @@
 package com.example.blogapp.feature_login_register.presentation.login_presentation
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.R
 import com.example.blogapp.core.Global
+import com.example.blogapp.core.data.extension.getString
 import com.example.blogapp.core.domain.use_cases.global.GlobalUseCases
 import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCases
 import com.example.blogapp.feature_profile.domain.use_cases.ProfileUseCases
 import com.example.notes.feature_profile.domain.use_case.validationUseCases.ValidateUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +26,8 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val validateUseCases: ValidateUseCases,
     private val signInUseCases: SignInUseCases,
-    private val globalUseCases: GlobalUseCases
+    private val globalUseCases: GlobalUseCases,
+    private val application: Application
 ): ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -84,8 +88,8 @@ class LoginViewModel @Inject constructor(
 
         if (hasError) {
             _state.update { it.copy(
-                emailErrorMessage = email.errorMessage,
-                passwordErrorMessage = password.errorMessage
+                emailErrorMessage = getString(email.errorMessage, application),
+                passwordErrorMessage = getString(password.errorMessage, application)
             ) }
         }
 

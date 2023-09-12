@@ -1,11 +1,13 @@
 package com.example.blogapp.feature_blog.presentation.blog_presentation
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.R
 import com.example.blogapp.core.Global
+import com.example.blogapp.core.data.extension.getString
 import com.example.blogapp.core.domain.unit.Resource
 import com.example.blogapp.feature_blog.domain.model.CommentModel
 import com.example.blogapp.feature_blog.domain.use_cases.PostUseCases
@@ -24,7 +26,8 @@ import javax.inject.Inject
 class BlogViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val validateUseCases: ValidateUseCases,
-    private val postUseCases: PostUseCases
+    private val postUseCases: PostUseCases,
+    private val application: Application
 ): ViewModel() {
 
     private var postId: String? = null
@@ -178,10 +181,10 @@ class BlogViewModel @Inject constructor(
                                 _state.update {  it.copy(
                                     comments = newList
                                 ) }
-                                _sharedFlow.emit(BlogUiEvent.Toast(R.string.delete_comment))
-                            } else {
-                                _sharedFlow.emit(BlogUiEvent.Toast(R.string.ProblemWithDeletingPost))
                             }
+                            _sharedFlow.emit(BlogUiEvent.Toast(R.string.delete_comment))
+                        } else {
+                            _sharedFlow.emit(BlogUiEvent.Toast(R.string.ProblemWithDeletingComment))
                         }
                     }
                 }
@@ -195,7 +198,7 @@ class BlogViewModel @Inject constructor(
         val hasError = !content.successful
 
         _state.update { it.copy(
-            commentMessageError = content.errorMessage
+            commentMessageError = getString(content.errorMessage, application)
         ) }
 
         return !hasError

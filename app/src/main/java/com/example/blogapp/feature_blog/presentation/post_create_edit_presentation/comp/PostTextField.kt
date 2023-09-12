@@ -50,7 +50,7 @@ fun PostTextField(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
-            ),
+            )
         )
 
         Spacer(modifier = Modifier.height(4.dp))

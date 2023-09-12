@@ -24,10 +24,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.blogapp.R
 import com.example.blogapp.core.comp.button.ButtonStandard
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.core.navigation.graph_profile.ProfileScreen
@@ -83,7 +85,7 @@ fun ProfilePresentation(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 ButtonStandard(
-                    value = "Make a post",
+                    value = stringResource(id = R.string.MakeAPost),
                     onClick = {
                         navHostController.navigate(BlogScreen.PostCreateEdit.route)
                     }
@@ -92,21 +94,21 @@ fun ProfilePresentation(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 ButtonStandard(
-                    value = "Change user data",
+                    value = stringResource(id = R.string.ChangeUserData),
                     onClick = {
                         navHostController.navigate(ProfileScreen.ChangeData.route)
                     }
                 )
 
                 ButtonStandard(
-                    value = "Change password",
+                    value = stringResource(id = R.string.ChangePassword),
                     onClick = {
                         navHostController.navigate(ProfileScreen.ChangePassword.route)
                     }
                 )
 
                 ButtonStandard(
-                    value = "Change email",
+                    value = stringResource(id = R.string.ChangeEmail),
                     onClick = {
                         navHostController.navigate(ProfileScreen.ChangeEmail.route)
                     }
@@ -115,7 +117,7 @@ fun ProfilePresentation(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 ButtonStandard(
-                    value = "Log Out",
+                    value = stringResource(id = R.string.LogOut),
                     isBordered = true,
                     onClick = {
                         viewModel.logOut()

@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -149,7 +150,9 @@ fun LoginPresentation(
 
                 Text(
                     text = context.getString(R.string.ForegPassword),
+                    style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.End,
                     modifier = Modifier
                         .clickable {
                             navHostController.navigate(LoginRegisterScreen.ForgetPassword.route)
@@ -174,9 +177,13 @@ fun LoginPresentation(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
             ) {
-                Text(text = "${context.getText(R.string.DontHaveAccout)} ")
+                Text(
+                    text = "${context.getText(R.string.DontHaveAccout)} ",
+                    style = MaterialTheme.typography.bodySmall
+                )
                 Text(
                     text = context.getString(R.string.SignUp),
+                    style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .clickable {

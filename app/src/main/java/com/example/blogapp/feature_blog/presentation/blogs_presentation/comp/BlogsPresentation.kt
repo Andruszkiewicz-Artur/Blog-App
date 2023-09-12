@@ -78,21 +78,13 @@ fun BlogsPresentation(
                 .fillMaxSize()
         ) {
             item {
-                BlogsSorting(
-                    showingSortBar = state.isPresentedSorting,
-                    currentLimit = state.limitPosts,
-                    setLimitPerPage = {
-                        viewModel.onEvent(BlogsEvent.ClickSorting(it))
-                    },
-                    onClickShowing = {
-                        viewModel.onEvent(BlogsEvent.ClickShowingSorting)
-                    }
+                Text(
+                    text = context.getString(R.string.Posts),
+                    style = MaterialTheme.typography.displayLarge
                 )
 
                 if (state.tags.isNotEmpty()) {
-                    LazyRow(
-
-                    ) {
+                    LazyRow {
                         item {
                             TagPresentation(
                                 value = context.getString(R.string.All),
@@ -149,33 +141,6 @@ fun BlogsPresentation(
                         user = state.usersList.get(it.userId)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-                }
-
-                item {
-                    if (state.maxPages != null && state.posts.isNotEmpty()) {
-                        BlogsPageChanger(
-                            pageLimit = state.maxPages ?: 0,
-                            currentPage = state.page,
-                            onClick = {
-                                viewModel.onEvent(BlogsEvent.ChangePage(it))
-                            }
-                        )
-
-                        Spacer(modifier = Modifier.height(100.dp))
-                    }
-                }
-            } else {
-                item {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .padding(top = 32.dp)
-                            .fillMaxWidth()
-                    ) {
-                        CircularProgressIndicator()
-                        Text(text = context.getString(R.string.Loading))
-                    }
                 }
             }
         }

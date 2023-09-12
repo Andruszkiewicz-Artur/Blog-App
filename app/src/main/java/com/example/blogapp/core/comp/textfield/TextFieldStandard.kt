@@ -16,6 +16,7 @@ import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -113,6 +114,7 @@ fun TextFieldStandard(
         AnimatedVisibility(visible = errorMessage != null) {
             Text(
                 text = errorMessage.toString(),
+                style = MaterialTheme.typography.bodySmall,
                 color = Color.Red,
                 fontWeight = FontWeight.Light,
                 modifier = Modifier

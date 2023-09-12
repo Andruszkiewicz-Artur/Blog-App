@@ -101,7 +101,7 @@ fun BlogCommentPresentation(
                             )
                         } else {
                             Icon(
-                                imageVector = if (user?.gender == Gender.Male.toString()) Icons.Outlined.Face else Icons.Outlined.Face3,
+                                imageVector = Icons.Outlined.Face,
                                 contentDescription = null,
                                 modifier = Modifier
                                     .padding(end = 16.dp)

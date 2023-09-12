@@ -64,7 +64,7 @@ fun UserDataPresentation(
                 )
             } else {
                 Icon(
-                    imageVector = if (userModel.gender != null && userModel.gender == Gender.Female.toString()) Icons.Outlined.Face3 else Icons.Outlined.Face,
+                    imageVector = Icons.Outlined.Face,
                     contentDescription = null,
                     modifier = Modifier
                         .size(200.dp)

@@ -4,6 +4,8 @@ import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +35,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun UserPostPresentation(
     post: PostModel,
@@ -76,12 +79,16 @@ fun UserPostPresentation(
             )
 
             if(!post.tags.isNullOrEmpty()) {
-                Row(
+                FlowRow(
                     modifier = Modifier
                         .padding(top = 16.dp, bottom = 8.dp)
                 ) {
                     post.tags.forEach {
-                        TagPresentation(value = it)
+                        TagPresentation(
+                            value = it,
+                            modifier = Modifier
+                                .padding(bottom = 4.dp)
+                        )
                     }
                 }
             }
@@ -113,6 +120,7 @@ fun UserPostPresentation(
 
                 Text(
                     text = formattedTime,
+                    style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Light
                 )
             }

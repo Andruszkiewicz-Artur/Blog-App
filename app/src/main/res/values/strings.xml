@@ -72,7 +72,7 @@
     <string name="SignUp">Sign up</string>
     <string name="ProblemWithRegistration">Problem during registration!</string>
     <string name="Welcome">Welcome!</string>
-    <string name="RegistrationDescription">You can create here your own profile now!\\nLets do this!</string>
+    <string name="RegistrationDescription">You can create here your own profile now!\nLets do this!</string>
     <string name="RePassword">Re-Password</string>
     <string name="TermsDescription">I now Terms of Service and Privacy Policy this app!</string>
     <string name="HaveAccount">You have account?</string>
@@ -93,4 +93,10 @@
     <string name="YouDontLoginYet">You don`t login yet, or you don`t have account?</string>
     <string name="UseButtonBelow">Use button below</string>
     <string name="Or">Or</string>
+    <string name="MakeAPost">Make a post</string>
+    <string name="LogOut">Log out</string>
+    <string name="EditPost">Edit post</string>
+    <string name="Post">Post</string>
+    <string name="ProblemWithDeletingComment">Problem with deleting comment</string>
+    <string name="Profile">Profile</string>
 </resources>

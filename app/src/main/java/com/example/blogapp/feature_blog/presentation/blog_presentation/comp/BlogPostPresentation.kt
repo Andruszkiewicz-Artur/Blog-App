@@ -6,6 +6,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,16 +49,15 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun BlogPostPresentation(
     postModel: PostModel,
     userModel: UserModel?,
-    isUserBlog: Boolean,
     navHostController: NavHostController,
     isLiked: Boolean,
     onClickLike: () -> Unit,
-    onClickDislike: () -> Unit,
-    onClickDelete: () -> Unit
+    onClickDislike: () -> Unit
 ) {
     val context = LocalContext.current
     val formattedTime = remember(postModel.publishDate) {
@@ -112,36 +113,6 @@ fun BlogPostPresentation(
                     )
                 }
             }
-
-            if (isUserBlog) {
-                Row {
-                    Icon(
-                        imageVector = Icons.Outlined.Edit,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clickable {
-                                navHostController.navigate(
-                                    BlogScreen.PostCreateEdit.sendPostId(
-                                        postModel.id ?: ""
-                                    )
-                                )
-                            }
-                    )
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Icon(
-                        imageVector = Icons.Outlined.Delete,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clickable {
-                                onClickDelete()
-                            }
-                    )
-                }
-            }
         }
 
         if (userModel?.picture != null) {
@@ -155,7 +126,7 @@ fun BlogPostPresentation(
             )
         } else {
             Icon(
-                imageVector = if(userModel?.gender != Gender.Female.toString()) Icons.Outlined.Face else Icons.Outlined.Face3,
+                imageVector = Icons.Outlined.Face,
                 contentDescription = null,
                 modifier = Modifier
                     .padding(end = 16.dp)
@@ -201,14 +172,15 @@ fun BlogPostPresentation(
                 .padding(top = 16.dp)
         )
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        FlowRow(
             modifier = Modifier
                 .padding(top = 8.dp, bottom = 16.dp)
         ) {
             postModel.tags?.forEach {
                 TagPresentation(
-                    value = it
+                    value = it,
+                    modifier = Modifier
+                        .padding(bottom = 4.dp)
                 )
             }
         }

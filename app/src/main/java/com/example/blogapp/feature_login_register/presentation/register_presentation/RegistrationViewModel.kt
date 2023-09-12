@@ -1,9 +1,12 @@
 package com.example.blogapp.feature_login_register.presentation.register_presentation
 
+import android.app.Application
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogapp.R
 import com.example.blogapp.core.Global
+import com.example.blogapp.core.data.extension.getString
 import com.example.blogapp.feature_login_register.domain.model.UserRegistrationModel
 import com.example.blogapp.feature_login_register.domain.use_cases.CreateUserUseCase
 import com.example.blogapp.feature_login_register.domain.use_cases.SignInUseCases
@@ -20,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
     private val validateUseCases: ValidateUseCases,
-    private val userUseCases: SignInUseCases
+    private val userUseCases: SignInUseCases,
+    private val application: Application
 ): ViewModel() {
 
     private val _state = MutableStateFlow(RegistrationState())
@@ -28,6 +32,10 @@ class RegistrationViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<RegistrationUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    companion object {
+        private const val TAG = "RegistrationViewModel"
+    }
 
     fun onEvent(event: RegistrationEvent) {
         when (event) {
@@ -109,12 +117,12 @@ class RegistrationViewModel @Inject constructor(
 
         if (hasError) {
             _state.update { it.copy(
-                firstNameErrorMessage = firstName.errorMessage,
-                lastNameErrorMessage = lastname.errorMessage,
-                emailErrorMessage = email.errorMessage,
-                passwordErrorMessage = password.errorMessage,
-                rePasswordErrorMessage = rePassword.errorMessage,
-                rulesErrorMessage = terms.errorMessage
+                firstNameErrorMessage = getString(firstName.errorMessage, application),
+                lastNameErrorMessage = getString(lastname.errorMessage, application),
+                emailErrorMessage = getString(email.errorMessage, application),
+                passwordErrorMessage = getString(password.errorMessage, application),
+                rePasswordErrorMessage = getString(rePassword.errorMessage, application),
+                rulesErrorMessage = getString(terms.errorMessage, application)
             ) }
         }
 

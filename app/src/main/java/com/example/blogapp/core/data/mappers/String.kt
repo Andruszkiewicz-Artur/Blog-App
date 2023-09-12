@@ -17,7 +17,7 @@ import java.util.Locale
 
 @SuppressLint("NewApi")
 fun String.toLocalData(): LocalDate? {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     return try {
         LocalDate.parse(this, formatter)
@@ -28,7 +28,7 @@ fun String.toLocalData(): LocalDate? {
 }
 @SuppressLint("NewApi")
 fun String.toLocalDateTime(): LocalDateTime? {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'kk:mm:ss.SSSSSS");
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'kk:mm:ss.SSSSSS")
 
     return try {
         LocalDateTime.parse(this, formatter)
@@ -58,5 +58,5 @@ fun String.capitalizeFirstLetter(): String {
     if (this.isEmpty()) {
         return this
     }
-    return this.substring(0, 1).toUpperCase() + this.substring(1).toLowerCase()
+    return this.substring(0, 1).uppercase(Locale.getDefault()) + this.substring(1).lowercase(Locale.getDefault())
 }
