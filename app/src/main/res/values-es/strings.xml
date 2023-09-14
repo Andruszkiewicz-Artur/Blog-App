@@ -100,4 +100,5 @@
     <string name="Post">Publicar</string>
     <string name="ProblemWithDeletingComment">Problema al eliminar un comentario</string>
     <string name="Profile">Perfil</string>
+    <string name="YouNeedToLogIn">¡Necesitas iniciar sesión primero!</string>
 </resources>

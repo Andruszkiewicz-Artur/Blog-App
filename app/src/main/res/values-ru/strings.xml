@@ -100,4 +100,5 @@
     <string name="Post">Пост</string>
     <string name="ProblemWithDeletingComment">Проблема с удалением комментария</string>
     <string name="Profile">Профиль</string>
+    <string name="YouNeedToLogIn">Сначала вам нужно войти в систему!</string>
 </resources>

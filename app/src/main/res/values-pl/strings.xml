@@ -100,4 +100,5 @@
     <string name="Post">Opublikuj</string>
     <string name="ProblemWithDeletingComment">Problem z usuwaniem komentarza</string>
     <string name="Profile">Profil</string>
+    <string name="YouNeedToLogIn">Najpierw musisz się zalogować!</string>
 </resources>

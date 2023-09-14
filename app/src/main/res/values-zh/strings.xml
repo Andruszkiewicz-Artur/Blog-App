@@ -100,4 +100,5 @@
     <string name="Post">发布</string>
     <string name="ProblemWithDeletingComment">删除评论问题</string>
     <string name="Profile">个人资料</string>
+    <string name="YouNeedToLogIn">您需要先登录！</string>
 </resources>

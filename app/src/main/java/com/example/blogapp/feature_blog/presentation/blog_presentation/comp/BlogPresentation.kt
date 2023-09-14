@@ -86,7 +86,6 @@ fun BlogPresentation(
             when (event) {
                 BlogUiEvent.BackFromPost -> {
                     navHostController.popBackStack()
-                    Toast.makeText(context, context.getString(R.string.DeletingPost), Toast.LENGTH_LONG).show()
                 }
                 is BlogUiEvent.Toast -> {
                     Toast.makeText(context, context.getString(event.value), Toast.LENGTH_LONG).show()
@@ -177,7 +176,7 @@ fun BlogPresentation(
                             modifier = Modifier
                                 .size(40.dp)
                                 .clickable {
-                                    viewModel.onEvent(BlogEvent.DeletePost)
+                                    infoDeletePostState.show()
                                 }
                         )
                     }

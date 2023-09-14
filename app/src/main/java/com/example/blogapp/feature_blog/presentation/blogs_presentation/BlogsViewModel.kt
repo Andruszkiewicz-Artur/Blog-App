@@ -35,6 +35,10 @@ class BlogsViewModel @Inject constructor(
     private val _sharedFlow = MutableSharedFlow<BlogsUiEvent>()
     val sharedFlow = _sharedFlow.asSharedFlow()
 
+    companion object {
+        private const val TAG = "BlogsViewModel"
+    }
+
     init {
         viewModelScope.launch {
             if(Global.user == null) {
@@ -94,21 +98,19 @@ class BlogsViewModel @Inject constructor(
             )
         }
 
-        takeUsers()
+        if (!filteredPosts.isNullOrEmpty()) {
+            takeUsers()
+        }
     }
 
     private suspend fun takeUsers() {
         val listUsersToTakeData = _state.value.posts.map { it.userId }.distinct()
-        val existingUsers = _state.value.usersList
 
-        val newUsersIds = listUsersToTakeData.filterNot { existingUsers.containsKey(it) }
-        val newUsersList = postUseCases.takeUsersUseCase.invoke(newUsersIds)
-
-        val updatedUsersList = existingUsers + newUsersList
+        val newUsersList = postUseCases.takeUsersUseCase.invoke(listUsersToTakeData)
 
         _state.update {
             it.copy(
-                usersList = updatedUsersList
+                usersList = newUsersList
             )
         }
     }
@@ -120,6 +122,8 @@ class BlogsViewModel @Inject constructor(
 
         val result = postUseCases.takePostsUseCase()
 
+        Log.d(TAG, "$result")
+
         when (result) {
             is Resource.Error -> {
                 _sharedFlow.emit(BlogsUiEvent.Toast(R.string.ProblemWithTakingData))
@@ -127,7 +131,7 @@ class BlogsViewModel @Inject constructor(
             is Resource.Success -> {
                 if (!result.data.isNullOrEmpty()) {
                     val data = result.data.toMutableList().sortedByDescending { it.publishDate }
-                    _state.update { _state.value.copy(
+                    _state.update { it.copy(
                         allPosts = data
                     ) }
                     setUpPosts()

@@ -26,6 +26,10 @@ import java.time.LocalDate
 
 class UserRepositoryImpl: UserRepository {
 
+    companion object {
+        private const val TAG = "UserRepositoryImpl"
+    }
+
     override suspend fun createUser(user: UserDto, password: String): Resource<UserDto> {
         try {
             Firebase.auth.createUserWithEmailAndPassword(user.email, password).await()
@@ -55,8 +59,7 @@ class UserRepositoryImpl: UserRepository {
 
     override suspend fun signOut(){
         try {
-            val result = Firebase.auth.signOut()
-            Log.d("check result sing out", "$result")
+            Firebase.auth.signOut()
         } catch (e: Exception) {
             Log.d("Error signOut", "${e.message}")
         }
@@ -270,7 +273,7 @@ class UserRepositoryImpl: UserRepository {
             val beginPath = "users/${user.id}"
             val updateProfile: MutableMap<String, Any> = hashMapOf()
 
-            if(user.picture != null && user.picture.contains("content://media/picker")) {
+            if(user.picture != null && user.picture.contains("content")) {
 
                 val result = setUpImage(
                     uri = user.picture.toUri()

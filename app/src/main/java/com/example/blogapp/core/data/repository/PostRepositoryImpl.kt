@@ -13,8 +13,10 @@ import com.example.blogapp.core.data.mappers.replaceDataToDatabase
 import com.example.blogapp.core.domain.repository.PostRepository
 import com.example.blogapp.core.domain.unit.Resource
 import com.example.blogapp.core.domain.unit.Result
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
@@ -38,13 +40,8 @@ class PostRepositoryImpl: PostRepository {
         val database = Firebase.database.reference
         val userId = postDto.userId
         val postId = postDto.id.ifBlank { System.currentTimeMillis().toString() }
-        var newPost = if(postDto.id.isBlank()) {
-            postDto.copy(
-                id = System.currentTimeMillis().toString()
-            )
-        } else {
-            postDto
-        }
+        var newPost = if(postDto.id.isBlank()) postDto.copy(id = postId) else postDto
+
         var successfulAddNewPost = false
 
         return try {
@@ -72,16 +69,11 @@ class PostRepositoryImpl: PostRepository {
                 }
             }
 
-            val value: MutableMap<String, Any> = hashMapOf(
-                "users/$userId/posts/$postId" to true,
-                "posts/$postId" to newPost
-            )
-
-            database.updateChildren(value)
-                .addOnCompleteListener {
-                    successfulAddNewPost = it.isSuccessful
+            database.child("users").child(userId).child("posts").child(postId).setValue(true)
+            database.child("posts").child(postId).setValue(newPost)
+                .addOnSuccessListener {
+                    successfulAddNewPost = true
                 }
-
 
             delay(200)
 
@@ -104,11 +96,12 @@ class PostRepositoryImpl: PostRepository {
 
             posts.children.forEachIndexed { index, postSnapshot ->
                 try {
-                    val postJson = postSnapshot.value.toString()
-                    val jsonObject = JsonParser.parseString(postJson).asJsonObject
-                    val postDto = PostDto(jsonObject)
+                    val post = setData(postSnapshot)
 
-                    postsList.add(postDto)
+                    Log.d(TAG, "post: $post")
+
+                    postsList.add(post)
+
                 } catch (e: JsonSyntaxException) {
                     Log.e("Check JSON Parse Error", "Error parsing JSON: $index", e)
                 }
@@ -125,9 +118,7 @@ class PostRepositoryImpl: PostRepository {
         return try {
             val post = Firebase.database.reference.child("posts").child(postId).get().await()
 
-            val gson = Gson()
-            val postJson = post.value.toString()
-            var postDto = gson.fromJson(postJson, PostDto::class.java)
+            var postDto = setData(post)
 
             if (postDto.image != null) {
                 val urlImage = takeImage(postDto.image!!)
@@ -286,5 +277,25 @@ class PostRepositoryImpl: PostRepository {
             Log.e("Error postRepository/takeImage", "Exception: ${e.message}", e)
             Resource.Error(message = "Problem with taking photo")
         }
+    }
+
+    private fun setData(value: DataSnapshot): PostDto {
+        val tags: MutableList<String> = mutableListOf()
+        val linkData: String = value.child("link").value.toString()
+
+        value.child("tags").children.forEach {
+            tags.add(it.value.toString())
+        }
+
+        return PostDto(
+            id = value.child("id").value.toString(),
+            text = value.child("text").value.toString(),
+            image = value.child("image").value.toString(),
+            likes = value.child("likes").value.toString().toInt(),
+            link = if(linkData == "null") null else linkData,
+            tags = tags,
+            publishDate = value.child("publishDate").value.toString().replaceDataFromDatabase(),
+            userId = value.child("userId").value.toString()
+        )
     }
 }

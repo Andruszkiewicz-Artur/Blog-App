@@ -100,5 +100,5 @@
     <string name="Post">Veröffentlichen</string>
     <string name="ProblemWithDeletingComment">Problem beim Löschen eines Kommentars</string>
     <string name="Profile">Profil</string>
-
+    <string name="YouNeedToLogIn">Sie müssen sich zuerst anmelden!</string>
 </resources>

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.blogapp.R
+import com.example.blogapp.core.Global
 import com.example.blogapp.core.comp.text.TagPresentation
 import com.example.blogapp.core.navigation.graph_blog.BlogScreen
 import com.example.blogapp.feature_blog.presentation.blogs_presentation.BlogsEvent
@@ -145,7 +146,7 @@ fun BlogsPresentation(
                         onClick = { idPost ->
                             navHostController.navigate(BlogScreen.Blog.sendPostId(idPost))
                         },
-                        isLikedPost = state.likedPosts.contains(it.id),
+                        isLikedPost = Global.likedPosts.contains(it.id),
                         user = state.usersList.get(it.userId)
                     )
                     Spacer(modifier = Modifier.height(12.dp))

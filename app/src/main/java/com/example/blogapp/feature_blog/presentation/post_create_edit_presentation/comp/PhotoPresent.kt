@@ -44,8 +44,8 @@ fun PhotoPresent(
                     contentDescription = null,
                     imageLoader = ImageLoader(context),
                     modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
                         .size(300.dp)
+                        .clip(RoundedCornerShape(20.dp))
                         .clickable { onClick() }
                 )
             } else {
@@ -53,8 +53,8 @@ fun PhotoPresent(
                     imageVector = icon,
                     contentDescription = null,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
                         .size(300.dp)
+                        .clip(RoundedCornerShape(20.dp))
                         .clickable { onClick() }
                 )
             }

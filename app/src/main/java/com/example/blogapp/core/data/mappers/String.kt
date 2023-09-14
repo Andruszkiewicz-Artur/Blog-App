@@ -28,10 +28,16 @@ fun String.toLocalData(): LocalDate? {
 }
 @SuppressLint("NewApi")
 fun String.toLocalDateTime(): LocalDateTime? {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'kk:mm:ss.SSSSSS")
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'kk:mm:ss.SS")
+
+    val date = if (this.length > 22) {
+        this.substring(0, 22)
+    } else {
+        this
+    }
 
     return try {
-        LocalDateTime.parse(this, formatter)
+        LocalDateTime.parse(date, formatter)
     } catch (e: DateTimeParseException) {
         Log.d("Error toLocalDataTime", "${e.message}")
         null

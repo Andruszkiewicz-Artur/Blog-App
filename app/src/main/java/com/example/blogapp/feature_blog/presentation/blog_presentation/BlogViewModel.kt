@@ -57,6 +57,10 @@ class BlogViewModel @Inject constructor(
                     val userId = Global.user?.id
                     val postId = _state.value.post?.id
 
+                    if (userId.isNullOrEmpty()) {
+                        _sharedFlow.emit(BlogUiEvent.Toast(R.string.YouNeedToLogIn))
+                    }
+
                     if (userId != null && postId != null) {
                         val result = postUseCases.likePostUseCase.invoke(postId, userId)
 
@@ -102,6 +106,10 @@ class BlogViewModel @Inject constructor(
                         val postId = _state.value.post?.id
                         val userId = Global.user?.id
                         val user = Global.user
+
+                        if (userId.isNullOrEmpty()) {
+                            _sharedFlow.emit(BlogUiEvent.Toast(R.string.YouNeedToLogIn))
+                        }
 
                         if(postId.isNullOrEmpty().not() && userId.isNullOrEmpty().not()) {
                             val newComment = CommentModel(
@@ -160,7 +168,10 @@ class BlogViewModel @Inject constructor(
                         if(!postId.isNullOrEmpty()) {
                             val result = postUseCases.deletePostUseCase.invoke(postId)
 
-                            if(result.successful) _sharedFlow.emit(BlogUiEvent.BackFromPost)
+                            if(result.successful) {
+                                _sharedFlow.emit(BlogUiEvent.BackFromPost)
+                                _sharedFlow.emit(BlogUiEvent.Toast(R.string.DeletingPost))
+                            }
                             else _sharedFlow.emit(BlogUiEvent.Toast(R.string.ProblemWithDeletignPost))
                         }
                     }
