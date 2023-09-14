@@ -14,3 +14,5 @@ It is an application where users can share posts by themselves. It is possible t
 - Gson
 - Material
 - Jetpack Compose 
+
+<p><b>App presentation: </b> <a href = "https://youtu.be/zCZkTk1GHEg">link to video on youtube</a></p>
