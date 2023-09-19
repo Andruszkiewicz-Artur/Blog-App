@@ -13,6 +13,12 @@ It is an application where users can share posts by themselves. It is possible t
 - Navigation
 - Gson
 - Material
-- Jetpack Compose 
+- Jetpack Compose
 
-<a href = "https://youtu.be/zCZkTk1GHEg">![Presentation Mobile App-3](https://github.com/Andruszkiewicz-Artur/Blog-App/assets/74057518/a0d01fd9-139d-44a2-9556-d28bc4b0a52e)</a>
+# Presentation App
+<p align = "center">
+  <a href = "https://youtu.be/zCZkTk1GHEg">Link to video</a>
+</p>
+<p align = "Center">
+  <img src="https://i.postimg.cc/L4GRTTg4/Presentation-Mobile-App-3.jpg" href="">
+</p>
