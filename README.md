@@ -15,4 +15,4 @@ It is an application where users can share posts by themselves. It is possible t
 - Material
 - Jetpack Compose 
 
-<p><b>App presentation: </b> <a href = "https://youtu.be/zCZkTk1GHEg">link to video on youtube</a></p>
+<a href = "https://youtu.be/zCZkTk1GHEg">![Presentation Mobile App-3](https://github.com/Andruszkiewicz-Artur/Blog-App/assets/74057518/a0d01fd9-139d-44a2-9556-d28bc4b0a52e)</a>
